@@ -63,3 +63,53 @@ test('closest ranking agrees with an independent small-budget enumeration',()=>{
  const p=x.partials[0],deficit=p.missing.reduce((n,m)=>n+m.quantity/({chicken:4,tart:3,pasta:1}[m.id]),0);
  assert.equal(deficit,candidates[0].deficit);assert.equal(p.totalCost,candidates[0].cost);
 });
+
+test('unavailable requested main is replaced by a complete priced alternative with explicit changes',()=>{
+ const offers=[offer('burger',{burger:1},1000)];offers[0].variants[0].individualMains=1;
+ const request={demand:{paperChicken:3},people:3,budgetMinor:5000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false};
+ const x=F.recommend({...demo,offers},request,{timeLimitMs:10000});
+ assert.equal(x.plans.length,0);assert(x.suggestions.length);
+ const p=x.suggestions.find(p=>p.effectiveRequest.demand.burgerMain===3);
+ assert(p);assert.equal(p.totalCost,3000);assert.equal(p.orders.length,3);
+ assert(p.adjustments.some(s=>s.includes('紙包雞')));assert(p.adjustments.some(s=>s.includes('一般漢堡')));
+ assert.equal(p.effectiveRequest.member,request.member);assert.equal(p.substitution,true);
+ assert.deepEqual(request.demand,{paperChicken:3});
+});
+test('rescue preserves hard coupon eligibility and exclusions',()=>{
+ const member=offer('member',{burger:1},100);member.eligibility.memberRequired=true;member.variants[0].individualMains=1;
+ const normal=offer('normal',{burger:1},1000);normal.variants[0].individualMains=1;
+ const expired=offer('expired',{chicken:2},1);expired.validity.validWindows=[{toExclusive:'2026-10-01'}];
+ const conflict=offer('conflict',{chicken:2},1);conflict.dataStatus='conflict';
+ const r={demand:{paperChicken:2},people:2,budgetMinor:5000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false,member:false,avoid:[]};
+ const x=F.recommend({...demo,offers:[member,normal,expired,conflict]},r,{timeLimitMs:10000});
+ assert(x.suggestions.length);assert(x.suggestions.every(p=>p.orders.every(o=>o.offerId==='normal')));
+ const avoided=F.recommend({...demo,offers:[normal]}, {...r,avoid:['burger']},{timeLimitMs:10000});
+ assert.equal(avoided.suggestions.length,0);assert(avoided.unpricedAlternative);
+});
+test('zero budget and no eligible coupons still provide an honest alternative',()=>{
+ const request={demand:{chicken:4,tart:2},people:2,budgetMinor:0,brands:['KFC'],cross:true,channel:'takeaway',at,maxOrders:4,estimate:false};
+ const a=F.recommend({...demo,offers:[offer('meal',{chicken:4,tart:2},2000)]},request,{timeLimitMs:10000});
+ assert(a.suggestions.length||a.minimumIgnoringBudget||a.unpricedAlternative);
+ assert(a.suggestions.every(p=>p.totalCost===null||p.totalCost>0&&p.overBudget));
+ const b=F.recommend({...demo,offers:[]},request,{timeLimitMs:10000});
+ assert(b.unpricedAlternative);assert.deepEqual(b.unpricedAlternative.items,request.demand);
+ assert.equal(b.unpricedAlternative.totalCost,undefined);
+});
+test('headcount changes recompute real coupon quantities and prices',()=>{
+ const burger=offer('burger',{burger:1},1000);burger.variants[0].individualMains=1;
+ const prices=[];
+ for(const people of [2,4]){
+  const r={demand:{paperChicken:people},people,budgetMinor:10000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:6,estimate:false};
+  const x=F.recommend({...demo,offers:[burger]},r,{timeLimitMs:10000});
+  const p=x.suggestions.find(p=>p.effectiveRequest.demand.burgerMain===people);
+  assert(p);prices.push(p.totalCost);assert.equal(p.orders.length,people);
+ }
+ assert.deepEqual(prices,[2000,4000]);
+});
+test('higher budget can offer a richer meal while preserving the original cheapest recommendation',()=>{
+ const r={demand:{chicken:2},people:1,budgetMinor:3000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false};
+ const x=F.recommend({...demo,offers:[offer('chicken',{chicken:2},1000)]},r,{timeLimitMs:10000});
+ assert.equal(x.plans[0].totalCost,1000);
+ const richer=x.suggestions.find(p=>p.label==='預算內・主餐多一點');assert(richer);
+ assert.equal(richer.totalCost,2000);assert(richer.coverage.every(c=>c.got>=c.need));assert(richer.totalCost<=r.budgetMinor);
+});

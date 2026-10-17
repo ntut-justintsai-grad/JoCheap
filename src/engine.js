@@ -293,7 +293,7 @@
       const extras=Object.fromEntries(physicalIds.map(k=>[k,Math.max(0,(counts[k]||0)-(consumed[k]||0))]).filter(([,n])=>n>0));
       const coverage=Object.entries(r.demand).filter(([,n])=>n>0).map(([k,n])=>({id:k,need:n,got:counts[k]||0}));
       const snackTypes=[...new Set(selected.flatMap(c=>c.snackGroups))];
-      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
+      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,supplied:{...counts},extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
     }
     function visit(from,selected,counts,uses,groups){
       if(!complete)return;
@@ -439,6 +439,87 @@
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
     return {plans:alternatives,partials,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing:partials[0]?.missing||missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,chooseCandidates,assignFlavors,solve,taipeiDate};
+  function recommend(dataset,request,config={}){
+    const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
+    const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
+    const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
+    const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
+    const noSnackGoal={minTypes:0,servings:0};
+    const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=result.plans.length?2:3;
+    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+o.variantId).sort().join('|');
+    const seen=new Set(result.plans.map(mealKey));
+    let attempts=0;
+    function describe(q){
+      const notes=[];
+      for(const id of new Set([...Object.keys(r.demand),...Object.keys(q.demand)])){
+        const before=r.demand[id]||0,after=q.demand[id]||0;
+        if(before!==after)notes.push(`${ITEMS[id].name}：${before} → ${after} ${ITEMS[id].unit}`);
+      }
+      if((r.snackGoal?.minTypes||0)!==(q.snackGoal?.minTypes||0))notes.push(`點心種類：至少 ${r.snackGoal.minTypes} 類 → ${q.snackGoal?.minTypes?'至少 '+q.snackGoal.minTypes+' 類':'不另限制'}`);
+      if(JSON.stringify(r.pizzaPreference)!==JSON.stringify(q.pizzaPreference)||r.pastaPreference!==q.pastaPreference)notes.push('披薩／義大利麵口味改為不限');
+      if(r.drinkPreference!==q.drinkPreference)notes.push('飲料種類改為不限，杯數照需求保留');
+      if(r.maxOrders!==q.maxOrders)notes.push(`可分開購買的訂單上限：${r.maxOrders} → ${q.maxOrders} 筆`);
+      if(JSON.stringify(r.brands)!==JSON.stringify(q.brands)||r.cross!==q.cross)notes.push('改為肯德基與必勝客一起比較，可跨品牌購買');
+      if(q.servingNote)notes.push(q.servingNote);
+      return notes;
+    }
+    function attempt(q,label){
+      if(suggestions.length>=maxSuggestions||attempts>=9||Date.now()>=deadline)return;
+      if(!Object.values(q.demand).some(n=>n>0)||Object.values(q.demand).some(n=>!Number.isInteger(n)||n<0||n>60))return;
+      const key=JSON.stringify([q.demand,q.snackGoal,q.pizzaPreference,q.pastaPreference,q.drinkPreference,q.maxOrders,q.brands,q.cross,q.budgetMinor]);
+      if(tried.has(key))return;tried.add(key);attempts++;
+      const x=solve(dataset,q,{...config,collectAlternatives:false,timeLimitMs:Math.min(350,Math.max(1,deadline-Date.now())),maxStates:Math.min(config.maxStates??150000,100000)});
+      result.states+=x.states;
+      const p=x.plans[0];if(!p||seen.has(mealKey(p)))return;
+      // Rescue searches never change validity, membership, payment, channel,
+      // excluded ingredients, or prices. Changed meal preferences are explicit.
+      seen.add(mealKey(p));
+      suggestions.push({...p,label,substitution:true,effectiveRequest:q,adjustments:describe(q),originalCoverage:Object.entries(r.demand).filter(([,n])=>n>0).map(([id,need])=>({id,need,got:p.supplied[id]||0})),overBudget:r.budgetMinor!==null&&p.totalCost!==null&&p.totalCost>r.budgetMinor});
+    }
+    if(result.plans.length&&r.budgetMinor!==null){
+      const demand=Object.fromEntries(Object.entries(r.demand).map(([k,n])=>[k,n>0&&mainSet.has(k)?Math.min(60,Math.ceil(n*1.3)):n]));
+      if(Object.keys(demand).some(k=>demand[k]!==r.demand[k]))attempt({...r,demand},'預算內・主餐多一點');
+    }
+    const light={...r,demand:noSnacks,snackGoal:noSnackGoal};
+    if(!result.plans.length){
+      attempt(light,'主餐保留・減少點心');
+      const flexible={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any'};
+      attempt(flexible,'主餐保留・口味不限');
+      if(r.maxOrders<12)attempt({...flexible,maxOrders:12},'多分幾筆買・主餐保留');
+    }
+    // Different main families are complete alternative meals for the same
+    // headcount; their serving assumptions are shown alongside the quantities.
+    const units={burgerMain:1,paperChicken:1,pasta:1,chicken:2,pizza9:.5,pizza13:.25};
+    const servingNotes={burgerMain:'替代主餐按每人 1 個一般漢堡估算',paperChicken:'替代主餐按每人 1 份紙包雞估算',pasta:'替代主餐按每人 1 份義大利麵估算',chicken:'替代主餐按每人 2 塊原塊炸雞估算',pizza9:'替代主餐按小披薩切 6 片、每人 3 片估算',pizza13:'替代主餐按大披薩切 8 片、每人 2 片估算'};
+    const families=Object.keys(units);
+    const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:Math.max(r.maxOrders,Math.min(12,r.people))};
+    const probe=chooseCandidates(dataset,{...base,demand:Object.fromEntries(families.map(id=>[id,1]))},config.now??Date.now()).candidates;
+    const cost=id=>Math.min(...probe.filter(c=>c.items[id]>0).map(c=>c.base/(c.items[id]/units[id])));
+    for(const id of families.sort((a,b)=>cost(a)-cost(b))){
+      if(!Number.isFinite(cost(id)))continue;
+      const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));
+      demand[id]=Math.ceil(r.people*units[id]);
+      attempt({...base,demand,servingNote:servingNotes[id]},'換主餐・'+ITEMS[id].name);
+    }
+    if(!result.plans.length&&suggestions.length<maxSuggestions&&(r.brands.length<2||!r.cross)){
+      const expanded={...base,brands:['KFC','PH'],cross:true};
+      attempt(expanded,'跨品牌找替代餐');
+      for(const id of ['burgerMain','chicken','pizza9']){
+        const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));demand[id]=Math.ceil(r.people*units[id]);
+        attempt({...expanded,demand,servingNote:servingNotes[id]},'跨品牌換餐・'+ITEMS[id].name);
+      }
+    }
+    if(!result.plans.length&&!suggestions.length){
+      const flexible={...base,budgetMinor:null};
+      attempt(flexible,'保留主餐・調整預算參考');
+      for(const id of ['burgerMain','chicken','pizza9']){
+        const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));demand[id]=Math.ceil(r.people*units[id]);
+        attempt({...flexible,demand,servingNote:servingNotes[id]},'替代主餐・預算參考');
+      }
+    }
+    const unpriced=!result.plans.length&&!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
+    return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'改用一般菜單點餐',note:'優惠券無法組成可估價餐單時，可按這份需求清單向門市或官網單點；價格與供應需現場確認。'}:null,elapsedMs:Date.now()-started};
+  }
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
