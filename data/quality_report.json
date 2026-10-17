@@ -1,17 +1,15 @@
 {
-  "generatedAt": "2026-10-17T12:45:56+00:00",
+  "generatedAt": "2026-10-17T18:40:55+00:00",
   "total": 1167,
   "byDataStatus": {
-    "pending": 548,
-    "estimate": 573,
-    "conflict": 41,
-    "official": 5
+    "pending": 551,
+    "estimate": 575,
+    "conflict": 41
   },
   "byVerificationStatus": {
-    "unverified": 1162,
-    "checked": 5
+    "unverified": 1167
   },
-  "withQualityIssues": 589,
+  "withQualityIssues": 592,
   "recommendationPolicy": "official_reviewed_configurations_only",
   "offers": [
     {
@@ -10609,12 +10607,14 @@
     {
       "brand": "KFC",
       "code": "50512",
-      "dataStatus": "official",
-      "verificationStatus": "checked",
-      "issues": [],
+      "dataStatus": "pending",
+      "verificationStatus": "unverified",
+      "issues": [
+        "含未完成對照的餐點；保留原文，停止參與推薦"
+      ],
       "sourceCount": 1,
-      "checkedAt": "2026-10-17T12:45:56+00:00",
-      "reviewBy": "2026-10-24T15:59:59+00:00"
+      "checkedAt": null,
+      "reviewBy": null
     },
     {
       "brand": "KFC",
@@ -10631,12 +10631,14 @@
     {
       "brand": "KFC",
       "code": "50514",
-      "dataStatus": "official",
-      "verificationStatus": "checked",
-      "issues": [],
+      "dataStatus": "pending",
+      "verificationStatus": "unverified",
+      "issues": [
+        "含未完成對照的餐點；保留原文，停止參與推薦"
+      ],
       "sourceCount": 1,
-      "checkedAt": "2026-10-17T12:45:56+00:00",
-      "reviewBy": "2026-10-24T15:59:59+00:00"
+      "checkedAt": null,
+      "reviewBy": null
     },
     {
       "brand": "KFC",
@@ -10653,12 +10655,12 @@
     {
       "brand": "KFC",
       "code": "50516",
-      "dataStatus": "official",
-      "verificationStatus": "checked",
+      "dataStatus": "estimate",
+      "verificationStatus": "unverified",
       "issues": [],
       "sourceCount": 1,
-      "checkedAt": "2026-10-17T12:45:56+00:00",
-      "reviewBy": "2026-10-24T15:59:59+00:00"
+      "checkedAt": null,
+      "reviewBy": null
     },
     {
       "brand": "KFC",
@@ -10675,12 +10677,12 @@
     {
       "brand": "KFC",
       "code": "50529",
-      "dataStatus": "official",
-      "verificationStatus": "checked",
+      "dataStatus": "estimate",
+      "verificationStatus": "unverified",
       "issues": [],
       "sourceCount": 1,
-      "checkedAt": "2026-10-17T12:45:56+00:00",
-      "reviewBy": "2026-10-24T15:59:59+00:00"
+      "checkedAt": null,
+      "reviewBy": null
     },
     {
       "brand": "KFC",
@@ -10709,12 +10711,14 @@
     {
       "brand": "KFC",
       "code": "50551",
-      "dataStatus": "official",
-      "verificationStatus": "checked",
-      "issues": [],
+      "dataStatus": "pending",
+      "verificationStatus": "unverified",
+      "issues": [
+        "含未完成對照的餐點；保留原文，停止參與推薦"
+      ],
       "sourceCount": 2,
-      "checkedAt": "2026-10-17T12:45:56+00:00",
-      "reviewBy": "2026-10-24T15:59:59+00:00"
+      "checkedAt": null,
+      "reviewBy": null
     },
     {
       "brand": "KFC",
