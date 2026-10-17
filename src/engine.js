@@ -363,13 +363,81 @@
       }
     }
     visit(0,[],{}, {},{});complete=complete&&optionsComplete;
+    // A bounded fallback explores affordable partial meals even when a missing
+    // item makes the complete-cover lower bound reject the entire search tree.
+    const partials=[];
+    if(!leaders.length&&config.collectAlternatives!==false){
+      const partialStart=Date.now(),limit=config.partialTimeLimitMs??350;
+      const mains=new Set(['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13']);
+      const rank=(a,b)=>a.mainDeficit-b.mainDeficit||a.deficit-b.deficit||(a.totalCost??Infinity)-(b.totalCost??Infinity)||a.knownSubtotal-b.knownSubtotal||a.selected.length-b.selected.length||a.key.localeCompare(b.key);
+      let beam=[{selected:[],counts:{},uses:{},groups:{},from:0,knownSubtotal:0,totalCost:0}],examined=0;
+      const retained=new Map();
+      searchPartial: for(let depth=0;depth<r.maxOrders;depth++){
+        const next=[];
+        for(const s of beam)for(let i=s.from;i<cs.length;i++){
+          if(++examined>30000||Date.now()-partialStart>limit)break searchPartial;
+          const c=cs[i],o=c.offer;
+          if((s.uses[o.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(s.groups[c.group]||0)>=c.groupLimit||!r.cross&&s.selected.length&&s.selected[0].offer.brand!==o.brand)continue;
+          const counts={...s.counts};for(const [k,n] of Object.entries(c.items))counts[k]=(counts[k]||0)+n;
+          if(r.exact&&demandKeys.some(k=>counts[k]>r.demand[k]))continue;
+          const slot=s.selected.filter(a=>a.offer.brand===o.brand).length;
+          const fee=r.channel==='delivery'?(r.fees?.[o.brand]?.[slot]??null):0;
+          const service=r.channel==='delivery'?(r.serviceFees?.[o.brand]?.[slot]??0):0;
+          const totalCost=s.totalCost===null||fee===null?null:s.totalCost+c.base+fee+service;
+          if(r.budgetMinor!==null&&(totalCost===null||totalCost>r.budgetMinor))continue;
+          const selected=[...s.selected,c],snacks=new Set(selected.flatMap(a=>a.snackGroups));
+          const flavors=assignFlavors(selected,r.pizzaPreference,dataset.pizzaFlavors);
+          const missing=demandKeys.filter(k=>(counts[k]||0)<r.demand[k]).map(id=>({id,quantity:r.demand[id]-(counts[id]||0)}));
+          const snackShortfall=Math.max(0,(r.snackGoal?.minTypes||0)-snacks.size),flavorShortfall=Math.max(0,(r.pizzaPreference?.minKinds||0)-flavors.distinct);
+          const parts=demandKeys.length+Number((r.snackGoal?.minTypes||0)>0)+Number((r.pizzaPreference?.minKinds||0)>0);
+          const deficit=sum(missing.map(m=>m.quantity/r.demand[m.id]))+(snackShortfall/(r.snackGoal?.minTypes||1))+(flavorShortfall/(r.pizzaPreference?.minKinds||1));
+          const mainDeficit=sum(missing.filter(m=>mains.has(m.id)).map(m=>m.quantity/r.demand[m.id]));
+          if(deficit>=parts||s.deficit!==undefined&&deficit>=s.deficit-1e-9)continue;
+          const key=selected.map(a=>a.id).sort().join('|');
+          const item={selected,counts,uses:{...s.uses,[o.id]:(s.uses[o.id]||0)+1},groups:{...s.groups,...(c.group?{[c.group]:(s.groups[c.group]||0)+1}:{})},from:i,knownSubtotal:s.knownSubtotal+c.base,totalCost,key,mainDeficit,deficit,missing,snackShortfall,flavorShortfall,coveragePercent:Math.floor((1-deficit/parts)*100)};
+          if(!missing.length&&!snackShortfall&&!flavorShortfall&&flavors.complete){
+            const p=makePlan(selected,counts);keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
+            if(!minAny||compare(p,minAny)<0)minAny=p;
+          }else{
+            retained.set(key,item);
+            // Keep only promising states, without claiming a globally closest meal.
+            if(retained.size>100){const best=[...retained.values()].sort(rank).slice(0,12);retained.clear();for(const p of best)retained.set(p.key,p);}
+          }
+          next.push(item);
+        }
+        beam=next.sort(rank).filter((s,i,all)=>!i||s.key!==all[i-1].key).slice(0,36);
+        if(!beam.length)break;
+      }
+      if(!leaders.length){
+        const seen=new Set();
+        for(const s of [...retained.values()].sort(rank)){
+          const key=s.selected.map(c=>c.offer.id).sort().join('|');if(seen.has(key))continue;seen.add(key);
+          partials.push({...makePlan(s.selected,s.counts),partial:true,label:'目前最接近的配置',missing:s.missing,snackShortfall:s.snackShortfall,flavorShortfall:s.flavorShortfall,coveragePercent:s.coveragePercent,searchComplete:false});
+          if(partials.length===3)break;
+        }
+      }
+    }
     if(r.budgetMinor!==null&&minAny?.totalCost===null){keep(leaders,minAny);}
     const alternatives=[];
-    function add(p,label){if(p&&!alternatives.some(x=>x.id===p.id))alternatives.push({...p,label,searchComplete:complete});}
-    add(leaders[0], '金額最低');add(oneBrand[0],'只買一家');add(fewOrders[0],'訂單較少');
+    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId).sort().join('|');
+    function add(p,label){if(p&&!alternatives.some(x=>mealKey(x)===mealKey(p)))alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});}
+    add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(fewOrders[0],'訂單較少');
     for(const p of leaders)if(alternatives.length<3)add(p,'其他組合');
+    // Minimum-price pruning may collapse equivalent or dominated coupons. Search
+    // a few exclusions separately so real alternative coupons can still appear.
+    if(alternatives.length&&alternatives.length<3&&config.collectAlternatives!==false){
+      const queue=[...new Set(alternatives[0].orders.map(o=>o.offerId))].map(id=>[id]);
+      for(let attempt=0;attempt<3&&queue.length;attempt++){
+        const banned=queue.shift();
+        const other=solve({...dataset,offers:dataset.offers.filter(o=>!banned.includes(o.id))},r,{...config,collectAlternatives:false,timeLimitMs:Math.min(timeLimit,600),maxStates:Math.min(maxStates,150000)});
+        states+=other.states;
+        for(const p of other.plans)if(alternatives.length<3)add(p,'不同優惠組合');
+        if(alternatives.length>=3)break;
+        if(other.plans[0])queue.push([...new Set([...banned,...other.plans[0].orders.map(o=>o.offerId)])]);
+      }
+    }
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
-    return {plans:alternatives,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
+    return {plans:alternatives,partials,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing:partials[0]?.missing||missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
   }
   const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,chooseCandidates,assignFlavors,solve,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
