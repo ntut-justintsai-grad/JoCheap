@@ -30,6 +30,7 @@
         const total=selected?selected.priceMinor===null?null:selected.priceMinor+(selected.surchargeMinor||0):Number.isFinite(price(o))?price(o):null;
         priceBox.textContent=identityIssue?'來源記載 '+money(price(o))+'・內容待確認':total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
         contents.textContent=identityIssue?'優惠標題與來源預設餐點不一致，暫不提供可計價配置。':selected?format(selected.items):o.rawText||'內容待確認';
+        if(selected?.mainDescription)contents.textContent+='；券面餐點：'+selected.mainDescription;
         costs.textContent=selected?`基本餐 ${money(selected.priceMinor||0)}＋本次替換 ${money(selected.surchargeMinor||0)}`+(selected.optionChoices?.filter(c=>c.from!==c.name).length?'；已選：'+selected.optionChoices.filter(c=>c.from!==c.name).map(c=>c.from+' → '+c.name).join('、'):''):'';
         drinks.textContent=selected?.beverages?.length?'本次飲料／湯：'+drinkText(selected.beverages):'';drinks.hidden=!drinks.textContent;
       };
@@ -54,7 +55,7 @@
       if(identityIssue||o.reviewReason)card.append(h('p',{class:'warning-text'},identityIssue||o.reviewReason));
       if(verification){
         const proof=h('div',{class:'verification-proof'},h('strong',{},checked(o)?'核對範圍：'+verification.scope.join('、'):'推薦資格：'+F.verificationCheck(o).reason));
-        if(verification.checkedAt)proof.append(h('p',{class:'helper'},'官方讀取 '+new Date(verification.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})+'；本次適用至 '+new Date(verification.validUntil).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})));
+        if(verification.checkedAt)proof.append(h('p',{class:'helper'},'查核者：'+(verification.reviewedBy||'未載明')+'；官方讀取 '+new Date(verification.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})+'；本次適用至 '+new Date(verification.validUntil).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})));
         if(verification.sourceUrl)proof.append(safeLink(verification.sourceUrl,'官方優惠頁'));
         if(verification.imageUrl)proof.append(safeLink(verification.imageUrl,'核對的官方券面'));
         if(verification.evidencePath)proof.append(safeLink('https://github.com/ntut-justintsai-grad/JoCheap/blob/main/'+verification.evidencePath,'查核紀錄'));
@@ -63,9 +64,9 @@
       }
       const platforms=o.ordering?.platforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／')||'下單方式待確認',channels=[...new Set(o.variants.flatMap(v=>v.channels))].map(c=>({takeaway:'外帶',delivery:'官方外送',dinein:'內用',unknown:'取餐方式待確認'}[c]||c)).join('／');
       const excluded=o.ordering?.excludedPlatforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／');
-      const orderingText='下單：'+platforms+'；取餐：'+(channels||'待確認')+(excluded?'；不適用：'+excluded:'')+(o.ordering?.onlinePaymentRequired?'；限線上付款':'')+(o.eligibility?.memberRequired?'；限會員':'')+(o.limits?.maxUsesPerUserPerDay?'；每日每人限用 '+o.limits.maxUsesPerUserPerDay+' 次':'');
+      const orderingText='下單：'+platforms+'；取餐：'+(channels||'待確認')+(excluded?'；不適用：'+excluded:'')+(o.ordering?.onlinePaymentRequired?'；限線上付款':'')+(o.eligibility?.memberRequired?'；限會員':'')+(o.limits?.conservativeCap?'；本站本次每碼最多 1 次（保守設定）':o.limits?.maxUsesPerUserPerDay?'；每日每人限用 '+o.limits.maxUsesPerUserPerDay+' 次':'');
       card.append(h('p',{class:'helper'},orderingText));
-      const ends=[...new Set(o.validity.validWindows.map(w=>w.toExclusive).filter(Boolean))];card.append(h('p',{class:'helper'},ends.length?'來源效期至 '+ends.map(s=>new Date(Date.parse(s+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})).join('、'):'效期未完整確認'));
+      const ends=[...new Set(o.validity.validWindows.map(w=>w.toExclusive).filter(Boolean))];card.append(h('p',{class:'helper'},verification?.validUntil?'查核適用至 '+new Date(verification.validUntil).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})+'；券面效期未另行核對':ends.length?'來源記載效期至 '+ends.map(s=>new Date(Date.parse(s+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})).join('、'):'效期未完整確認'));
       const evidence=h('details',{class:'coupon-options'},h('summary',{},`來源與限制（${o.observations?.length||1} 筆記載）`));
       for(const obs of o.observations||[{sourcePublisher:o.provenance.sourcePublisher,sourceUrl:o.provenance.sourceUrl,text:o.rawText||o.title,priceMinor:price(o)}]){
         const block=h('div',{class:'source-observation'},safeLink(obs.sourceUrl,obs.sourcePublisher),h('p',{},obs.text),h('p',{class:'helper'},Number.isFinite(obs.priceMinor)?money(obs.priceMinor):'價格未完整辨識'));

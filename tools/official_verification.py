@@ -1,7 +1,7 @@
-"""Only manually reviewed official recipes can be refreshed into recommendations.
+"""Only explicitly reviewed official recipes can be refreshed into recommendations.
 
 The public query is read-only. A changed record, image, source meal or terms blocks
-promotion. It never discovers a recipe or extends its manual review deadline.
+promotion. It never discovers a recipe or extends its review deadline.
 """
 import copy,json,re,urllib.parse,urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -59,9 +59,9 @@ def refresh_official(data,reviews,fetcher,stamp):
         for review in approved:
             offer=next((o for o in data['offers'] if o['brand']==review['brand'] and o['code']==review['code']),None)
             if not offer:continue
-            info=dict(status='partial',reason='待完成官方核對',reviewedAt=review['reviewedAt'],reviewBy=review['reviewBy'],sourceUrl=COUPON_URL,imageUrl=review['imageUrl'],evidencePath=review['evidencePath'],scope=review['scope'],limitations=review['limitations'])
+            info=dict(status='partial',reason='待完成官方核對',reviewedBy=review.get('reviewedBy','未載明'),reviewedAt=review['reviewedAt'],reviewBy=review['reviewBy'],sourceUrl=COUPON_URL,imageUrl=review['imageUrl'],evidencePath=review['evidencePath'],scope=review['scope'],limitations=review['limitations'])
             offer['verification']=info
-            if now>datetime.fromisoformat(review['reviewBy'].replace('Z','+00:00')):info.update(status='expired',reason='人工查核已到複查期限');continue
+            if now>datetime.fromisoformat(review['reviewBy'].replace('Z','+00:00')):info.update(status='expired',reason='逐券查核已到複查期限');continue
             row=rows.get(review['code'])
             if not row:info.update(status='unavailable',reason='官方本次餐期清單未列此券');continue
             if record_signature(row)!=review['recordSignature'] or images.get(review['imageUrl'])!=review['imageHash']:
