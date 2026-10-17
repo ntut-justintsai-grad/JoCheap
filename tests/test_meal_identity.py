@@ -23,7 +23,7 @@ class MealIdentityTests(unittest.TestCase):
         self.assertEqual(offer['observations'][0]['text'],row['record']['text'])
         explicit=copy.deepcopy(row['record'])
         explicit['text']=explicit['structured']['name']='炸雞可加價換紙包雞'
-        self.assertEqual(c.make_offer(explicit,feed,'now')['dataStatus'],'estimate')
+        self.assertNotIn('身分不一致',c.make_offer(explicit,feed,'now')['reviewReason'] or '')
 
     def test_different_meals_in_different_sources_remain_a_conflict(self):
         row=dict(code='12345',text='咔啦脆雞 × 2',priceMinor=9900,priceType='fixed',windows=[])

@@ -8,6 +8,8 @@ import urllib.request
 from catalog import FEEDS,source_records,make_offer,merge,assign_flavor_ids
 from food_parser import CATALOG
 from ordering_rules import apply_reviewed_ordering
+from data_quality import audit_report
+from official_verification import refresh_official,fetch_official
 
 ROOT=Path(__file__).resolve().parent.parent
 def fetch(url):
@@ -18,7 +20,7 @@ def fetch(url):
         if len(body)>8_000_000:raise ValueError('來源超過 8 MB')
     return body.decode('utf-8-sig')
 
-def crawl(previous,previous_records,fetcher,stamp):
+def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
     all_records=[];source_status=[];observations=[]
     for feed in FEEDS:
         status=dict(brand=feed['brand'],sourceId=feed['id'],sourceUrl=feed['url'],sourcePublisher=feed['publisher'],sourceType='public_dataset' if feed['format']=='kcouper' else 'aggregator',lastAttemptAt=stamp,coverage='parsed_public_feed')
@@ -49,10 +51,13 @@ def crawl(previous,previous_records,fetcher,stamp):
     data.setdefault('pizzaFlavors',{})
     assign_flavor_ids(data['offers'],data['pizzaFlavors'])
     data['foodCatalog']=dict(CATALOG)
+    reviews=ROOT/'data/official_reviews.json'
+    refresh_official(data,json.loads(reviews.read_text(encoding='utf-8')) if reviews.exists() else [],official_fetcher,stamp)
     research=ROOT/'data/research.json'
     if research.exists():data['upgradeResearch']=json.loads(research.read_text(encoding='utf-8'))
     report=dict(fetchedAt=stamp,status='parsed' if all(s['status']=='parsed_success' for s in source_status) else 'partial_failure',sources=source_status,sourceRows=len(all_records),uniqueCodes=len(data['offers']),byBrand=dict(Counter(o['brand'] for o in data['offers'])),byStatus=dict(Counter(o['dataStatus'] for o in data['offers'])),variants=sum(len(o['variants']) for o in data['offers']),optionGroups=sum(len(v.get('optionGroups',[])) for o in data['offers'] for v in o['variants']))
     data['crawlReport']=report
+    data['qualityReport']=audit_report(data,stamp)
     return data,all_records,report
 
 def main():
@@ -69,7 +74,7 @@ def main():
     stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
     if args.cache_dir:
         stamp=datetime.fromtimestamp(min(p.stat().st_mtime for p in directory.iterdir() if p.name in {'talk-kfc.html','talk-ph.html','calling-kfc.html','calling-ph.html','kcouper-coupons.js'}),timezone.utc).isoformat(timespec='seconds')
-    data,records,report=crawl(old,old_records,fetcher,stamp)
+    data,records,report=crawl(old,old_records,fetcher,stamp,official_fetcher=None if args.cache_dir else fetch_official)
     if report['status']=='all_failed':
         (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         raise SystemExit('All sources failed; previous snapshot retained.')
@@ -77,7 +82,8 @@ def main():
     target.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     cache.write_text(json.dumps(records,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
-    (target.parent/'review_queue.json').write_text(json.dumps([dict(brand=o['brand'],code=o['code'],status=o['dataStatus'],reason=o['reviewReason'],sources=o['observations']) for o in data['offers'] if o['dataStatus']!='estimate'],ensure_ascii=False,indent=2),encoding='utf-8')
+    (target.parent/'quality_report.json').write_text(json.dumps(data['qualityReport'],ensure_ascii=False,indent=2),encoding='utf-8')
+    (target.parent/'review_queue.json').write_text(json.dumps([dict(brand=o['brand'],code=o['code'],status=o['dataStatus'],reason=o.get('reviewReason') or o.get('verification',{}).get('reason'),verification=o.get('verification'),sources=o['observations']) for o in data['offers'] if o.get('verification',{}).get('status')!='checked'],ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({k:v for k,v in report.items() if k!='sources'},ensure_ascii=False))
     for source in report['sources']:print(json.dumps(source,ensure_ascii=False))
 

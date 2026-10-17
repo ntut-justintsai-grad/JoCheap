@@ -158,6 +158,29 @@
     return title.includes('紙包雞')&&!/替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]/.test(title)&&variants.length&&variants.every(v=>!v.items.paperChicken)&&variants.some(v=>v.items.chicken>0)
       ?'餐點身分不一致：標題記載紙包雞，但來源預設內容是炸雞；需核對來源':null;
   }
+  const verificationFields=['brand','code','title','priceType','displayPriceMinor','variants','validity','ordering','eligibility','limits','combinationPolicy','officialUrl'];
+  function stableJson(value){
+    if(Array.isArray(value))return '['+value.map(stableJson).join(',')+']';
+    if(value&&typeof value==='object')return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+stableJson(value[k])).join(',')+'}';
+    return JSON.stringify(value);
+  }
+  function contentSignature(o){return stableJson(Object.fromEntries(verificationFields.map(k=>[k,o[k]??null])));}
+  function verificationCheck(o,now=Date.now()){
+    const v=o.verification;
+    if(['pending','conflict'].includes(o.dataStatus)||o.priceType!=='fixed')return {allowed:false,reason:'價格、品項或來源衝突仍待確認'};
+    if(v?.status!=='checked')return {allowed:false,reason:v?.reason||'尚未完成官方配置核對'};
+    if(!['https://www.kfcclub.com.tw/coupon','https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu'].includes(v.sourceUrl))return {allowed:false,reason:'缺少可核對的官方來源'};
+    const checked=Date.parse(v.checkedAt),until=Date.parse(v.validUntil),review=Date.parse(v.reviewBy);
+    if(![checked,until,review].every(Number.isFinite)||checked>now||now>=until||now>review||now-checked>24*3600000)return {allowed:false,reason:'官方查核已過期，需重新核對'};
+    if(!v.contentSignature||contentSignature(o)!==v.contentSignature)return {allowed:false,reason:'餐點、價格或適用條件已異動，需重新核對'};
+    if(!v.imageHash||!v.evidencePath||!v.scope?.length)return {allowed:false,reason:'官方查核證據不完整'};
+    return {allowed:true,reason:'官方基本配置已核對'};
+  }
+  function recommendationCheck(dataset,o,now=Date.now()){
+    if(dataset.mode==='demo')return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'合成示範，不能兌換'};
+    if(dataset.recommendationPolicy?.requireOfficial)return verificationCheck(o,now);
+    return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'來源估算，尚未官方核對'};
+  }
   function catalogChoice(o,category='all',at=new Date().toISOString()){
     let best=null;
     for(const base of o.variants||[]){
@@ -174,6 +197,7 @@
     extendItems(dataset);const candidates=[],excluded=[];let optionsComplete=true;
     for(const o of dataset.offers){
       const reasons=[];
+      const verification=recommendationCheck(dataset,o,now);if(!verification.allowed)reasons.push(verification.reason);
       const ordering=orderingCheck(o,r);if(!ordering.allowed)reasons.push(ordering.reason);
       if(!r.brands.includes(o.brand))reasons.push('未選品牌');
       if(o.dataStatus==='conflict')reasons.push('同碼內容衝突');
@@ -287,7 +311,7 @@
         const slot=brandSlots[c.offer.brand]||0;brandSlots[c.offer.brand]=slot+1;
         const fee=r.channel==='delivery'?(r.fees?.[c.offer.brand]?.[slot]??null):0;
         const service=r.channel==='delivery'?(r.serviceFees?.[c.offer.brand]?.[slot]??0):0;
-        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
+        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
       });
       const unknown=orders.some(o=>o.total===null),knownSubtotal=sum(orders.map(o=>o.base));
       const total=unknown?null:sum(orders.map(o=>o.total));
@@ -311,7 +335,7 @@
       const extras=Object.fromEntries(physicalIds.map(k=>[k,Math.max(0,(counts[k]||0)-(consumed[k]||0))]).filter(([,n])=>n>0));
       const coverage=Object.entries(r.demand).filter(([,n])=>n>0).map(([k,n])=>({id:k,need:n,got:counts[k]||0}));
       const snackTypes=[...new Set(selected.flatMap(c=>c.snackGroups))];
-      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,supplied:{...counts},extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
+      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,supplied:{...counts},extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':dataset.recommendationPolicy?.requireOfficial?'official_configuration_checked':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
     }
     function visit(from,selected,counts,uses,groups){
       if(!complete)return;
@@ -535,9 +559,9 @@
         attempt({...flexible,demand,servingNote:servingNotes[id]},'替代主餐・預算參考');
       }
     }
-    const unpriced=!result.plans.length&&!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
-    return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'改用一般菜單點餐',note:'優惠券無法組成可估價餐單時，可按這份需求清單向門市或官網單點；價格與供應需現場確認。'}:null,elapsedMs:Date.now()-started};
+    const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget;
+    return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

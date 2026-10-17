@@ -1,0 +1,124 @@
+{
+  "reviewedAt": "2026-10-17T10:13:23+00:00",
+  "method": "官方公開清單與券面人工核對；未下單",
+  "sourceUrl": "https://www.kfcclub.com.tw/coupon",
+  "query": {
+    "mealPeriod": "4",
+    "orderType": "2",
+    "orderDate": "2026/10/17"
+  },
+  "facts": [
+    {
+      "code": "50529",
+      "officialRecord": {
+        "CT_ID": "18",
+        "Category": "連假超雞省",
+        "CouponCode": "50529",
+        "CouponID": "9423",
+        "Fcode": "LB854",
+        "ImgNameNew": "1006-目錄圖_50529.png",
+        "ImgAlt": "肯德基炸雞優惠券",
+        "NewName": "50529-經典澎派桶",
+        "Price": "333",
+        "Intro": "咔啦脆雞x6+原味蛋撻x6 $333(原價$720)",
+        "Hyperlink": ""
+      },
+      "imageUrl": "https://kfcoosfs.kfcclub.com.tw/1006-%E7%9B%AE%E9%8C%84%E5%9C%96_50529.png",
+      "imageSha256": "5ebe1bc52551723a71371e507fc721e9816ce6b694155018f1917020184fa481",
+      "transcribedMeal": "咔啦脆雞 6 塊＋原味蛋撻 6 顆",
+      "priceMinor": 33300
+    },
+    {
+      "code": "50551",
+      "officialRecord": {
+        "CT_ID": "18",
+        "Category": "連假超雞省",
+        "CouponCode": "50551",
+        "CouponID": "9991",
+        "Fcode": "LB873",
+        "ImgNameNew": "目錄圖_50551.png",
+        "ImgAlt": "肯德基炸雞優惠券",
+        "NewName": "50551-咔啦脆雞套餐買一送一",
+        "Price": "175",
+        "Intro": "咔啦脆雞x4+冰無糖綠茶(小)x2 $175(原價$350)",
+        "Hyperlink": ""
+      },
+      "imageUrl": "https://kfcoosfs.kfcclub.com.tw/%E7%9B%AE%E9%8C%84%E5%9C%96_50551.png",
+      "imageSha256": "2570e1d96e81d247344ee11f11af270b50fb57700703b5e794c98385bd2b6ad1",
+      "transcribedMeal": "咔啦脆雞 4 塊＋小杯冰無糖綠茶 2 杯",
+      "priceMinor": 17500
+    },
+    {
+      "code": "50512",
+      "officialRecord": {
+        "CT_ID": "4",
+        "Category": "個人超值選",
+        "CouponCode": "50512",
+        "CouponID": "9282",
+        "Fcode": "LB839",
+        "ImgNameNew": "0526-OLO-50512.jpg",
+        "ImgAlt": "肯德基炸雞優惠券",
+        "NewName": "50512-優惠券",
+        "Price": "105",
+        "Intro": "青花椒咔啦雞腿堡x1+冰無糖綠茶(小)x1 ",
+        "Hyperlink": ""
+      },
+      "imageUrl": "https://kfcoosfs.kfcclub.com.tw/0526-OLO-50512.jpg",
+      "imageSha256": "0d1c8c1630220550caa17da183c92c28dc856cc9e1fb2f8b059454e21f438ee1",
+      "transcribedMeal": "青花椒咔啦雞腿堡 1 個＋小杯冰無糖綠茶 1 杯",
+      "priceMinor": 10500
+    },
+    {
+      "code": "50514",
+      "officialRecord": {
+        "CT_ID": "4",
+        "Category": "個人超值選",
+        "CouponCode": "50514",
+        "CouponID": "9284",
+        "Fcode": "LB841",
+        "ImgNameNew": "0526-OLO-50514.jpg",
+        "ImgAlt": "肯德基炸雞優惠券",
+        "NewName": "50514-優惠券",
+        "Price": "129",
+        "Intro": "咔啦雞腿堡x1+4塊上校雞塊x1+百事可樂(小)x1 ",
+        "Hyperlink": ""
+      },
+      "imageUrl": "https://kfcoosfs.kfcclub.com.tw/0526-OLO-50514.jpg",
+      "imageSha256": "c370bf0318c8f6ab64f2cecff20064a286a4dbfbc9584002413f60fefdfd22df",
+      "transcribedMeal": "咔啦雞腿堡 1 個＋上校雞塊 4 塊＋小杯百事可樂 1 杯",
+      "priceMinor": 12900
+    },
+    {
+      "code": "50516",
+      "officialRecord": {
+        "CT_ID": "2",
+        "Category": "點心救嘴饞",
+        "CouponCode": "50516",
+        "CouponID": "9286",
+        "Fcode": "LB843",
+        "ImgNameNew": "0526-OLO-50516 (1).jpg",
+        "ImgAlt": "肯德基點心優惠券",
+        "NewName": "50516-優惠券",
+        "Price": "99",
+        "Intro": "原味蛋撻x1+經典冰奶茶x1+橢圓薯餅x1 ",
+        "Hyperlink": ""
+      },
+      "imageUrl": "https://kfcoosfs.kfcclub.com.tw/0526-OLO-50516%20%281%29.jpg",
+      "imageSha256": "1dfd5fdcf9c460ec2372bef778e9dd12e21043456e199337983b26f2c4fbec11",
+      "transcribedMeal": "原味蛋撻 1 顆＋經典冰奶茶 1 杯＋橢圓薯餅 1 份",
+      "priceMinor": 9900
+    }
+  ],
+  "commonTerms": [
+    "每筆消費限使用一張優惠券，且不得與其他活動或優惠券併用",
+    "本優惠數量有限，售完為止",
+    "部分餐點限正餐時段供應(正餐時段為10:30-22:30)",
+    "網路訂餐請至優惠券專區輸入編碼，電話訂餐請先告知點餐人員優惠編碼"
+  ],
+  "limitations": [
+    "僅核對券面基本配置，不含飲料替換、主餐升級或加購。",
+    "僅用於官方當次查詢的日期、餐期與官網外帶；其他日期、餐期及通路須另查。",
+    "未指定門市、未提交訂單；庫存、店別供應與結帳接受情況需向官方確認。",
+    "每筆消費限一張券；多筆購買能否接受仍需門市確認。"
+  ]
+}

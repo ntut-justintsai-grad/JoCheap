@@ -6,6 +6,7 @@ import copy,json,re,unicodedata
 from update_sources import Document,Node,blocks,table_grid,clean,parse_page
 from food_parser import atomic,add,CATALOG,norm
 from ordering_rules import parse_ordering
+from data_quality import meal_issues
 
 FEEDS=[
  dict(id='talk-kfc',brand='KFC',publisher='好康情報誌',url='https://info.talk.tw/kfc-coupon/',format='talk'),
@@ -113,6 +114,7 @@ def menu_component(text,brand):
 
 def parse_meal(text,brand):
     s=unicodedata.normalize('NFKC',text)
+    if s.count('(')!=s.count(')'):raise ValueError('餐點括號不完整，無法確認套餐邊界')
     s=re.sub(r'^\s*【[^】]*】','',s)
     # Exclude promotional arithmetic without dropping food from a recognized list.
     if '，包含' in s:s=s.split('，包含',1)[1]
@@ -154,7 +156,7 @@ def kcouper_variant(raw):
         options=[]
         for opt in [dict(name=part['name'],addition_price=0)]+part.get('flavors',[]):
             its,ds=atomic(opt['name']);cost=opt.get('addition_price')
-            if not isinstance(cost,(int,float)) or cost<0:continue
+            if isinstance(cost,bool) or not isinstance(cost,(int,float)) or cost<0:raise ValueError('替換差額不完整，不能略過選項')
             options.append(dict(name=opt['name'],items=its,beverages=ds,surchargeMinor=round(cost*100)))
         if len(options)>1:groups.append(dict(id='slot-'+str(i+1),count=count,baseItems=base,baseBeverages=drinks,options=options,label=part['name']))
     burger=items.get('burger',0)
@@ -177,6 +179,8 @@ def make_offer(rec,feed,stamp):
         elif rec.get('priceType')=='from':issue='來源標示起價，升級差額尚未完整確認'
         elif re.search(r'滿\s*\d+|現折|折抵|折扣|買.+送|加購',rec['text']) and not rec.get('structured'):issue='折扣或加購的前置條件待確認'
     except (ValueError,KeyError,TypeError) as err:issue=str(err)
+    quality_issues=meal_issues(variants)
+    if quality_issues and not issue:issue='；'.join(quality_issues)
     if issue:status='pending'
     else:status='estimate'
     windows_=[{'from':w.get('from_'), 'toExclusive':w['toExclusive']} for w in rec.get('windows',[])]
@@ -195,6 +199,10 @@ def make_offer(rec,feed,stamp):
     observation=dict(sourceId=feed['id'],sourcePublisher=feed['publisher'],sourceUrl=feed['url'],fetchedAt=stamp,code=rec['code'],text=rec['text'],priceMinor=rec['priceMinor'],priceType=rec.get('priceType'),validWindows=windows_,contentHash=sha256(json.dumps(rec,ensure_ascii=False,sort_keys=True).encode()).hexdigest())
     offer=dict(id=feed['brand'].lower()+'-'+rec['code'],brand=feed['brand'],code=rec['code'],title=rec['text'] if not structured else structured['name'],rawText=rec['text'],priceType=rec.get('priceType','fixed'),displayPriceMinor=rec['priceMinor'],dataStatus=status,reviewReason=issue,officialUrl=('https://www.kfcclub.com.tw/coupon' if feed['brand']=='KFC' else 'https://www.pizzahut.com.tw/'),variants=variants,choiceGroups=choice_groups,ordering=ordering,validity=dict(validWindows=windows_,startUnknown=not windows_ or any(not w['from'] for w in windows_),timeBasis='order_time',timezone='Asia/Taipei'),eligibility=dict(memberRequired=bool(re.search('會員限定|會員專屬',rec.get('termsText',rec['text']))),appRequired=ordering['platforms']==['pk_app'],storeScope='unknown'),limits=dict(maxUsesPerUserPerDay=1 if re.search('每日限購1|每日限購一',rec['text']) else None,sharedLimitGroup=None),combinationPolicy=dict(sameOrder='unknown',separateOrders='unknown'),conditions=['來源整理資料，門市、通路、限購及併用條件仍需於官方確認。']+([issue] if issue else [])+ordering['evidence']+(['供餐時段與取餐方式依 KCouper 資料分類，仍需向門市核對。'] if structured else []),provenance=dict(sourceUrl=feed['url'],sourcePublisher=feed['publisher'],sourceType='public_dataset' if structured else 'aggregator',fetchedAt=stamp,parsedAt=stamp,officialVerifiedAt=None,officialEvidenceUrl=None,method='public_feed_parser_v5',reviewStatus='needs_official_confirmation',contentHash=observation['contentHash'],sourceBlockId=rec['code']),observations=[observation],sourceMetadata=dict(mealPeriods=structured.get('meal_periods'),orderTypes=structured.get('order_types'),productCode=structured.get('product_code'),sourceUpdatedAt=rec.get('sourceUpdatedAt')))
     observation['ordering']=ordering
+    observation['parsedConfigurations']=[dict(items=v['items'],priceMinor=v['priceMinor']) for v in variants]
+    observation['parseIssues']=list(dict.fromkeys(quality_issues+([issue] if issue else [])))
+    if structured:observation['sourceItems']=copy.deepcopy(structured['items'])
+    offer['qualityIssues']=list(dict.fromkeys(quality_issues+([issue] if issue else [])))
     return offer
 
 def signature(offer):
