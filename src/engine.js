@@ -5,7 +5,7 @@
     chicken:{name:'原塊炸雞',unit:'塊',emoji:'🍗'},
     tart:{name:'原味蛋撻',unit:'顆',emoji:'🥧'},
     burger:{name:'漢堡',unit:'個',emoji:'🍔'},
-    paperChicken:{name:'香草紙包雞',unit:'份',emoji:'🍗'},
+    paperChicken:{name:'紙包雞',unit:'份',emoji:'🍗'},
     pasta:{name:'義大利麵',unit:'份',emoji:'🍝'},
     fishRings:{name:'鱈魚圈圈',unit:'份',emoji:'🐟'},
     pizza9:{name:'9 吋小披薩',unit:'個',emoji:'🍕'},
@@ -48,7 +48,7 @@
   function drinkCount(beverages,preference){return sum((beverages||[]).filter(d=>drinkMatch(d,preference)).map(d=>d.quantity));}
   function applyOptions(variant,selections={},at=null){
     const fallback=[['drinkSmall','small'],['drinkMedium','medium'],['milkTeaCup','cup']].filter(([k])=>variant.items[k]).map(([item,size])=>({name:ITEMS[item].name,quantity:variant.items[item],kind:'unknown',size,item}));
-    const v={...variant,items:{...variant.items},beverages:[...(variant.beverages??fallback)],optionChoices:[],surchargeMinor:variant.surchargeMinor||0};
+    const v={...variant,items:{...variant.items},beverages:[...(variant.beverages??fallback)],optionChoices:[],selectionIndices:Object.fromEntries((variant.optionGroups||[]).map(g=>[g.id,[...(selections[g.id]||Array(g.count).fill(0))]])),surchargeMinor:variant.surchargeMinor||0};
     for(const g of variant.optionGroups||[]){
       const selection=selections[g.id]||Array(g.count).fill(0);
       if(selection.length!==g.count||selection.some(i=>!Number.isInteger(i)||!g.options[i]))throw Error('餐點替換選項無效。');
@@ -153,6 +153,23 @@
     const day=new Date(at+8*3600000).getUTCDay();
     return windows.some(w=> (!w.from||date>=w.from)&&(!w.toExclusive||date<w.toExclusive)&&(!w.days||w.days.includes(day))&&(!w.startMinute||minute>=w.startMinute)&&(w.endMinute===undefined||minute<w.endMinute));
   }
+  function mealIdentityIssue(o){
+    const title=[o.title,o.rawText].filter(Boolean).join(' '),variants=o.variants||[];
+    return title.includes('紙包雞')&&!/替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]/.test(title)&&variants.length&&variants.every(v=>!v.items.paperChicken)&&variants.some(v=>v.items.chicken>0)
+      ?'餐點身分不一致：標題記載紙包雞，但來源預設內容是炸雞；需核對來源':null;
+  }
+  function catalogChoice(o,category='all',at=new Date().toISOString()){
+    let best=null;
+    for(const base of o.variants||[]){
+      const variants=category==='all'?[applyOptions(base,{},at)]:expandOptions(base,{demand:{[category]:1},at,drinkPreference:'any',avoid:[]}).variants;
+      for(const selected of variants){
+        if(category!=='all'&&!(selected.items[category]>0))continue;
+        const total=selected.priceMinor===null?null:selected.priceMinor+(selected.surchargeMinor||0);
+        if(!best||(total??Infinity)<(best.total??Infinity))best={base,selected,selections:selected.selectionIndices,total};
+      }
+    }
+    return best;
+  }
   function chooseCandidates(dataset,r,now){
     extendItems(dataset);const candidates=[],excluded=[];let optionsComplete=true;
     for(const o of dataset.offers){
@@ -161,6 +178,7 @@
       if(!r.brands.includes(o.brand))reasons.push('未選品牌');
       if(o.dataStatus==='conflict')reasons.push('同碼內容衝突');
       if(o.dataStatus==='pending'||o.priceType!=='fixed')reasons.push('價格或品項待確認');
+      if(mealIdentityIssue(o))reasons.push(mealIdentityIssue(o));
       if(o.eligibility?.personalCoupon)reasons.push('個人專屬券未收錄');
       if(o.requiresParent)reasons.push('加購前置條件尚未支援');
       if(o.eligibility?.memberRequired&&!r.member)reasons.push('需要會員資格');
@@ -520,6 +538,6 @@
     const unpriced=!result.plans.length&&!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'改用一般菜單點餐',note:'優惠券無法組成可估價餐單時，可按這份需求清單向門市或官網單點；價格與供應需現場確認。'}:null,elapsedMs:Date.now()-started};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

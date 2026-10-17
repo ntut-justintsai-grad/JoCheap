@@ -169,6 +169,10 @@ def make_offer(rec,feed,stamp):
             configs,choice_groups=parse_meal(rec['text'],feed['brand'])
             for i,c in enumerate(configs):
                 variants.append(dict(id='v'+str(i+1),priceMinor=rec['priceMinor'],surchargeMinor=0,items=c['items'],beverages=c['beverages'],pizzaSlotNames=c['pizzaSlots'],individualMains=sum(c['items'].get(k,0) for k in ['burger','paperChicken','pasta']),individualMainItems={k:c['items'][k] for k in ['burger','paperChicken','pasta'] if c['items'].get(k)},channels=['unknown'],choice='；'.join(c['choices']) or None))
+        if ('紙包雞' in rec['text'] and not re.search(r'替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]',rec['text'])
+            and variants and all(not v['items'].get('paperChicken') for v in variants)
+            and any(v['items'].get('chicken') for v in variants)):
+            issue='餐點身分不一致：標題記載紙包雞，但來源預設內容是炸雞；不可直接當作同一品項'
         if rec['priceMinor'] is None:issue='缺少確定價格'
         elif rec.get('priceType')=='from':issue='來源標示起價，升級差額尚未完整確認'
         elif re.search(r'滿\s*\d+|現折|折抵|折扣|買.+送|加購',rec['text']) and not rec.get('structured'):issue='折扣或加購的前置條件待確認'

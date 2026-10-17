@@ -1,0 +1,1211 @@
+{
+  "checkedAt": "2026-10-17",
+  "offers": [
+    {
+      "id": "kfc-16144",
+      "brand": "KFC",
+      "code": "16144",
+      "title": "16144-只饗陪您",
+      "rawText": "16144-只饗陪您",
+      "priceType": "fixed",
+      "displayPriceMinor": 29200,
+      "dataStatus": "estimate",
+      "reviewReason": null,
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 29200,
+          "surchargeMinor": 0,
+          "items": {
+            "food_8f4585a6a8a4": 1,
+            "chicken": 2,
+            "chickenRice": 1,
+            "tart": 2,
+            "drinkSmall": 2
+          },
+          "beverages": [
+            {
+              "name": "無糖綠茶(小)",
+              "quantity": 2,
+              "kind": "unsweetened",
+              "size": "small",
+              "item": "drinkSmall"
+            }
+          ],
+          "optionGroups": [
+            {
+              "id": "slot-2",
+              "count": 1,
+              "baseItems": {
+                "chicken": 2
+              },
+              "baseBeverages": [],
+              "options": [
+                {
+                  "name": "2塊咔啦脆雞(辣)",
+                  "items": {
+                    "chicken": 2
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "麻油紙包雞",
+                  "items": {
+                    "paperChicken": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1300
+                }
+              ],
+              "label": "2塊咔啦脆雞(辣)"
+            },
+            {
+              "id": "slot-3",
+              "count": 1,
+              "baseItems": {
+                "chickenRice": 1
+              },
+              "baseBeverages": [],
+              "options": [
+                {
+                  "name": "雞汁風味飯(加量不加價)",
+                  "items": {
+                    "chickenRice": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "20:00前供應青花椒醬飯",
+                  "items": {
+                    "food_c94775e1d02f": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1500
+                },
+                {
+                  "name": "20:00前供應蒜香白醬飯",
+                  "items": {
+                    "food_5634d8d283de": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1500
+                }
+              ],
+              "label": "雞汁風味飯(加量不加價)"
+            },
+            {
+              "id": "slot-5",
+              "count": 2,
+              "baseItems": {
+                "drinkSmall": 2
+              },
+              "baseBeverages": [
+                {
+                  "name": "無糖綠茶(小)",
+                  "quantity": 2,
+                  "kind": "unsweetened",
+                  "size": "small",
+                  "item": "drinkSmall"
+                }
+              ],
+              "options": [
+                {
+                  "name": "無糖綠茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "無糖綠茶(小)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "百事可樂(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "百事可樂(小)",
+                      "quantity": 1,
+                      "kind": "cola",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "七喜(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "七喜(小)",
+                      "quantity": 1,
+                      "kind": "soda",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "立頓檸檬風味紅茶(小)",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "阿薩姆無糖紅茶(小)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "經典熱奶茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典熱奶茶(小)",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 200
+                },
+                {
+                  "name": "無糖綠茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "無糖綠茶(中)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "百事可樂(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "百事可樂(中)",
+                      "quantity": 1,
+                      "kind": "cola",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "七喜(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "七喜(中)",
+                      "quantity": 1,
+                      "kind": "soda",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "立頓檸檬風味紅茶(中)",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "阿薩姆無糖紅茶(中)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "經典冰奶茶",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典冰奶茶",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "經典熱奶茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典熱奶茶(中)",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "蘋果汁",
+                  "items": {
+                    "appleJuiceBottle": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "蘋果汁",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "cup",
+                      "item": "appleJuiceBottle"
+                    }
+                  ],
+                  "surchargeMinor": 700
+                },
+                {
+                  "name": "玉米濃湯(小)",
+                  "items": {
+                    "soupSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "玉米濃湯(小)",
+                      "quantity": 1,
+                      "kind": "soup",
+                      "size": "small",
+                      "item": "soupSmall"
+                    }
+                  ],
+                  "surchargeMinor": 700
+                },
+                {
+                  "name": "蜂蜜風味紅茶",
+                  "items": {
+                    "food_4ec863d74837": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "蜂蜜風味紅茶",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "cup",
+                      "item": "food_4ec863d74837"
+                    }
+                  ],
+                  "surchargeMinor": 1500
+                },
+                {
+                  "name": "玉米濃湯(大)",
+                  "items": {
+                    "soupLarge": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "玉米濃湯(大)",
+                      "quantity": 1,
+                      "kind": "soup",
+                      "size": "large",
+                      "item": "soupLarge"
+                    }
+                  ],
+                  "surchargeMinor": 1900
+                }
+              ],
+              "label": "無糖綠茶(小)"
+            }
+          ],
+          "individualMains": 0,
+          "individualMainItems": {},
+          "channels": [
+            "takeaway"
+          ],
+          "choice": null
+        }
+      ],
+      "choiceGroups": [],
+      "ordering": {
+        "platforms": null,
+        "excludedPlatforms": [],
+        "fulfilments": null,
+        "onlinePaymentRequired": false,
+        "evidence": [],
+        "status": "unknown"
+      },
+      "validity": {
+        "validWindows": [
+          {
+            "from": "2026-05-13",
+            "toExclusive": "2026-12-21",
+            "startMinute": 630,
+            "endMinute": 1020
+          },
+          {
+            "from": "2026-05-13",
+            "toExclusive": "2026-12-21",
+            "startMinute": 1020,
+            "endMinute": 1380
+          }
+        ],
+        "startUnknown": false,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源整理資料，門市、通路、限購及併用條件仍需於官方確認。",
+        "供餐時段與取餐方式依 KCouper 資料分類，仍需向門市核對。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
+        "sourcePublisher": "KCouper 公開資料",
+        "sourceType": "public_dataset",
+        "fetchedAt": "2026-10-17T04:39:34+00:00",
+        "parsedAt": "2026-10-17T04:39:34+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "public_feed_parser_v5",
+        "reviewStatus": "needs_official_confirmation",
+        "contentHash": "c9c6eaa40e94d7dceba0eb6cb3eb7008a52fd26a1b435a150f0a89d55fc60ae9",
+        "sourceBlockId": "16144"
+      },
+      "observations": [
+        {
+          "sourceId": "kcouper",
+          "sourcePublisher": "KCouper 公開資料",
+          "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
+          "fetchedAt": "2026-10-17T04:39:34+00:00",
+          "code": "16144",
+          "text": "16144-只饗陪您",
+          "priceMinor": 29200,
+          "priceType": "fixed",
+          "validWindows": [
+            {
+              "from": "2026-05-13",
+              "toExclusive": "2026-12-21",
+              "startMinute": 630,
+              "endMinute": 1020
+            },
+            {
+              "from": "2026-05-13",
+              "toExclusive": "2026-12-21",
+              "startMinute": 1020,
+              "endMinute": 1380
+            }
+          ],
+          "contentHash": "c9c6eaa40e94d7dceba0eb6cb3eb7008a52fd26a1b435a150f0a89d55fc60ae9",
+          "ordering": {
+            "platforms": null,
+            "excludedPlatforms": [],
+            "fulfilments": null,
+            "onlinePaymentRequired": false,
+            "evidence": [],
+            "status": "unknown"
+          }
+        },
+        {
+          "sourceId": "calling-kfc",
+          "sourcePublisher": "Calling Taiwan",
+          "sourceUrl": "https://www.callingtaiwan.com.tw/kfc-coupon-code/",
+          "fetchedAt": "2026-10-17T04:39:34+00:00",
+          "code": "16144",
+          "text": "【七夕情人節】韓式脆雞起司飯 × 1 + 香草紙包雞 × 1 + 雞汁風味飯 × 1 + 原味蛋撻 × 2 + 冰無糖綠茶（小）× 2",
+          "priceMinor": 29200,
+          "priceType": "fixed",
+          "validWindows": [
+            {
+              "from": null,
+              "toExclusive": "2026-12-21"
+            }
+          ],
+          "contentHash": "1f351fc0d2bcf19693059469776a07b1294ab80a3d8a60d7fae0b8d37b6bc052",
+          "ordering": {
+            "platforms": null,
+            "excludedPlatforms": [],
+            "fulfilments": null,
+            "onlinePaymentRequired": false,
+            "evidence": [],
+            "status": "unknown"
+          }
+        },
+        {
+          "sourceId": "talk-kfc",
+          "sourcePublisher": "好康情報誌",
+          "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+          "fetchedAt": "2026-10-17T04:39:34+00:00",
+          "code": "16144",
+          "text": "只饗有個人陪您一起 1份韓式起司脆雞飯+1份香草紙包雞+ 1碗雞汁風味飯+2顆原味蛋撻+ 2杯冰無糖綠茶(小)",
+          "priceMinor": 29200,
+          "priceType": "fixed",
+          "validWindows": [
+            {
+              "from": null,
+              "toExclusive": "2026-12-21"
+            }
+          ],
+          "contentHash": "aa0a2aff09ba750b26162f265a14123bad258256a215d6dff3f4a509c482ee37",
+          "ordering": {
+            "platforms": null,
+            "excludedPlatforms": [],
+            "fulfilments": null,
+            "onlinePaymentRequired": false,
+            "evidence": [],
+            "status": "unknown"
+          }
+        }
+      ],
+      "sourceMetadata": {
+        "mealPeriods": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "orderTypes": [
+          2
+        ],
+        "productCode": "TA9684",
+        "sourceUpdatedAt": "2026-10-17 05:18:03"
+      }
+    },
+    {
+      "id": "kfc-26900",
+      "brand": "KFC",
+      "code": "26900",
+      "title": "26900-國泰app紙包雞",
+      "rawText": "26900-國泰app紙包雞",
+      "priceType": "fixed",
+      "displayPriceMinor": 16200,
+      "dataStatus": "estimate",
+      "reviewReason": null,
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 16200,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "chickenRice": 1,
+            "tart": 1,
+            "drinkSmall": 1
+          },
+          "beverages": [
+            {
+              "name": "無糖綠茶(小)",
+              "quantity": 1,
+              "kind": "unsweetened",
+              "size": "small",
+              "item": "drinkSmall"
+            }
+          ],
+          "optionGroups": [
+            {
+              "id": "slot-1",
+              "count": 1,
+              "baseItems": {
+                "chicken": 2
+              },
+              "baseBeverages": [],
+              "options": [
+                {
+                  "name": "2塊咔啦脆雞(辣)",
+                  "items": {
+                    "chicken": 2
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "麻油紙包雞",
+                  "items": {
+                    "paperChicken": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1300
+                }
+              ],
+              "label": "2塊咔啦脆雞(辣)"
+            },
+            {
+              "id": "slot-2",
+              "count": 1,
+              "baseItems": {
+                "chickenRice": 1
+              },
+              "baseBeverages": [],
+              "options": [
+                {
+                  "name": "雞汁風味飯(加量不加價)",
+                  "items": {
+                    "chickenRice": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "20:00前供應青花椒醬飯",
+                  "items": {
+                    "food_c94775e1d02f": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1500
+                },
+                {
+                  "name": "20:00前供應蒜香白醬飯",
+                  "items": {
+                    "food_5634d8d283de": 1
+                  },
+                  "beverages": [],
+                  "surchargeMinor": 1500
+                }
+              ],
+              "label": "雞汁風味飯(加量不加價)"
+            },
+            {
+              "id": "slot-4",
+              "count": 1,
+              "baseItems": {
+                "drinkSmall": 1
+              },
+              "baseBeverages": [
+                {
+                  "name": "無糖綠茶(小)",
+                  "quantity": 1,
+                  "kind": "unsweetened",
+                  "size": "small",
+                  "item": "drinkSmall"
+                }
+              ],
+              "options": [
+                {
+                  "name": "無糖綠茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "無糖綠茶(小)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "百事可樂(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "百事可樂(小)",
+                      "quantity": 1,
+                      "kind": "cola",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "七喜(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "七喜(小)",
+                      "quantity": 1,
+                      "kind": "soda",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "立頓檸檬風味紅茶(小)",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "阿薩姆無糖紅茶(小)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 0
+                },
+                {
+                  "name": "經典熱奶茶(小)",
+                  "items": {
+                    "drinkSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典熱奶茶(小)",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "small",
+                      "item": "drinkSmall"
+                    }
+                  ],
+                  "surchargeMinor": 200
+                },
+                {
+                  "name": "無糖綠茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "無糖綠茶(中)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "百事可樂(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "百事可樂(中)",
+                      "quantity": 1,
+                      "kind": "cola",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "七喜(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "七喜(中)",
+                      "quantity": 1,
+                      "kind": "soda",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "立頓檸檬風味紅茶(中)",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "阿薩姆無糖紅茶(中)",
+                      "quantity": 1,
+                      "kind": "unsweetened",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "經典冰奶茶",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典冰奶茶",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "經典熱奶茶(中)",
+                  "items": {
+                    "drinkMedium": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "經典熱奶茶(中)",
+                      "quantity": 1,
+                      "kind": "milkTea",
+                      "size": "medium",
+                      "item": "drinkMedium"
+                    }
+                  ],
+                  "surchargeMinor": 500
+                },
+                {
+                  "name": "蘋果汁",
+                  "items": {
+                    "appleJuiceBottle": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "蘋果汁",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "cup",
+                      "item": "appleJuiceBottle"
+                    }
+                  ],
+                  "surchargeMinor": 700
+                },
+                {
+                  "name": "玉米濃湯(小)",
+                  "items": {
+                    "soupSmall": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "玉米濃湯(小)",
+                      "quantity": 1,
+                      "kind": "soup",
+                      "size": "small",
+                      "item": "soupSmall"
+                    }
+                  ],
+                  "surchargeMinor": 700
+                },
+                {
+                  "name": "蜂蜜風味紅茶",
+                  "items": {
+                    "food_4ec863d74837": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "蜂蜜風味紅茶",
+                      "quantity": 1,
+                      "kind": "other",
+                      "size": "cup",
+                      "item": "food_4ec863d74837"
+                    }
+                  ],
+                  "surchargeMinor": 1500
+                },
+                {
+                  "name": "玉米濃湯(大)",
+                  "items": {
+                    "soupLarge": 1
+                  },
+                  "beverages": [
+                    {
+                      "name": "玉米濃湯(大)",
+                      "quantity": 1,
+                      "kind": "soup",
+                      "size": "large",
+                      "item": "soupLarge"
+                    }
+                  ],
+                  "surchargeMinor": 1900
+                }
+              ],
+              "label": "無糖綠茶(小)"
+            }
+          ],
+          "individualMains": 0,
+          "individualMainItems": {},
+          "channels": [
+            "takeaway"
+          ],
+          "choice": null
+        }
+      ],
+      "choiceGroups": [],
+      "ordering": {
+        "platforms": null,
+        "excludedPlatforms": [],
+        "fulfilments": null,
+        "onlinePaymentRequired": false,
+        "evidence": [],
+        "status": "unknown"
+      },
+      "validity": {
+        "validWindows": [
+          {
+            "from": "2026-04-08",
+            "toExclusive": "2026-11-01",
+            "startMinute": 630,
+            "endMinute": 1020
+          },
+          {
+            "from": "2026-04-08",
+            "toExclusive": "2026-11-01",
+            "startMinute": 1020,
+            "endMinute": 1380
+          }
+        ],
+        "startUnknown": false,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源整理資料，門市、通路、限購及併用條件仍需於官方確認。",
+        "供餐時段與取餐方式依 KCouper 資料分類，仍需向門市核對。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
+        "sourcePublisher": "KCouper 公開資料",
+        "sourceType": "public_dataset",
+        "fetchedAt": "2026-10-17T04:39:34+00:00",
+        "parsedAt": "2026-10-17T04:39:34+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "public_feed_parser_v5",
+        "reviewStatus": "needs_official_confirmation",
+        "contentHash": "a926333d3d64df73ed4d2066f58b2a59635698faa59fcb63b0dc635647ea40ac",
+        "sourceBlockId": "26900"
+      },
+      "observations": [
+        {
+          "sourceId": "kcouper",
+          "sourcePublisher": "KCouper 公開資料",
+          "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
+          "fetchedAt": "2026-10-17T04:39:34+00:00",
+          "code": "26900",
+          "text": "26900-國泰app紙包雞",
+          "priceMinor": 16200,
+          "priceType": "fixed",
+          "validWindows": [
+            {
+              "from": "2026-04-08",
+              "toExclusive": "2026-11-01",
+              "startMinute": 630,
+              "endMinute": 1020
+            },
+            {
+              "from": "2026-04-08",
+              "toExclusive": "2026-11-01",
+              "startMinute": 1020,
+              "endMinute": 1380
+            }
+          ],
+          "contentHash": "a926333d3d64df73ed4d2066f58b2a59635698faa59fcb63b0dc635647ea40ac",
+          "ordering": {
+            "platforms": null,
+            "excludedPlatforms": [],
+            "fulfilments": null,
+            "onlinePaymentRequired": false,
+            "evidence": [],
+            "status": "unknown"
+          }
+        }
+      ],
+      "sourceMetadata": {
+        "mealPeriods": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "orderTypes": [
+          2
+        ],
+        "productCode": "TA9518",
+        "sourceUpdatedAt": "2026-10-17 05:18:03"
+      }
+    }
+  ],
+  "rawRecords": [
+    {
+      "sourceId": "kcouper",
+      "fetchedAt": "2026-10-17T04:39:34+00:00",
+      "record": {
+        "code": "26900",
+        "text": "26900-國泰app紙包雞",
+        "priceMinor": 16200,
+        "priceType": "fixed",
+        "windows": [
+          {
+            "from_": "2026-04-08",
+            "toExclusive": "2026-11-01"
+          }
+        ],
+        "structured": {
+          "name": "26900-國泰app紙包雞",
+          "product_code": "TA9518",
+          "coupon_code": 26900,
+          "price": 162,
+          "items": [
+            {
+              "name": "2塊咔啦脆雞(辣)",
+              "count": 1,
+              "addition_price": 0,
+              "flavors": [
+                {
+                  "name": "麻油紙包雞",
+                  "addition_price": 13
+                }
+              ]
+            },
+            {
+              "name": "雞汁風味飯(加量不加價)",
+              "count": 1,
+              "addition_price": 0,
+              "flavors": [
+                {
+                  "name": "20:00前供應青花椒醬飯",
+                  "addition_price": 15
+                },
+                {
+                  "name": "20:00前供應蒜香白醬飯",
+                  "addition_price": 15
+                }
+              ]
+            },
+            {
+              "name": "原味蛋撻",
+              "count": 1,
+              "addition_price": 0,
+              "flavors": []
+            },
+            {
+              "name": "無糖綠茶(小)",
+              "count": 1,
+              "addition_price": 0,
+              "flavors": [
+                {
+                  "name": "百事可樂(小)",
+                  "addition_price": 0
+                },
+                {
+                  "name": "七喜(小)",
+                  "addition_price": 0
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(小)",
+                  "addition_price": 0
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(小)",
+                  "addition_price": 0
+                },
+                {
+                  "name": "經典熱奶茶(小)",
+                  "addition_price": 2
+                },
+                {
+                  "name": "無糖綠茶(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "百事可樂(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "七喜(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "立頓檸檬風味紅茶(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "阿薩姆無糖紅茶(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "經典冰奶茶",
+                  "addition_price": 5
+                },
+                {
+                  "name": "經典熱奶茶(中)",
+                  "addition_price": 5
+                },
+                {
+                  "name": "蘋果汁",
+                  "addition_price": 7
+                },
+                {
+                  "name": "玉米濃湯(小)",
+                  "addition_price": 7
+                },
+                {
+                  "name": "蜂蜜風味紅茶",
+                  "addition_price": 15
+                },
+                {
+                  "name": "玉米濃湯(大)",
+                  "addition_price": 19
+                }
+              ]
+            }
+          ],
+          "start_date": "2026-04-08",
+          "end_date": "2026-10-31",
+          "meal_periods": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "order_types": [
+            2
+          ]
+        },
+        "sourceUpdatedAt": "2026-10-17 05:18:03"
+      }
+    }
+  ],
+  "foodCatalog": {
+    "chickenRice": {
+      "name": "雞汁風味飯",
+      "unit": "份",
+      "emoji": "🍚"
+    },
+    "food_8f4585a6a8a4": {
+      "name": "青花椒醬脆雞飯",
+      "unit": "份",
+      "emoji": "🍽️"
+    }
+  }
+}

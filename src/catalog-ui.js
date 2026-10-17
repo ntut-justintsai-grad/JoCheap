@@ -8,32 +8,40 @@
     const price=o=>o.displayPriceMinor??Math.min(...o.variants.map(v=>v.priceMinor??Infinity));
     const format=items=>Object.entries(items).filter(([k,n])=>I[k]&&n>0).map(([k,n])=>`${I[k].name} ${n} ${I[k].unit}`).join('＋');
     const drinkText=beverages=>{const names=new Map();for(const b of beverages||[])names.set(b.name,(names.get(b.name)||0)+b.quantity);return [...names].map(([n,q])=>n+' × '+q).join('、');};
-    let rows=data.offers.filter(o=>(brand==='all'||o.brand===brand)&&(status==='all'||o.dataStatus===status)&&(!q||[o.title,o.code,o.rawText||'',...o.variants.map(v=>format(v.items))].join(' ').toLowerCase().includes(q))&&(rawMax===''||price(o)<=max)&&(category==='all'||o.variants.some(v=>v.items[category]>0||(v.optionGroups||[]).some(g=>g.options.some(a=>a.items[category]>0))))&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
-    const rank=o=>o.dataStatus==='conflict'?2:o.dataStatus==='pending'?1:0;
-    rows.sort((a,b)=>rank(a)-rank(b)||($('browse-sort').value==='price'?price(a)-price(b):(a.validity.validWindows[0]?.toExclusive||'9999').localeCompare(b.validity.validWindows[0]?.toExclusive||'9999'))||a.id.localeCompare(b.id));
+    const queryCategory=category==='all'&&q.includes('紙包雞')?'paperChicken':category;
+    const choices=new Map(data.offers.map(o=>[o.id,F.catalogChoice(o,queryCategory)]));
+    const identity=o=>F.mealIdentityIssue(o);
+    const effectivePrice=o=>choices.get(o.id)?.total??price(o);
+    const searchable=o=>[o.title,o.code,o.rawText||'',...o.variants.flatMap(v=>[format(v.items),...(v.optionGroups||[]).flatMap(g=>g.options.map(a=>a.name+' '+format(a.items)))])].join(' ').toLowerCase();
+    let rows=data.offers.filter(o=>(brand==='all'||o.brand===brand)&&(status==='all'||(identity(o)?'pending':o.dataStatus)===status)&&(!q||searchable(o).includes(q))&&(rawMax===''||effectivePrice(o)<=max)&&(queryCategory==='all'||choices.get(o.id))&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
+    const rank=o=>o.dataStatus==='conflict'?2:o.dataStatus==='pending'||identity(o)?1:0;
+    rows.sort((a,b)=>rank(a)-rank(b)||($('browse-sort').value==='price'?effectivePrice(a)-effectivePrice(b):(a.validity.validWindows[0]?.toExclusive||'9999').localeCompare(b.validity.validWindows[0]?.toExclusive||'9999'))||a.id.localeCompare(b.id));
     $('browse-summary').textContent=`找到 ${rows.length} / ${data.offers.length} 個優惠碼，先顯示 ${Math.min(limit,rows.length)} 個。衝突與待確認的優惠仍可查看來源；不參與比價。`;
     $('browse-grid').replaceChildren();
     for(const o of rows.slice(0,limit)){
-      let base=o.variants.find(v=>(category==='all'||v.items[category]>0)&&v.priceMinor!==null&&v.priceMinor<=max)||o.variants[0],selected=base,selections={};
-      const demo=data.mode==='demo',eligible=!['conflict','pending'].includes(o.dataStatus)&&o.priceType==='fixed';
-      const card=h('article',{class:'coupon-card'+(o.dataStatus==='conflict'?' conflict':'')},h('span',{class:'coupon-status'},o.dataStatus==='conflict'?'來源衝突・不參與計算':o.dataStatus==='pending'?'待確認・不參與計算':demo?'合成示範・不能兌換':'來源估算・條款待確認'),h('span',{class:'muted'},brandName(o.brand)+'・'+o.code),h('h3',{},o.title));
+      const choice=choices.get(o.id),identityIssue=identity(o);
+      let base=choice?.base||o.variants[0],selected=choice?.selected||base,selections=choice?.selections||{};
+      const demo=data.mode==='demo',eligible=!identityIssue&&!['conflict','pending'].includes(o.dataStatus)&&o.priceType==='fixed';
+      const card=h('article',{class:'coupon-card'+(o.dataStatus==='conflict'?' conflict':'')},h('span',{class:'coupon-status'},identityIssue?'品項矛盾・不參與計算':o.dataStatus==='conflict'?'來源衝突・不參與計算':o.dataStatus==='pending'?'待確認・不參與計算':demo?'合成示範・不能兌換':'來源估算・條款待確認'),h('span',{class:'muted'},brandName(o.brand)+'・'+o.code),h('h3',{},o.title));
       const priceBox=h('div',{class:'coupon-price'}),contents=h('p',{class:'coupon-contents'}),costs=h('p',{class:'selection-cost'}),drinks=h('p',{class:'order-choice'}),options=h('div');card.append(priceBox);
       const update=()=>{
-        selected=base?F.applyOptions(base,selections):null;
+        selected=base&&!identityIssue?F.applyOptions(base,selections,new Date().toISOString()):null;
         const total=selected?selected.priceMinor===null?null:selected.priceMinor+(selected.surchargeMinor||0):Number.isFinite(price(o))?price(o):null;
-        priceBox.textContent=total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
-        contents.textContent=selected?format(selected.items):o.rawText||'內容待確認';
-        costs.textContent=selected?`基本餐 ${money(selected.priceMinor||0)}＋本次替換 ${money(selected.surchargeMinor||0)}`:'';
+        priceBox.textContent=identityIssue?'來源記載 '+money(price(o))+'・內容待確認':total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
+        contents.textContent=identityIssue?'優惠標題與來源預設餐點不一致，暫不提供可計價配置。':selected?format(selected.items):o.rawText||'內容待確認';
+        costs.textContent=selected?`基本餐 ${money(selected.priceMinor||0)}＋本次替換 ${money(selected.surchargeMinor||0)}`+(selected.optionChoices?.filter(c=>c.from!==c.name).length?'；已選：'+selected.optionChoices.filter(c=>c.from!==c.name).map(c=>c.from+' → '+c.name).join('、'):''):'';
         drinks.textContent=selected?.beverages?.length?'本次飲料／湯：'+drinkText(selected.beverages):'';drinks.hidden=!drinks.textContent;
       };
       const renderOptions=()=>{
         options.replaceChildren();
-        if(base?.optionGroups?.length){
+        if(base?.optionGroups?.length&&!identityIssue){
           const detail=h('details',{class:'coupon-options'},h('summary',{},'挑選飲料與餐點替換・查看加價'));
+          if(Object.values(selections).some(indices=>indices.some(i=>i!==0)))detail.open=true;
           detail.append(h('p',{class:'helper'},'每份分開選擇；差額只適用這張券，會加進本張券總額。'));
           for(const g of base.optionGroups)for(let unit=0;unit<g.count;unit++){
             const select=h('select',{'aria-label':o.code+' '+g.label+'第 '+(unit+1)+' 份選項'});
             g.options.forEach((option,i)=>select.append(h('option',{value:i},option.name+'・'+(option.surchargeMinor?'加 '+money(option.surchargeMinor):'同價'))));
+            select.value=String(selections[g.id]?.[unit]||0);
             select.addEventListener('change',()=>{selections[g.id]??=Array(g.count).fill(0);selections[g.id][unit]=Number(select.value);update();});
             detail.append(h('label',{class:'variant-label'},g.label+(g.count>1?'・第 '+(unit+1)+' 份':''),select));
           }
@@ -42,7 +50,7 @@
       };
       if(o.variants.length>1){const select=h('select',{'aria-label':o.code+'套餐配置',class:'variant-select'});o.variants.forEach(v=>select.append(h('option',{value:v.id},v.choice||v.id)));select.value=base.id;select.addEventListener('change',()=>{base=o.variants.find(v=>v.id===select.value);selections={};renderOptions();update();});card.append(h('label',{class:'variant-label'},`套餐配置・${o.variants.length} 種`,select));}
       card.append(contents,drinks,costs,options);
-      if(o.reviewReason)card.append(h('p',{class:'warning-text'},o.reviewReason));
+      if(identityIssue||o.reviewReason)card.append(h('p',{class:'warning-text'},identityIssue||o.reviewReason));
       const platforms=o.ordering?.platforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／')||'下單方式待確認',channels=[...new Set(o.variants.flatMap(v=>v.channels))].map(c=>({takeaway:'外帶',delivery:'官方外送',dinein:'內用',unknown:'取餐方式待確認'}[c]||c)).join('／');
       const excluded=o.ordering?.excludedPlatforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／');
       const orderingText='下單：'+platforms+'；取餐：'+(channels||'待確認')+(excluded?'；不適用：'+excluded:'')+(o.ordering?.onlinePaymentRequired?'；限線上付款':'')+(o.eligibility?.memberRequired?'；限會員':'')+(o.limits?.maxUsesPerUserPerDay?'；每日每人限用 '+o.limits.maxUsesPerUserPerDay+' 次':'');
