@@ -1,0 +1,64 @@
+(function(root){
+  'use strict';
+  let signature='',limit=24;
+  function render(ctx){
+    const {data,F,I,h,$,money,brandName,safeLink,onAdd,onCopy}=ctx;
+    const q=$('browse-search').value.trim().toLowerCase(),brand=$('browse-brand').value,category=$('browse-category').value,rawMax=$('browse-max').value,max=rawMax===''?Infinity:Number(rawMax)*100,status=$('browse-status').value;
+    const key=JSON.stringify([data.datasetVersion,q,brand,category,rawMax,status,$('browse-active').checked,$('browse-sort').value]);if(key!==signature){signature=key;limit=24;}
+    const price=o=>o.displayPriceMinor??Math.min(...o.variants.map(v=>v.priceMinor??Infinity));
+    const format=items=>Object.entries(items).filter(([k,n])=>I[k]&&n>0).map(([k,n])=>`${I[k].name} ${n} ${I[k].unit}`).join('＋');
+    const drinkText=beverages=>{const names=new Map();for(const b of beverages||[])names.set(b.name,(names.get(b.name)||0)+b.quantity);return [...names].map(([n,q])=>n+' × '+q).join('、');};
+    let rows=data.offers.filter(o=>(brand==='all'||o.brand===brand)&&(status==='all'||o.dataStatus===status)&&(!q||[o.title,o.code,o.rawText||'',...o.variants.map(v=>format(v.items))].join(' ').toLowerCase().includes(q))&&(rawMax===''||price(o)<=max)&&(category==='all'||o.variants.some(v=>v.items[category]>0||(v.optionGroups||[]).some(g=>g.options.some(a=>a.items[category]>0))))&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
+    const rank=o=>o.dataStatus==='conflict'?2:o.dataStatus==='pending'?1:0;
+    rows.sort((a,b)=>rank(a)-rank(b)||($('browse-sort').value==='price'?price(a)-price(b):(a.validity.validWindows[0]?.toExclusive||'9999').localeCompare(b.validity.validWindows[0]?.toExclusive||'9999'))||a.id.localeCompare(b.id));
+    $('browse-summary').textContent=`找到 ${rows.length} / ${data.offers.length} 個優惠碼，先顯示 ${Math.min(limit,rows.length)} 個。衝突與待確認的優惠仍可查看來源；不參與比價。`;
+    $('browse-grid').replaceChildren();
+    for(const o of rows.slice(0,limit)){
+      let base=o.variants.find(v=>(category==='all'||v.items[category]>0)&&v.priceMinor!==null&&v.priceMinor<=max)||o.variants[0],selected=base,selections={};
+      const demo=data.mode==='demo',eligible=!['conflict','pending'].includes(o.dataStatus)&&o.priceType==='fixed';
+      const card=h('article',{class:'coupon-card'+(o.dataStatus==='conflict'?' conflict':'')},h('span',{class:'coupon-status'},o.dataStatus==='conflict'?'來源衝突・不參與計算':o.dataStatus==='pending'?'待確認・不參與計算':demo?'合成示範・不能兌換':'來源估算・條款待確認'),h('span',{class:'muted'},brandName(o.brand)+'・'+o.code),h('h3',{},o.title));
+      const priceBox=h('div',{class:'coupon-price'}),contents=h('p',{class:'coupon-contents'}),costs=h('p',{class:'selection-cost'}),drinks=h('p',{class:'order-choice'}),options=h('div');card.append(priceBox);
+      const update=()=>{
+        selected=base?F.applyOptions(base,selections):null;
+        const total=selected?selected.priceMinor===null?null:selected.priceMinor+(selected.surchargeMinor||0):Number.isFinite(price(o))?price(o):null;
+        priceBox.textContent=total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
+        contents.textContent=selected?format(selected.items):o.rawText||'內容待確認';
+        costs.textContent=selected?`基本餐 ${money(selected.priceMinor||0)}＋本次替換 ${money(selected.surchargeMinor||0)}`:'';
+        drinks.textContent=selected?.beverages?.length?'本次飲料／湯：'+drinkText(selected.beverages):'';drinks.hidden=!drinks.textContent;
+      };
+      const renderOptions=()=>{
+        options.replaceChildren();
+        if(base?.optionGroups?.length){
+          const detail=h('details',{class:'coupon-options'},h('summary',{},'挑選飲料與餐點替換・查看加價'));
+          detail.append(h('p',{class:'helper'},'每份分開選擇；差額只適用這張券，會加進本張券總額。'));
+          for(const g of base.optionGroups)for(let unit=0;unit<g.count;unit++){
+            const select=h('select',{'aria-label':o.code+' '+g.label+'第 '+(unit+1)+' 份選項'});
+            g.options.forEach((option,i)=>select.append(h('option',{value:i},option.name+'・'+(option.surchargeMinor?'加 '+money(option.surchargeMinor):'同價'))));
+            select.addEventListener('change',()=>{selections[g.id]??=Array(g.count).fill(0);selections[g.id][unit]=Number(select.value);update();});
+            detail.append(h('label',{class:'variant-label'},g.label+(g.count>1?'・第 '+(unit+1)+' 份':''),select));
+          }
+          options.append(detail);
+        }
+      };
+      if(o.variants.length>1){const select=h('select',{'aria-label':o.code+'套餐配置',class:'variant-select'});o.variants.forEach(v=>select.append(h('option',{value:v.id},v.choice||v.id)));select.value=base.id;select.addEventListener('change',()=>{base=o.variants.find(v=>v.id===select.value);selections={};renderOptions();update();});card.append(h('label',{class:'variant-label'},`套餐配置・${o.variants.length} 種`,select));}
+      card.append(contents,drinks,costs,options);
+      if(o.reviewReason)card.append(h('p',{class:'warning-text'},o.reviewReason));
+      const platforms=o.ordering?.platforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／')||'下單方式待確認',channels=[...new Set(o.variants.flatMap(v=>v.channels))].map(c=>({takeaway:'外帶',delivery:'官方外送',dinein:'內用',unknown:'取餐方式待確認'}[c]||c)).join('／');
+      const excluded=o.ordering?.excludedPlatforms?.map(p=>F.ORDER_METHODS[p]?.name||'指定平台').join('／');
+      const orderingText='下單：'+platforms+'；取餐：'+(channels||'待確認')+(excluded?'；不適用：'+excluded:'')+(o.ordering?.onlinePaymentRequired?'；限線上付款':'')+(o.eligibility?.memberRequired?'；限會員':'')+(o.limits?.maxUsesPerUserPerDay?'；每日每人限用 '+o.limits.maxUsesPerUserPerDay+' 次':'');
+      card.append(h('p',{class:'helper'},orderingText));
+      const ends=[...new Set(o.validity.validWindows.map(w=>w.toExclusive).filter(Boolean))];card.append(h('p',{class:'helper'},ends.length?'來源效期至 '+ends.map(s=>new Date(Date.parse(s+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})).join('、'):'效期未完整確認'));
+      const evidence=h('details',{class:'coupon-options'},h('summary',{},`來源與限制（${o.observations?.length||1} 筆記載）`));
+      for(const obs of o.observations||[{sourcePublisher:o.provenance.sourcePublisher,sourceUrl:o.provenance.sourceUrl,text:o.rawText||o.title,priceMinor:price(o)}])evidence.append(h('div',{class:'source-observation'},safeLink(obs.sourceUrl,obs.sourcePublisher),h('p',{},obs.text),h('p',{class:'helper'},Number.isFinite(obs.priceMinor)?money(obs.priceMinor):'價格未完整辨識')));
+      for(const condition of o.conditions||[])evidence.append(h('p',{class:'helper'},condition));
+      for(const review of o.ordering?.officialRestrictionEvidence||[])evidence.append(h('p',{class:'helper'},safeLink(review.sourceUrl,'官方限制查核'),`・${review.checkedAt} 查閱，${review.reviewBy} 前需複查；僅確認所述限制。`));
+      card.append(evidence);
+      if(eligible&&base)card.append(h('button',{type:'button',class:'outline-button',onclick:()=>onAdd(selected.items)},'把目前選項加入需求'));
+      if(!demo)card.append(h('button',{type:'button',class:'text-button',onclick:()=>onCopy([`【${brandName(o.brand)} ${o.code}・${eligible?'來源估算':'待確認'}】`,o.title,selected?format(selected.items):o.rawText,selected?'飲料／湯：'+drinkText(selected.beverages):'',priceBox.textContent,selected?'替換差額：'+money(selected.surchargeMinor||0):'',orderingText,...(o.ordering?.officialRestrictionEvidence||[]).map(r=>r.finding),o.provenance.sourceUrl,'使用條件與實付金額請向官方確認。'].filter(Boolean).join('\n'))},'複製優惠與目前選項'));
+      renderOptions();update();$('browse-grid').append(card);
+    }
+    if(rows.length>limit)$('browse-grid').append(h('button',{type:'button',class:'outline-button browse-more',onclick:()=>{limit+=24;render(ctx);}},'再看 24 個優惠'));
+    if(!rows.length)$('browse-grid').append(h('div',{class:'state-card browse-empty'},h('h3',{},'沒有符合篩選的優惠'),h('p',{},'可調整品牌、餐點、時間或資料狀態。')));
+  }
+  root.CatalogUI={render};
+})(typeof globalThis!=='undefined'?globalThis:this);

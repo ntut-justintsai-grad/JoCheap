@@ -1,0 +1,88 @@
+{
+  "researchedAt": "2026-10-17",
+  "checkoutVerified": false,
+  "cases": [
+    {
+      "brand": "KFC",
+      "type": "replacement",
+      "title": "飲料替換逐券計算",
+      "finding": "KCouper 的 26383 小無糖綠茶可換中杯飲料或經典冰奶茶，每杯加 5 元；26382 原本為中飲料，換經典冰奶茶同價。26383 若兩杯都換冰奶茶，整組加 10 元。",
+      "status": "third_party_structured_snapshot",
+      "sourceUrls": [
+        "https://winedays.github.io/KCouper/coupon.js"
+      ],
+      "limit": "只適用各該券記載的替換槽；不能推定所有券同價，尚未逐券官方結帳驗證。"
+    },
+    {
+      "brand": "KFC",
+      "type": "recipe_conflict",
+      "title": "紙包雞與炸雞內容有來源差異",
+      "finding": "16298 在整理頁仍記載香草紙包雞與炸雞；KCouper 公開資料的對應槽則為兩塊咔啦脆雞，可加 13 元換麻油紙包雞。這是來源衝突，該碼不參與自動推薦。",
+      "status": "conflict_not_checkout_verified",
+      "sourceUrls": [
+        "https://winedays.github.io/KCouper/coupon.js",
+        "https://www.callingtaiwan.com.tw/kfc-coupon-code/",
+        "https://info.talk.tw/kfc-coupon/"
+      ],
+      "limit": "需向指定門市或官方點餐結果確認，不能把舊的紙包雞內容直接沿用到新配方。"
+    },
+    {
+      "brand": "KFC",
+      "type": "time_dependent_replacement",
+      "title": "雞汁飯在 20:00 後改中薯",
+      "finding": "肯德基官方訂購須知記載：20:00 前供應雞汁風味飯，20:00 後改供香酥脆薯（中）。",
+      "status": "official_page_verified",
+      "sourceUrls": [
+        "https://www.kfcclub.com.tw/terms/orderingInstructions"
+      ],
+      "limit": "以預計取餐或送達時間判斷；仍以餐廳實際供應為準。"
+    },
+    {
+      "brand": "PH",
+      "type": "parent_addon",
+      "title": "APP 個人比薩／義大利麵飯加 1 元副食",
+      "finding": "官方列有個人比薩加 1 元多一份副食，以及義大利麵／飯加 1 元多一份副食。",
+      "status": "official_page_verified",
+      "sourceUrls": [
+        "https://www.pizzahut.com.tw/order/?cu=11&mode=step_2&p_id=12337",
+        "https://www.pizzahut.com.tw/order/?cu=11&mode=step_2&p_id=12776"
+      ],
+      "limit": "限指定 APP 活動套餐；公開說明尚不足以確認所有可選副食與各組最終價格，不能把 1 元副食當單買價格。"
+    },
+    {
+      "brand": "PH",
+      "type": "parent_addon",
+      "title": "私廚燉飯 L／XL 加 1 元起司塔",
+      "finding": "官方列有私廚燉飯 L／XL 套餐加 1 元多一顆冰藏起司塔，整組標示 190 元起。",
+      "status": "official_page_verified",
+      "sourceUrls": [
+        "https://www.pizzahut.com.tw/order/?cu=1674&mode=step_2&p_id=19161"
+      ],
+      "limit": "必須有指定套餐，並確認口味、套餐等級與門市供應；未以起價當成所有配置的固定價。"
+    },
+    {
+      "brand": "PH",
+      "type": "choice_bundle",
+      "title": "副食 A＋B 組合 69 元起",
+      "finding": "購買 A 區一項搭配 B 區一項。A 區列有小雞軟骨、杏鮑菇、嫩雞球、大薯金幣等；B 區列有 QQ 球 4 顆、330ml 汽水、580ml 原萃綠茶或起司塔。",
+      "status": "official_page_verified",
+      "sourceUrls": [
+        "https://www.pizzahut.com.tw/order/?cu=1674&mode=step_2&p_id=17620"
+      ],
+      "limit": "69 元為起價，尚未取得各 A 區品項的完整配置價目，不能假設任意 A＋B 都是 69 元。"
+    },
+    {
+      "brand": "KFC",
+      "type": "official_spotcheck",
+      "title": "部分官方選項仍需指定點餐情境",
+      "finding": "已查閱三張券的官方餐點說明與選項資料，皆載明不適用外送。未指定門市時的回傳內容不足以完整確認飲料與額外加購；不能將其中一個價格欄位直接視為整餐實付金額。",
+      "status": "official_readonly_spotcheck",
+      "sourceUrls": [
+        "https://www.kfcclub.com.tw/meal/TA10573?couponProduct=16845",
+        "https://www.kfcclub.com.tw/meal/TA10146?couponProduct=26383",
+        "https://www.kfcclub.com.tw/meal/TA9853?couponProduct=16298"
+      ],
+      "limit": "這是公開餐點資料的查核，不是指定門市的成功結帳驗證；額外加購清單為空時也不推定所有門市都沒有加購。"
+    }
+  ]
+}

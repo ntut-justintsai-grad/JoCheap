@@ -1,0 +1,13 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const read=p=>readFile(path.join(root,p),'utf8');
+const [html,css,engine,planner,catalogUI,app,data,demo]=await Promise.all(['src/index.html','src/styles.css','src/engine.js','src/planner.js','src/catalog-ui.js','src/app.js','data/offers.json','data/demo.json'].map(read));
+const safeJson=s=>JSON.stringify(JSON.parse(s)).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+const result=html.replace('/*INLINE_STYLE*/',css).replace('/*INLINE_ENGINE*/',()=>engine+'\n'+planner+'\n'+catalogUI).replace('/*INLINE_APP*/',()=>app).replace('DATA_SNAPSHOT',()=>safeJson(data)).replace('DEMO_SNAPSHOT',()=>safeJson(demo));
+if(/INLINE_|DATA_SNAPSHOT|DEMO_SNAPSHOT/.test(result))throw Error('Missing build input');
+await mkdir(path.join(root,'dist'),{recursive:true});
+await writeFile(path.join(root,'dist/index.html'),result);
+await writeFile(path.join(root,'index.html'),result);
+console.log(`Built standalone index.html (${Buffer.byteLength(result)} bytes)`);

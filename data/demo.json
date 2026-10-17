@@ -1,0 +1,726 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "demo-v2",
+  "mode": "demo",
+  "generatedAt": "2026-10-16T06:36:00Z",
+  "sources": [],
+  "offers": [
+    {
+      "id": "kfc-DEMO-A",
+      "brand": "KFC",
+      "code": "DEMO-A",
+      "title": "示範 炸雞蛋撻組",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 13900,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "tart": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 2,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-A"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "kfc-DEMO-B",
+      "brand": "KFC",
+      "code": "DEMO-B",
+      "title": "示範 單塊炸雞",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 6500,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-B"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "kfc-DEMO-C",
+      "brand": "KFC",
+      "code": "DEMO-C",
+      "title": "示範 六顆蛋撻",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 19900,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-C"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "ph-DEMO-D",
+      "brand": "PH",
+      "code": "DEMO-D",
+      "title": "示範 大披薩",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 19900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null,
+          "pizzaSlots": [
+            {
+              "size": "pizza13",
+              "allowed": [
+                "demo-sea-a",
+                "demo-sea-b",
+                "demo-meat"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-D"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "kfc-DEMO-E",
+      "brand": "KFC",
+      "code": "DEMO-E",
+      "title": "示範 四塊炸雞",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 24900,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 4
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-E"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "kfc-DEMO-F",
+      "brand": "KFC",
+      "code": "DEMO-F",
+      "title": "示範 四塊雞與兩顆蛋撻",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 29900,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 4,
+            "tart": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-F"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "kfc-DEMO-G",
+      "brand": "KFC",
+      "code": "DEMO-G",
+      "title": "示範 漢堡個人餐",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 12900,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 1,
+            "drinkSmall": 1,
+            "friesSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-G"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "ph-DEMO-H",
+      "brand": "PH",
+      "code": "DEMO-H",
+      "title": "示範 雙小披薩",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 25000,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null,
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "demo-sea-a",
+                "demo-sea-b",
+                "demo-meat"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "demo-sea-a",
+                "demo-sea-b",
+                "demo-meat"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-H"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "demo-DEMO-I",
+      "brand": "KFC",
+      "code": "DEMO-I",
+      "title": "示範義大利麵餐",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 15900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "friesSmall": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null,
+          "individualMainItems": {
+            "pasta": 1
+          },
+          "mainDescription": "示範義大利麵餐",
+          "pastaTags": [
+            "meat"
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-G"
+      },
+      "isDemo": true
+    },
+    {
+      "id": "demo-DEMO-J",
+      "brand": "KFC",
+      "code": "DEMO-J",
+      "title": "示範紙包雞餐",
+      "priceType": "fixed",
+      "dataStatus": "demo",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 17900,
+          "surchargeMinor": 0,
+          "items": {
+            "paperChicken": 1,
+            "friesSmall": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "takeaway",
+            "delivery"
+          ],
+          "choice": null,
+          "individualMainItems": {
+            "paperChicken": 1
+          },
+          "mainDescription": "示範紙包雞餐"
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "from_": null,
+            "toExclusive": "2099-01-01"
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": false,
+        "appRequired": false,
+        "storeScope": "demo_all"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": 6,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "allowed"
+      },
+      "conditions": [
+        "合成示範資料，不能兌換。"
+      ],
+      "provenance": {
+        "sourceUrl": null,
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "synthetic_fixture",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "DEMO-G"
+      },
+      "isDemo": true
+    }
+  ],
+  "pizzaFlavors": {
+    "demo-sea-a": {
+      "name": "示範鮮蝦",
+      "tags": [
+        "seafood"
+      ]
+    },
+    "demo-sea-b": {
+      "name": "示範蛤蜊",
+      "tags": [
+        "seafood"
+      ]
+    },
+    "demo-meat": {
+      "name": "示範雞肉",
+      "tags": [
+        "meat"
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "brand": "KFC",
+    "code": "16845",
+    "productCode": "TA10573",
+    "checkedAt": "2026-10-17",
+    "reviewBy": "2026-10-24",
+    "excludedFulfilments": [
+      "delivery"
+    ],
+    "finding": "官方餐點說明記載本券不適用外送；其餘資格仍需確認。",
+    "sourceUrl": "https://www.kfcclub.com.tw/meal/TA10573?couponProduct=16845",
+    "method": "public_meal_detail_readonly",
+    "checkoutVerified": false
+  },
+  {
+    "brand": "KFC",
+    "code": "26383",
+    "productCode": "TA10146",
+    "checkedAt": "2026-10-17",
+    "reviewBy": "2026-10-24",
+    "excludedFulfilments": [
+      "delivery"
+    ],
+    "finding": "官方餐點說明記載本券不適用外送；其餘資格仍需確認。",
+    "sourceUrl": "https://www.kfcclub.com.tw/meal/TA10146?couponProduct=26383",
+    "method": "public_meal_detail_readonly",
+    "checkoutVerified": false
+  },
+  {
+    "brand": "KFC",
+    "code": "16298",
+    "productCode": "TA9853",
+    "checkedAt": "2026-10-17",
+    "reviewBy": "2026-10-24",
+    "excludedFulfilments": [
+      "delivery"
+    ],
+    "finding": "官方餐點說明記載本券不適用外送；其餘資格仍需確認。",
+    "sourceUrl": "https://www.kfcclub.com.tw/meal/TA9853?couponProduct=16298",
+    "method": "public_meal_detail_readonly",
+    "checkoutVerified": false
+  }
+]

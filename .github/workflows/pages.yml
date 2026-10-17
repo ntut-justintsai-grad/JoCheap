@@ -1,0 +1,60 @@
+name: Update coupons and deploy Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 0,6,12,18 * * *'
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate independent calculation and parser fixtures
+        run: |
+          npm test
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Crawl all five public feeds and ingest new coupon codes
+        run: python tools/crawl_catalog.py
+      - name: Validate refreshed catalogue
+        run: |
+          node --test tests/upgrades.test.cjs
+          python -m unittest discover -s tests -p 'test_catalog.py' -v
+      - name: Build standalone HTML
+        run: npm run build
+      - name: Keep snapshots for the next scheduled run
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/offers.json data/offers.previous.json data/source_records.json data/crawl_report.json data/review_queue.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh coupon snapshots and source status"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

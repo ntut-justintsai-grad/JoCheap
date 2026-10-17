@@ -1,0 +1,4078 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "2026-10-16-v3-simple",
+  "mode": "real",
+  "generatedAt": "2026-10-16T10:35:37+00:00",
+  "updateStatus": "configured_not_verified",
+  "coverage": "partial",
+  "sources": [
+    {
+      "brand": "KFC",
+      "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+      "sourcePublisher": "好康情報誌",
+      "sourceType": "aggregator",
+      "coverage": "partial",
+      "lastAttemptAt": "2026-10-16T06:36:00Z",
+      "lastSuccessAt": "2026-10-16T06:36:00Z",
+      "status": "manual_snapshot",
+      "errorSummary": "開發環境直接 HTTP 連線不可用；由可讀來源逐筆轉錄，定時更新尚未實測。"
+    },
+    {
+      "brand": "PH",
+      "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+      "sourcePublisher": "好康情報誌",
+      "sourceType": "aggregator",
+      "coverage": "partial",
+      "lastAttemptAt": "2026-10-16T06:36:00Z",
+      "lastSuccessAt": "2026-10-16T06:36:00Z",
+      "status": "manual_snapshot",
+      "errorSummary": "開發環境直接 HTTP 連線不可用；由可讀來源逐筆轉錄，定時更新尚未實測。"
+    }
+  ],
+  "offers": [
+    {
+      "id": "kfc-16845",
+      "brand": "KFC",
+      "code": "16845",
+      "title": "4 件好時光",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 13500,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 1,
+            "tart": 1,
+            "friesSmall": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16845",
+        "expectedItems": {
+          "burger": 1,
+          "tart": 1,
+          "friesSmall": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16844",
+      "brand": "KFC",
+      "code": "16844",
+      "title": "雙層暖心點",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 16700,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 1,
+            "tart": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16844",
+        "expectedItems": {
+          "burger": 1,
+          "tart": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16843",
+      "brand": "KFC",
+      "code": "16843",
+      "title": "花生好事多",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 16900,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 1,
+            "tart": 1,
+            "friesSmall": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16843",
+        "expectedItems": {
+          "burger": 1,
+          "tart": 1,
+          "friesSmall": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16858",
+      "brand": "KFC",
+      "code": "16858",
+      "title": "QQ 雞套餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 13000,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "qq": 10
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16858",
+        "expectedItems": {
+          "chicken": 2,
+          "qq": 10
+        }
+      }
+    },
+    {
+      "id": "kfc-16839",
+      "brand": "KFC",
+      "code": "16839",
+      "title": "炸雞雞塊獨享餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 13900,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "nuggets": 4,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16839",
+        "expectedItems": {
+          "chicken": 2,
+          "nuggets": 4,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16842",
+      "brand": "KFC",
+      "code": "16842",
+      "title": "炸雞經典餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 16300,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "tart": 1,
+            "friesSmall": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16842",
+        "expectedItems": {
+          "chicken": 2,
+          "tart": 1,
+          "friesSmall": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16840",
+      "brand": "KFC",
+      "code": "16840",
+      "title": "雙雞饗宴 8 件組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 16800,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 2,
+            "nuggets": 4,
+            "tart": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16840",
+        "expectedItems": {
+          "chicken": 2,
+          "nuggets": 4,
+          "tart": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16859",
+      "brand": "KFC",
+      "code": "16859",
+      "title": "雞塊富翁餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 18900,
+          "surchargeMinor": 0,
+          "items": {
+            "nuggets": 20,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16859",
+        "expectedItems": {
+          "nuggets": 20,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16388",
+      "brand": "KFC",
+      "code": "16388",
+      "title": "午茶三件組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 8000,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 2,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-01-21",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16388",
+        "expectedItems": {
+          "tart": 2,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-26975",
+      "brand": "KFC",
+      "code": "26975",
+      "title": "蛋撻五件組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 14100,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 4,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26975",
+        "expectedItems": {
+          "tart": 4,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16658",
+      "brand": "KFC",
+      "code": "16658",
+      "title": "蛋撻與瓶裝可樂",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 14800,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 4,
+            "bottle1250": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16658",
+        "expectedItems": {
+          "tart": 4,
+          "bottle1250": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16720",
+      "brand": "KFC",
+      "code": "16720",
+      "title": "雙小堡與綠茶",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 9900,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 2,
+            "drinkSmall": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-30",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "小型原味脆雞堡，不自動計作獨立主餐。",
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16720",
+        "expectedItems": {
+          "burger": 2,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "ph-16448",
+      "brand": "PH",
+      "code": "16448",
+      "title": "雙 9 吋披薩組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 25000,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "火辣辣墨西哥",
+                "松露蕈菇起司丁"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "炙燒豬肉總匯",
+                "蒜香起司燻雞培根",
+                "熱帶鳳梨海鮮總匯",
+                "彩蔬鮮菇",
+                "日式照燒雞",
+                "醬燒鮮蛤田園"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16448",
+        "expectedItems": {
+          "pizza9": 2
+        }
+      }
+    },
+    {
+      "id": "ph-16420",
+      "brand": "PH",
+      "code": "16420",
+      "title": "雙披薩分享組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 29800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "火辣辣墨西哥"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "火辣辣墨西哥"
+              ]
+            }
+          ],
+          "distinctPizzaSlots": true
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16420",
+        "expectedItems": {
+          "pizza9": 2
+        }
+      }
+    },
+    {
+      "id": "ph-16419",
+      "brand": "PH",
+      "code": "16419",
+      "title": "小披薩與烤腿排",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 29800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "roast": 4
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "火辣辣墨西哥"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16419",
+        "expectedItems": {
+          "pizza9": 1,
+          "roast": 4
+        }
+      }
+    },
+    {
+      "id": "ph-16171",
+      "brand": "PH",
+      "code": "16171",
+      "title": "兩款 9 吋披薩",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 29800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "夏威夷",
+                "四小福",
+                "彩蔬鮮菇"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16171",
+        "expectedItems": {
+          "pizza9": 2
+        }
+      }
+    },
+    {
+      "id": "ph-16007",
+      "brand": "PH",
+      "code": "16007",
+      "title": "大小披薩組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 36800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 1,
+            "pizza9": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza13",
+              "allowed": [
+                "炙燒豬肉總匯",
+                "彩蔬鮮菇"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "和風章魚燒",
+                "韓式泡菜豬五花",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "火辣辣墨西哥",
+                "彩蔬鮮菇",
+                "BBQ黃金嫩雞",
+                "熱帶鳳梨海鮮總匯",
+                "日式照燒雞",
+                "義式培根薯金幣",
+                "四小福",
+                "夏威夷",
+                "蒜香起司燻雞培根"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16007",
+        "expectedItems": {
+          "pizza13": 1,
+          "pizza9": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-50551",
+      "brand": "KFC",
+      "code": "50551",
+      "title": "四塊脆雞與綠茶",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 17500,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 4,
+            "drinkSmall": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-10-20",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "50551",
+        "expectedItems": {
+          "chicken": 4,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16849",
+      "brand": "KFC",
+      "code": "16849",
+      "title": "雞塊大薯共享組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 23900,
+          "surchargeMinor": 0,
+          "items": {
+            "nuggets": 20,
+            "friesLarge": 1,
+            "drinkSmall": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16849",
+        "expectedItems": {
+          "nuggets": 20,
+          "friesLarge": 1,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16851",
+      "brand": "KFC",
+      "code": "16851",
+      "title": "脆雞薯餅組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 7900,
+          "surchargeMinor": 0,
+          "items": {
+            "chicken": 1,
+            "hashBrown": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16851",
+        "expectedItems": {
+          "chicken": 1,
+          "hashBrown": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16125",
+      "brand": "KFC",
+      "code": "16125",
+      "title": "蛋撻綠茶午茶組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 5000,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16125",
+        "expectedItems": {
+          "tart": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16672",
+      "brand": "KFC",
+      "code": "16672",
+      "title": "蛋撻大福奶茶組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 8800,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 1,
+            "daifuku": 1,
+            "milkTeaCup": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-21",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16672",
+        "expectedItems": {
+          "tart": 1,
+          "daifuku": 1,
+          "milkTeaCup": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-26833",
+      "brand": "KFC",
+      "code": "26833",
+      "title": "雙蛋撻蘋果汁組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 8500,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 2,
+            "appleJuiceBottle": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-11-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26833",
+        "expectedItems": {
+          "tart": 2,
+          "appleJuiceBottle": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16399",
+      "brand": "KFC",
+      "code": "16399",
+      "title": "雙蛋撻大福組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 11500,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 2,
+            "daifuku": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-21",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16399",
+        "expectedItems": {
+          "tart": 2,
+          "daifuku": 1,
+          "drinkSmall": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16722",
+      "brand": "KFC",
+      "code": "16722",
+      "title": "雙小堡薯餅組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 11800,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 2,
+            "hashBrown": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-30",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "小型漢堡不自動計為獨立主餐。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16722",
+        "expectedItems": {
+          "burger": 2,
+          "hashBrown": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16724",
+      "brand": "KFC",
+      "code": "16724",
+      "title": "雙小堡大福組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 15800,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 2,
+            "daifuku": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-30",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "小型漢堡不自動計為獨立主餐。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16724",
+        "expectedItems": {
+          "burger": 2,
+          "daifuku": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16848",
+      "brand": "KFC",
+      "code": "16848",
+      "title": "超蝦點心拼盤組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 17900,
+          "surchargeMinor": 0,
+          "items": {
+            "seafoodPlatter": 1,
+            "drinkSmall": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "拼盤含超蝦塊、魚圈圈、雙色 QQ 球及大薯，但各單品數量未明，僅以完整拼盤 1 份計數。",
+        "通路、門市、限購及多券使用條款待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16848",
+        "expectedItems": {
+          "seafoodPlatter": 1,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16852",
+      "brand": "KFC",
+      "code": "16852",
+      "title": "漢堡雞塊雙杯組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 21900,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 1,
+            "nuggets": 8,
+            "tart": 2,
+            "drinkSmall": 2
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16852",
+        "expectedItems": {
+          "burger": 1,
+          "nuggets": 8,
+          "tart": 2,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "kfc-16853",
+      "brand": "KFC",
+      "code": "16853",
+      "title": "雙堡點心組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 24500,
+          "surchargeMinor": 0,
+          "items": {
+            "burger": 2,
+            "tart": 1,
+            "friesSmall": 1,
+            "nuggets": 4,
+            "drinkSmall": 2
+          },
+          "individualMains": 2,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-03-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16853",
+        "expectedItems": {
+          "burger": 2,
+          "tart": 1,
+          "friesSmall": 1,
+          "nuggets": 4,
+          "drinkSmall": 2
+        }
+      }
+    },
+    {
+      "id": "ph-16402",
+      "brand": "PH",
+      "code": "16402",
+      "title": "小披薩辣芝心腸組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 28800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "spicySausage": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "火辣辣墨西哥"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16402",
+        "expectedItems": {
+          "pizza9": 1,
+          "spicySausage": 6
+        }
+      }
+    },
+    {
+      "id": "ph-16449",
+      "brand": "PH",
+      "code": "16449",
+      "title": "雙小披薩歡聚配餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 39800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "roast": 5
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "兩個 9 吋鬆厚披薩，依來源限原價 410 元以下口味；尚未指定口味，須結帳確認；配餐選 5 塊厚燒醬烤腿排"
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 39800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "bbqChickenSet": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "兩個 9 吋鬆厚披薩，依來源限原價 410 元以下口味；尚未指定口味，須結帳確認；配餐選 1 份 BBQ 烤雞組（3 腿 3 翅）"
+        },
+        {
+          "id": "choice-3",
+          "priceMinor": 39800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "codBites": 10
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "兩個 9 吋鬆厚披薩，依來源限原價 410 元以下口味；尚未指定口味，須結帳確認；配餐選 10 塊和風鱈魚塊"
+        },
+        {
+          "id": "choice-4",
+          "priceMinor": 39800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "germanSausage": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "兩個 9 吋鬆厚披薩，依來源限原價 410 元以下口味；尚未指定口味，須結帳確認；配餐選 6 條德國芝心腸"
+        },
+        {
+          "id": "choice-5",
+          "priceMinor": 39800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "spicySausage": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "兩個 9 吋鬆厚披薩，依來源限原價 410 元以下口味；尚未指定口味，須結帳確認；配餐選 6 條火辣辣芝心腸"
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16449",
+        "expectedItems": {
+          "pizza9": 2,
+          "roast": 5
+        }
+      }
+    },
+    {
+      "id": "ph-16450",
+      "brand": "PH",
+      "code": "16450",
+      "title": "三款小披薩配點心",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 41900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 3,
+            "chocolateQQ": 4
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "霸王雙雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "炙燒明太子嫩雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "日式照燒雞"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 41900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 3,
+            "bottle1250": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "霸王雙雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "炙燒明太子嫩雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "日式照燒雞"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-3",
+          "priceMinor": 41900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 3,
+            "soupCup": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "霸王雙雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "炙燒明太子嫩雞"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "日式照燒雞"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16450",
+        "expectedItems": {
+          "pizza9": 3,
+          "chocolateQQ": 4
+        }
+      }
+    },
+    {
+      "id": "ph-26823",
+      "brand": "PH",
+      "code": "26823",
+      "title": "大披薩點心分享組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 63300,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 1,
+            "potatoCoinsSmall": 1,
+            "chocolateQQ": 5,
+            "bottle1250": 1,
+            "roast": 4
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza13",
+              "allowed": [
+                "經典海鮮四重奏",
+                "鐵板雙牛",
+                "韓式泡菜豬五花",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "超級總匯",
+                "BBQ黃金嫩雞",
+                "彩蔬鮮菇",
+                "熱帶鳳梨海鮮總匯"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 63300,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 1,
+            "potatoCoinsSmall": 1,
+            "chocolateQQ": 5,
+            "bottle1250": 1,
+            "germanSausage": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza13",
+              "allowed": [
+                "經典海鮮四重奏",
+                "鐵板雙牛",
+                "韓式泡菜豬五花",
+                "炙燒明太子嫩雞",
+                "超級夏威夷",
+                "超級總匯",
+                "BBQ黃金嫩雞",
+                "彩蔬鮮菇",
+                "熱帶鳳梨海鮮總匯"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26823",
+        "expectedItems": {
+          "pizza13": 1,
+          "potatoCoinsSmall": 1,
+          "chocolateQQ": 5,
+          "bottle1250": 1,
+          "roast": 4
+        }
+      }
+    },
+    {
+      "id": "ph-16422",
+      "brand": "PH",
+      "code": "16422",
+      "title": "松露小披薩配點心",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 22200,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "potatoCoinsLarge": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露起司丁"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 22200,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "mochiQQ": 10
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露起司丁"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-3",
+          "priceMinor": 22200,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "greenTea1250": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露起司丁"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-01-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16422",
+        "expectedItems": {
+          "pizza9": 1,
+          "potatoCoinsLarge": 1
+        }
+      }
+    },
+    {
+      "id": "ph-16425",
+      "brand": "PH",
+      "code": "16425",
+      "title": "雙披薩薯金幣組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 29800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "potatoCoinsSmall": 1,
+            "greenTea580": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "彩蔬鮮菇"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "彩蔬鮮菇"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 29800,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 2,
+            "potatoCoinsSmall": 1,
+            "chocolateQQ": 5
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "彩蔬鮮菇"
+              ]
+            },
+            {
+              "size": "pizza9",
+              "allowed": [
+                "彩蔬鮮菇"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-01-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16425",
+        "expectedItems": {
+          "pizza9": 2,
+          "potatoCoinsSmall": 1,
+          "greenTea580": 1
+        }
+      }
+    },
+    {
+      "id": "ph-16325",
+      "brand": "PH",
+      "code": "16325",
+      "title": "小披薩幸福配餐",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 13900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "chipsMini": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "9 吋夏威夷鬆厚披薩；配餐選 1 包樂事 mini"
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 13900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "chocolateQQ": 4
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "9 吋夏威夷鬆厚披薩；配餐選 4 顆巧克力 QQ 球"
+        },
+        {
+          "id": "choice-3",
+          "priceMinor": 13900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "yuzuTeaBottle": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "9 吋夏威夷鬆厚披薩；配餐選 1 瓶茉香柚茶"
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16325",
+        "expectedItems": {
+          "pizza9": 1,
+          "chipsMini": 1
+        },
+        "conflictGroupId": "PH-16325"
+      }
+    },
+    {
+      "id": "ph-16168",
+      "brand": "PH",
+      "code": "16168",
+      "title": "海鮮小披薩配餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "choice-1",
+          "priceMinor": 29900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "chocolateQQ": 5
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露干貝鮮蝦起司",
+                "法式海陸盛宴",
+                "千島海鮮盛宴"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-2",
+          "priceMinor": 29900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "chickenCartilageSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露干貝鮮蝦起司",
+                "法式海陸盛宴",
+                "千島海鮮盛宴"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "choice-3",
+          "priceMinor": 29900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza9": 1,
+            "potatoCoinsSmall": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "pizzaSlots": [
+            {
+              "size": "pizza9",
+              "allowed": [
+                "松露干貝鮮蝦起司",
+                "法式海陸盛宴",
+                "千島海鮮盛宴"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "適用通路、門市、限購及多券使用規則待確認。",
+        "每次優惠僅選本配置的一種配餐；不同選項共用此優惠的使用限額。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:58:00Z",
+        "parsedAt": "2026-10-16T06:58:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16168",
+        "expectedItems": {
+          "pizza9": 1,
+          "chocolateQQ": 5
+        }
+      }
+    },
+    {
+      "id": "kfc-26953-a",
+      "brand": "KFC",
+      "code": "26953",
+      "title": "蛋撻與瓶裝可樂（衝突紀錄 1）",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 20900,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 6,
+            "bottle1250": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-11-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "同一來源的相同優惠碼對應不同內容，已排除計算。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26953",
+        "conflictGroupId": "KFC-26953",
+        "expectedItems": {
+          "tart": 6,
+          "bottle1250": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-26953-b",
+      "brand": "KFC",
+      "code": "26953",
+      "title": "蛋撻與紙包雞（衝突紀錄 2）",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 26200,
+          "surchargeMinor": 0,
+          "items": {
+            "tart": 6
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "同一來源的相同優惠碼對應不同內容，已排除計算。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26953",
+        "conflictGroupId": "KFC-26953",
+        "expectedItems": {
+          "tart": 6
+        }
+      }
+    },
+    {
+      "id": "ph-26701-a",
+      "brand": "PH",
+      "code": "26701",
+      "title": "兩個 6 吋披薩（衝突紀錄 1）",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 39900,
+          "surchargeMinor": 0,
+          "items": {},
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-11-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "同一來源的相同優惠碼對應不同內容，已排除計算。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26701",
+        "conflictGroupId": "PH-26701",
+        "expectedItems": {}
+      }
+    },
+    {
+      "id": "ph-26701-b",
+      "brand": "PH",
+      "code": "26701",
+      "title": "13 吋大披薩組（衝突紀錄 2）",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 39900,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 1
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-11-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "同一來源的相同優惠碼對應不同內容，已排除計算。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T06:36:00Z",
+        "parsedAt": "2026-10-16T06:36:00Z",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "26701",
+        "conflictGroupId": "PH-26701",
+        "expectedItems": {
+          "pizza13": 1
+        }
+      }
+    },
+    {
+      "id": "kfc-16298",
+      "brand": "KFC",
+      "code": "16298",
+      "title": "香草紙包雞雙雞餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 15900,
+          "surchargeMinor": 0,
+          "items": {
+            "paperChicken": 1,
+            "chicken": 1,
+            "drinkSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null,
+          "mainDescription": "香草紙包雞 1 份；另有原塊炸雞 1 塊",
+          "individualMainItems": {
+            "paperChicken": 1
+          }
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16298"
+      }
+    },
+    {
+      "id": "kfc-16461",
+      "brand": "KFC",
+      "code": "16461",
+      "title": "紙包雞鱈魚圈圈餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.kfcclub.com.tw/coupon",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 14500,
+          "surchargeMinor": 0,
+          "items": {
+            "paperChicken": 1,
+            "fishRings": 1,
+            "drinkMedium": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null,
+          "mainDescription": "香草紙包雞 1 份；飲料為中杯，不當成小杯數量",
+          "individualMainItems": {
+            "paperChicken": 1
+          }
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-02-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/kfc-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16461"
+      }
+    },
+    {
+      "id": "ph-16400",
+      "brand": "PH",
+      "code": "16400",
+      "title": "泡菜起司雪花牛筆管麵餐",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 22200,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "chickenCartilageSmall": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null,
+          "mainDescription": "泡菜起司雪花牛筆管麵 1 份",
+          "individualMainItems": {
+            "pasta": 1
+          },
+          "pastaTags": [
+            "meat"
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16400"
+      }
+    },
+    {
+      "id": "ph-16358",
+      "brand": "PH",
+      "code": "16358",
+      "title": "私廚筆管麵與小披薩",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "pasta-1",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "泡菜起司雪花牛筆管麵 1 份",
+          "pastaTags": [
+            "meat"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        },
+        {
+          "id": "pasta-2",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "明太子干貝鮮蝦筆管麵 1 份",
+          "pastaTags": [
+            "seafood"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        },
+        {
+          "id": "pasta-3",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "青醬干貝鱈魚筆管麵 1 份",
+          "pastaTags": [
+            "seafood"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        },
+        {
+          "id": "pasta-4",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "白醬干貝鱈魚筆管麵 1 份",
+          "pastaTags": [
+            "seafood"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        },
+        {
+          "id": "pasta-5",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "白醬炭烤雞肉筆管麵 1 份",
+          "pastaTags": [
+            "meat"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        },
+        {
+          "id": "pasta-6",
+          "priceMinor": 30900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1,
+            "pizza9": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "小披薩依來源限原價 410 元以下口味；口味未指定，需結帳確認。",
+          "mainDescription": "紅醬嫩牛乳酪筆管麵 1 份",
+          "pastaTags": [
+            "meat"
+          ],
+          "individualMainItems": {
+            "pasta": 1
+          }
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2026-12-11",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16358"
+      }
+    },
+    {
+      "id": "ph-16118",
+      "brand": "PH",
+      "code": "16118",
+      "title": "兩個大披薩組",
+      "priceType": "fixed",
+      "dataStatus": "estimate",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 55500,
+          "surchargeMinor": 0,
+          "items": {
+            "pizza13": 2
+          },
+          "individualMains": 0,
+          "channels": [
+            "unknown"
+          ],
+          "choice": "披薩口味依本券各區允許名單分配；結果會列出實際口味。",
+          "mainDescription": null,
+          "pizzaSlots": [
+            {
+              "size": "pizza13",
+              "allowed": [
+                "和風章魚燒",
+                "鐵板雙牛",
+                "超級總匯",
+                "炙燒明太子嫩雞",
+                "松露蕈菇起司丁"
+              ]
+            },
+            {
+              "size": "pizza13",
+              "allowed": [
+                "香濃蒜香海鮮",
+                "彩蔬鮮菇",
+                "四小福",
+                "夏威夷",
+                "日式照燒雞",
+                "蒜香起司燻雞培根",
+                "義式培根薯金幣",
+                "炙燒豬肉總匯"
+              ]
+            }
+          ]
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-01-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16118"
+      }
+    },
+    {
+      "id": "ph-16325-conflict-other",
+      "brand": "PH",
+      "code": "16325",
+      "title": "飯麵與個人披薩（同碼衝突）",
+      "priceType": "fixed",
+      "dataStatus": "conflict",
+      "officialUrl": "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+      "variants": [
+        {
+          "id": "standard",
+          "priceMinor": 18900,
+          "surchargeMinor": 0,
+          "items": {
+            "pasta": 1
+          },
+          "individualMains": 1,
+          "channels": [
+            "unknown"
+          ],
+          "choice": null,
+          "mainDescription": null,
+          "individualMainItems": {
+            "pasta": 1
+          }
+        }
+      ],
+      "validity": {
+        "validWindows": [
+          {
+            "toExclusive": "2027-04-01",
+            "from": null
+          }
+        ],
+        "startUnknown": true,
+        "timeBasis": "order_time",
+        "timezone": "Asia/Taipei"
+      },
+      "eligibility": {
+        "memberRequired": null,
+        "appRequired": null,
+        "storeScope": "unknown"
+      },
+      "limits": {
+        "maxUsesPerUserPerDay": null,
+        "sharedLimitGroup": null
+      },
+      "combinationPolicy": {
+        "sameOrder": "unknown",
+        "separateOrders": "unknown"
+      },
+      "conditions": [
+        "來源價格與數量已轉錄；通路、限購及門市須於官方結帳確認。"
+      ],
+      "provenance": {
+        "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
+        "sourcePublisher": "好康情報誌",
+        "sourceType": "aggregator",
+        "fetchedAt": "2026-10-16T10:26:48+00:00",
+        "parsedAt": "2026-10-16T10:26:48+00:00",
+        "officialVerifiedAt": null,
+        "officialEvidenceUrl": null,
+        "method": "manual_transcription_from_readable_source",
+        "reviewStatus": "source_fields_checked",
+        "sourceBlockId": "16325",
+        "conflictGroupId": "PH-16325"
+      }
+    }
+  ],
+  "pizzaFlavors": {
+    "和風章魚燒": {
+      "name": "和風章魚燒",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "韓式泡菜豬五花": {
+      "name": "韓式泡菜豬五花",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "超級總匯": {
+      "name": "超級總匯",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "炙燒明太子嫩雞": {
+      "name": "炙燒明太子嫩雞",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "超級夏威夷": {
+      "name": "超級夏威夷",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "火辣辣墨西哥": {
+      "name": "火辣辣墨西哥",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "松露蕈菇起司丁": {
+      "name": "松露蕈菇起司丁",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "炙燒豬肉總匯": {
+      "name": "炙燒豬肉總匯",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "蒜香起司燻雞培根": {
+      "name": "蒜香起司燻雞培根",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "熱帶鳳梨海鮮總匯": {
+      "name": "熱帶鳳梨海鮮總匯",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "彩蔬鮮菇": {
+      "name": "彩蔬鮮菇",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "日式照燒雞": {
+      "name": "日式照燒雞",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "醬燒鮮蛤田園": {
+      "name": "醬燒鮮蛤田園",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "夏威夷": {
+      "name": "夏威夷",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "四小福": {
+      "name": "四小福",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "BBQ黃金嫩雞": {
+      "name": "BBQ黃金嫩雞",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "義式培根薯金幣": {
+      "name": "義式培根薯金幣",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "霸王雙雞": {
+      "name": "霸王雙雞",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "經典海鮮四重奏": {
+      "name": "經典海鮮四重奏",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "鐵板雙牛": {
+      "name": "鐵板雙牛",
+      "tags": [
+        "meat"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "松露起司丁": {
+      "name": "松露起司丁",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "松露干貝鮮蝦起司": {
+      "name": "松露干貝鮮蝦起司",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "法式海陸盛宴": {
+      "name": "法式海陸盛宴",
+      "tags": [
+        "other"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "千島海鮮盛宴": {
+      "name": "千島海鮮盛宴",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    },
+    "香濃蒜香海鮮": {
+      "name": "香濃蒜香海鮮",
+      "tags": [
+        "seafood"
+      ],
+      "classification": "name_based_preference_not_dietary"
+    }
+  }
+}
