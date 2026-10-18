@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-18T05:19:35+00:00",
+  "fetchedAt": "2026-10-18T11:05:52+00:00",
   "status": "parsed",
   "sources": [
     {
@@ -8,10 +8,10 @@
       "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
       "sourcePublisher": "好康情報誌",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
+      "lastAttemptAt": "2026-10-18T11:05:52+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
+      "lastSuccessAt": "2026-10-18T11:05:52+00:00",
       "parsedCount": 81,
       "contentHash": "7eaaa92fae15e2062b0bfe000c5206569757e19c5a758bfc2733e59929dbe5c7",
       "responseBytes": 299579,
@@ -23,13 +23,13 @@
       "sourceUrl": "https://www.callingtaiwan.com.tw/pizzahut-coupon-code/",
       "sourcePublisher": "Calling Taiwan",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
+      "lastAttemptAt": "2026-10-18T11:05:52+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
+      "lastSuccessAt": "2026-10-18T11:05:52+00:00",
       "parsedCount": 188,
-      "contentHash": "cdce7e655e18cf0766eae1812c9d0cd084252a4ea990b03ff6179b10d62cf331",
-      "responseBytes": 833860,
+      "contentHash": "1fbc3a73c2d02956a028a2a112285e6de8ba62ac2396260433c1e609997bc793",
+      "responseBytes": 833874,
       "errorSummary": null
     },
     {
@@ -38,10 +38,10 @@
       "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
       "sourcePublisher": "KCouper 公開資料",
       "sourceType": "public_dataset",
-      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
+      "lastAttemptAt": "2026-10-18T11:05:52+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
+      "lastSuccessAt": "2026-10-18T11:05:52+00:00",
       "parsedCount": 971,
       "contentHash": "015940cddcc56484f66217b6a8eebd672625a054fce964a33ee8ae3864b73053",
       "responseBytes": 2344087,
@@ -55,19 +55,36 @@
     "PH": 194
   },
   "byStatus": {
-    "estimate": 1095,
-    "official": 2,
-    "pending": 66,
+    "pending": 160,
+    "estimate": 1003,
     "conflict": 2
   },
-  "variants": 1695,
-  "optionGroups": 1475,
+  "variants": 1806,
+  "optionGroups": 102,
+  "kfcDescriptions": {
+    "total": 971,
+    "queried": 0,
+    "reused": 971,
+    "deferred": 0,
+    "endpoint": "https://olo-api.kfcclub.com.tw/menu/v1/GetQueryFoodDetail",
+    "attemptedAt": "2026-10-18T11:05:52+00:00",
+    "shopCode": "TWI104",
+    "shopName": "台北雙連店",
+    "byStatus": {
+      "success": 971
+    },
+    "parseStatus": {
+      "pending": 96,
+      "estimate": 875
+    },
+    "retainedSuccessful": 0
+  },
   "pizzahutLookup": {
-    "attemptedAt": "2026-10-18T05:19:35+00:00",
+    "attemptedAt": "2026-10-18T11:05:52+00:00",
     "endpoint": "https://www.pizzahut.com.tw/order/?m=ajax",
     "total": 194,
-    "queried": 156,
-    "reused": 38,
+    "queried": 2,
+    "reused": 192,
     "stopped": false,
     "byStatus": {
       "matched": 190,
