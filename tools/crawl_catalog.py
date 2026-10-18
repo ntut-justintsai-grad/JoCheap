@@ -11,6 +11,7 @@ from ordering_rules import apply_reviewed_ordering
 from data_quality import audit_report
 from official_verification import refresh_official,fetch_official
 from pizzahut_lookup import refresh as refresh_pizzahut,fetch_coupon,save_cache
+from pizzahut_menu import update_file as update_menu,apply as apply_menu
 from kfc_description import refresh as refresh_kfc,fetch_detail
 
 ROOT=Path(__file__).resolve().parent.parent
@@ -90,7 +91,12 @@ def main():
         try:
             age=(datetime.now(timezone.utc)-datetime.fromisoformat(old['generatedAt'].replace('Z','+00:00'))).total_seconds()
             if 0<=age<7*86400:
-                print('Weekly parsing is not due; rebuilding with the existing snapshot.');return
+                print('Weekly parsing is not due; rebuilding with the existing snapshot.');
+                menu_cache=target.parent/'pizzahut_menu.json'
+                if menu_cache.exists():
+                    apply_menu(old,json.loads(menu_cache.read_text(encoding='utf-8')))
+                    target.write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+                return
         except (KeyError,ValueError):pass
     cache=target.parent/'source_records.json'
     old_records=json.loads(cache.read_text(encoding='utf-8')) if cache.exists() else []
@@ -125,6 +131,7 @@ def main():
     data['qualityReport']=audit_report(data,stamp)
     target.with_suffix('.previous.json').write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     target.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+    if not args.cache_dir:update_menu(target,stamp=stamp)
     cache.write_text(json.dumps(records,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     (target.parent/'quality_report.json').write_text(json.dumps(data['qualityReport'],ensure_ascii=False,indent=2),encoding='utf-8')

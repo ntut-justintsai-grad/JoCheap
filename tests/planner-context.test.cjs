@@ -31,6 +31,17 @@ test('date-only validity is explicitly unknown for serving hours',()=>{
  const context=P.planningContext({...demo,offers:[o]},{...request,brands:['PH']});assert.equal(context.schedules[0].unknown,true);
  assert.equal(P.planTimeWindows({orders:[{validity:o.validity}]},at).unknown,true);
 });
+test('breakfast and regular meal windows remain distinguishable after changing settings',()=>{
+ const breakfast=offer('breakfast','KFC',{hashBrown:1},{validWindows:[{from:'2026-10-19',startMinute:480,endMinute:630}]}),regular=offer('regular','KFC',{hashBrown:1,chicken:4},{validWindows:[{from:'2026-10-19',startMinute:630,endMinute:1380}]});
+ breakfast.sourceMetadata={mealPeriods:[1]};regular.sourceMetadata={mealPeriods:[2,3,4,5]};
+ const data={...demo,offers:[breakfast,regular]};
+ for(const extra of [{},{people:7},{budgetMinor:30000}]){
+  const s=P.planningContext(data,{...request,...extra,demand:{hashBrown:2}}).schedules[0];
+  assert.deepEqual(s.periods,[{label:'早餐優惠',windows:[[480,630]]},{label:'一般餐點優惠',windows:[[630,1380]]}]);
+ }
+ const s=P.planningContext(data,{...request,demand:{hashBrown:2,chicken:8}}).schedules[0];
+ assert.deepEqual(s.windows,[[630,1380]]);assert.equal(s.periods.length,1);assert.equal(s.periods[0].label,'一般餐點優惠');
+});
 test('production Pizza Hut menu excludes KFC mains and an 8-plus-3 quote exposes its full time range',()=>{
  const data=require('../data/offers.json');
  const menu=P.planningContext(data,{...request,brands:['PH']});assert(menu.mains.includes('pizza'));assert(!menu.mains.includes('chicken'));assert(!menu.items.includes('paperChicken'));assert(!menu.snacks.includes('tart'));

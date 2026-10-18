@@ -28,3 +28,6 @@ for(const [code,chicken] of [['16725',2],['16726',4]]){
 }
 const priced=new Set(F.planningOffers(data,req,now).filter(o=>F.recommendationCheck(data,o,now,req).allowed).map(o=>o.id));
 console.log(JSON.stringify({total:data.offers.length,priceableCodes:priced.size,sourceVersions:data.offers.reduce((n,o)=>n+o.sourceVersions.length,0),candidates:candidates.length,officialConfigurations:checked.length,officialRefresh:data.officialRefresh.status}));
+
+const menu=data.menuOffers||[];assert.equal(new Set(menu.map(o=>o.id)).size,menu.length);
+for(const o of menu){assert.equal(o.kind,'direct_menu');assert.equal(o.code,'');assert.equal(o.brand,'PH');assert(F.recommendationCheck(data,o,Date.parse(o.menuSnapshot.checkedAt)+1000,{at:new Date(Date.parse(o.menuSnapshot.checkedAt)+2000).toISOString()}).allowed);assert(o.officialUrl.startsWith('https://www.pizzahut.com.tw/order/?'));assert(o.variants.every(v=>v.channels.join()==='takeaway'));}

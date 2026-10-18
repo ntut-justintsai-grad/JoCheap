@@ -31,7 +31,7 @@
         const ids=new Set(Object.keys(v.items||{}).filter(k=>v.items[k]>0));
         for(const g of v.optionGroups||[])for(const option of g.options||[])for(const [k,n] of Object.entries(option.items||{}))if(n>0)ids.add(k);
         if(v.individualMainItems?.burger||v.individualMains&&v.items?.burger)ids.add('burgerMain');
-        for(const k of ids)items.add(k);records.push({brand:o.brand,items:ids,...hours});
+        for(const k of ids)items.add(k);records.push({brand:o.brand,items:ids,breakfastOnly:o.sourceMetadata?.mealPeriods?.length===1&&o.sourceMetadata.mealPeriods[0]===1,...hours});
       }
     }
     const schedules=r.brands.map(brand=>{
@@ -39,7 +39,12 @@
       let windows=mergeWindows(rows.flatMap(o=>o.windows)),unknown=false;
       for(const id of requested){const matches=rows.filter(o=>o.items.has(id));windows=intersectWindows(windows,mergeWindows(matches.flatMap(o=>o.windows)));unknown=unknown||matches.some(o=>o.unknown);}
       if(!requested.length)unknown=rows.some(o=>o.unknown);
-      return {brand,windows,unknown};
+      // Keep the breakfast boundary visible even when the same abstract food
+      // (e.g. a burger or hash brown) has coupons on both sides of it.
+      const breakfastEnds=records.filter(o=>o.brand===brand&&o.breakfastOnly).flatMap(o=>o.windows.map(w=>w[1]));
+      const boundary=breakfastEnds.length?Math.max(...breakfastEnds):null;
+      const periods=boundary===null?[]:[{label:'早餐優惠',windows:intersectWindows(windows,[[0,boundary]])},{label:'一般餐點優惠',windows:intersectWindows(windows,[[boundary,1440]])}].filter(p=>p.windows.length);
+      return {brand,windows,unknown,requested,periods};
     });
     return {date,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
   }
@@ -66,6 +71,13 @@
     potatoCoinsSmall:{brand:'PH',group:'薯類',portion:1},potatoCoinsLarge:{brand:'PH',group:'薯類',portion:1},chickenCartilageSmall:{brand:'PH',group:'雞肉小食',portion:1},germanSausage:{brand:'PH',group:'芝心腸',portion:3},spicySausage:{brand:'PH',group:'芝心腸',portion:3},codBites:{brand:'PH',group:'魚類小食',portion:5},chocolateQQ:{brand:'PH',group:'QQ 球',portion:5},mochiQQ:{brand:'PH',group:'QQ 球',portion:5},chipsMini:{brand:'PH',group:'薯類',portion:1}
   };
   Object.assign(SNACK_META,{qqPack:{brand:'KFC',group:'QQ 球',portion:1},shrimpPack:{brand:'KFC',group:'海鮮小食',portion:1},friesMedium:{brand:'KFC',group:'薯類',portion:1},chickenCartilageLarge:{brand:'PH',group:'雞肉小食',portion:1}});
+  for(const [id,group,portion,perPerson,perGroup] of [
+    ['chickenBalls','雞肉小食',1,1],['friedMushrooms','蔬菜小食',1,1],['cheesePork','豬肉小食',1,1],['fishCakeTrio','魚類小食',1,1],['seafoodPancake','海鮮小食',1,1],
+    ['chickenStrips','雞肉小食',2,2],['mexicanSausage','芝心腸',3,3],['germanSausagePack','芝心腸',1,1],['cartilageMenuPack','雞肉小食',1,1],
+    ['peachCheeseTart','起司塔',1,1],['coldCheeseTart','起司塔',1,1],['warmCheeseTart','起司塔',1,1],['durianIceCream','冰淇淋甜點',1,1],
+    ['phSeaLarge','綜合拼盤',1,1,true],['phHotLarge','綜合拼盤',1,1,true],['phRoastPlatter','綜合拼盤',1,1,true],['phSeaSmall','綜合拼盤',1,1,true],['phHotSmall','綜合拼盤',1,1,true],['phTaiwanTrio','綜合拼盤',1,1,true],
+    ['bbqLegThighPack','烤雞',1,1,true],['bbqWingDrumPack','烤雞',1,1,true],['basque4','蛋糕',1,1,true],['basque8','蛋糕',1,1,true],['coldCheeseGift','起司塔',1,1,true],['warmCheeseGift','起司塔',1,1,true]
+  ])SNACK_META[id]={brand:'PH',group,portion,perPerson,perGroup:!!perGroup};
   function buildSimple(p){
     const n=Number(p.people);if(!Number.isInteger(n)||n<1||n>30)throw Error('用餐人數請填 1～30 人。');
     const snack=p.mealMode==='snack',mains=normalizeMains(p),family=snack?'snack':mains.length===1?mains[0]:'mixed',rich=RICHNESS[p.richness||'normal'];if(!rich)throw Error('請選擇點心程度。');
@@ -83,7 +95,7 @@
     });
     const personal=mains.some(k=>['burger','wrapped','pasta'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
-    for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=Math.ceil(n*(F.SNACKS[id]?.perPerson??.5));}
+    for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=SNACK_META[id].perGroup?1:Math.ceil(n*(SNACK_META[id].perPerson??F.SNACKS[id]?.perPerson??.5));}
     const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
     if(snackGoal.servings)demand.snackPortions=snackGoal.servings;
     if(Object.values(demand).some(n=>!Number.isInteger(n)||n<0||n>60))throw Error('建議份量超過目前每項 60 的上限，請減少人數或調整食量。');

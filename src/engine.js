@@ -199,6 +199,7 @@
     return {allowed:true,status:'matched',productId:record.productId,typeId:record.typeId,checkedAt:record.checkedAt,detailUrl:'https://www.pizzahut.com.tw/order/?'+new URLSearchParams({mode:'step_2',type_id:record.typeId,cno:o.code}).toString(),label:retained?'本次查碼失敗・沿用上次商品配對':stale?'上次官方查碼已配對・資料較舊':'官方查碼已配對',retained,stale};
   }
   function sourceConfidence(o,now=Date.now()){
+    if(o.kind==='direct_menu')return {level:'official_menu',label:'官方單點菜單・供應以門市為準'};
     if(o.brand==='KFC'&&o.sourceMetadata?.compositionBasis==='official_intro')return {level:'official_description',label:'官方餐點說明・依原組合估算'};
     if(o.brand==='PH'&&o.couponLookup){const paired=couponLookupCheck(o,now);return {level:paired.allowed?'code_matched':paired.status==='invalid'?'invalid_code':'lookup_pending',label:paired.label+(paired.allowed?'・餐點價目依來源估算':'')+(o.sourceConflict?'・來源版本有差異':'')};}
     if(verificationCheck(o,now).allowed)return {level:'official',label:'官方基本配置已核對'};
@@ -214,6 +215,11 @@
     return {level:'source',label:o.provenance?.sourcePublisher==='KCouper 公開資料'?'KCouper 官網 API 整理・估算':'來源記載・估算'};
   }
   function recommendationCheck(dataset,o,now=Date.now(),r={}){
+    if(o.kind==='direct_menu'){
+      const m=o.menuSnapshot,checked=Date.parse(m?.checkedAt),until=Date.parse(m?.recheckBy),at=Date.parse(r.at);
+      const valid=o.brand==='PH'&&m?.productId>0&&m.contentSignature===contentSignature(o)&&m.contentHash&&m.sourceUrl?.startsWith('https://www.pizzahut.com.tw/order/?')&&Number.isFinite(checked)&&Number.isFinite(until)&&until>checked&&until-checked<=8*86400000&&now>=checked&&now<until&&(!Number.isFinite(at)||at>=checked&&at<until)&&o.priceType==='fixed'&&o.variants?.length&&o.variants.every(v=>Number.isSafeInteger(v.priceMinor)&&v.priceMinor>0&&Object.keys(v.items||{}).length&&!Object.keys(v.items).some(k=>k.startsWith('food_')));
+      return {allowed:!!valid&&r.dataScope!=='official',reason:valid?'官方單點菜單・供應以門市為準':'官方單點菜單待更新'};
+    }
     if(dataset.mode==='demo')return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'合成示範，不能兌換'};
     if(o.brand==='KFC'&&dataset.sourcePolicy?.KFC?.compositionBasis==='official_intro'&&o.sourceMetadata?.compositionBasis!=='official_intro')return {allowed:false,reason:'待取得官方餐點說明，不以預設選項代替基本組合'};
     if(o.brand==='PH'&&(o.couponLookup||dataset.sourcePolicy?.PH?.apiIntegration==='code_lookup')){const paired=couponLookupCheck(o,now);if(!paired.allowed)return {allowed:false,reason:paired.label};}
@@ -237,7 +243,7 @@
     return {...version,couponLookup:root.couponLookup,officialUrl:paired.detailUrl||version.officialUrl,observations:root.observations,sourceVersions:versions,sourceConflict:root.dataStatus==='conflict',conflictReason:root.dataStatus==='conflict'?root.reviewReason:null,verification:{status:'unverified',reason:'此來源版本未完成官方逐配置核對'}};
   }
   function planningOffers(dataset,r,now){
-    if(!dataset.recommendationPolicy?.allowAllSources)return dataset.offers;
+    if(!dataset.recommendationPolicy?.allowAllSources)return [...dataset.offers,...(dataset.menuOffers||[])];
     const out=[];
     for(const root of dataset.offers){
       const checked=verificationCheck(root,now).allowed;
@@ -257,6 +263,7 @@
         out.push(o);
       }
     }
+    if(r.dataScope!=='official')out.push(...(dataset.menuOffers||[]));
     return out;
   }
   function catalogChoice(o,category='all',at=new Date().toISOString()){
@@ -393,7 +400,7 @@
         const slot=brandSlots[c.offer.brand]||0;brandSlots[c.offer.brand]=slot+1;
         const fee=r.channel==='delivery'?(r.fees?.[c.offer.brand]?.[slot]??null):0;
         const service=r.channel==='delivery'?(r.serviceFees?.[c.offer.brand]?.[slot]??0):0;
-        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderMethod:c.ordering.method||r.orderMethod||'official_web',paymentMethod:c.ordering.paymentMethod||r.paymentMethod||'any',orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,couponLookup:c.offer.couponLookup||null,officialMeal:c.offer.sourceMetadata?.officialMeal||null,validity:c.offer.validity,confidence:sourceConfidence(c.offer,now),sourceVersionKey:c.offer.sourceVersionKey||null,sourceConflict:!!c.offer.sourceConflict,conflictReason:c.offer.conflictReason||null,sourceFetchedAt:c.offer.provenance?.fetchedAt,sourcePublisher:c.offer.provenance?.sourcePublisher,sourceText:c.offer.rawText,sourceUpdatedAt:c.offer.sourceMetadata?.sourceUpdatedAt,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
+        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,kind:c.offer.kind||'coupon',menuSnapshot:c.offer.menuSnapshot||null,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderMethod:c.ordering.method||r.orderMethod||'official_web',paymentMethod:c.ordering.paymentMethod||r.paymentMethod||'any',orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,couponLookup:c.offer.couponLookup||null,officialMeal:c.offer.sourceMetadata?.officialMeal||null,validity:c.offer.validity,confidence:sourceConfidence(c.offer,now),sourceVersionKey:c.offer.sourceVersionKey||null,sourceConflict:!!c.offer.sourceConflict,conflictReason:c.offer.conflictReason||null,sourceFetchedAt:c.offer.provenance?.fetchedAt,sourcePublisher:c.offer.provenance?.sourcePublisher,sourceText:c.offer.rawText,sourceUpdatedAt:c.offer.sourceMetadata?.sourceUpdatedAt,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
       });
       const unknown=orders.some(o=>o.total===null),knownSubtotal=sum(orders.map(o=>o.base));
       const total=unknown?null:sum(orders.map(o=>o.total));

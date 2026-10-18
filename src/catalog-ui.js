@@ -6,14 +6,14 @@
   const key=JSON.stringify([data.datasetVersion,q,brand,category,rawMax,$('browse-active').checked,$('browse-sort').value]);if(key!==signature){signature=key;limit=24;}
   const format=items=>Object.entries(items||{}).filter(([k,n])=>I[k]&&n>0&&!['individual','snackPortions'].includes(k)).map(([k,n])=>`${I[k].name} ${n} ${I[k].unit}`).join('＋');
   const queryCategory=category==='all'&&q.includes('紙包雞')?'paperChicken':category;
-  const rows=data.offers.map(o=>F.catalogOffer(o)).map(o=>({o,choice:F.catalogChoice(o,queryCategory)})).filter(({o,choice})=>(brand==='all'||o.brand===brand)&&(!q||[o.title,o.code,o.rawText,...o.variants.map(v=>format(v.items))].join(' ').toLowerCase().includes(q))&&(queryCategory==='all'||choice)&&(!rawMax||(choice?.total??o.displayPriceMinor??Infinity)<=max)&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
+  const rows=[...data.offers,...(data.menuOffers||[])].map(o=>F.catalogOffer(o)).map(o=>({o,choice:F.catalogChoice(o,queryCategory)})).filter(({o,choice})=>(brand==='all'||o.brand===brand)&&(!q||[o.title,o.code,o.rawText,...o.variants.map(v=>format(v.items))].join(' ').toLowerCase().includes(q))&&(queryCategory==='all'||choice)&&(!rawMax||(choice?.total??o.displayPriceMinor??Infinity)<=max)&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
   const cost=row=>row.choice?.total??row.o.displayPriceMinor??Infinity;
   rows.sort((a,b)=>(F.recommendationCheck(data,b.o).allowed?1:0)-(F.recommendationCheck(data,a.o).allowed?1:0)||($('browse-sort').value==='price'?cost(a)-cost(b):(a.o.validity?.validWindows?.[0]?.toExclusive||'9999').localeCompare(b.o.validity?.validWindows?.[0]?.toExclusive||'9999'))||a.o.id.localeCompare(b.o.id));
   $('browse-summary').textContent=rows.length+' 個優惠';$('browse-grid').replaceChildren();
   for(const {o,choice} of rows.slice(0,limit)){
    const check=F.recommendationCheck(data,o),eligible=check.allowed&&!F.mealIdentityIssue(o),pair=o.brand==='PH'?F.couponLookupCheck(o):null;
    let base=choice?.base||o.variants[0],selected=choice?.selected||base,selections=choice?.selections||{};
-   const card=h('article',{class:'coupon-card'},h('span',{class:'muted'},brandName(o.brand)+'・'+o.code),h('h3',{},o.title.replace(new RegExp('^'+o.code+'[-－ ]*'),'')));
+   const card=h('article',{class:'coupon-card'},h('span',{class:'muted'},brandName(o.brand)+'・'+(o.kind==='direct_menu'?'官方單點':o.code)),h('h3',{},o.title.replace(new RegExp('^'+o.code+'[-－ ]*'),'')));
    if(!eligible)card.append(h('span',{class:'coupon-status'},pair?.status==='invalid'?'目前無法使用':'內容待確認'));
    const price=h('div',{class:'coupon-price'}),contents=h('p',{class:'coupon-contents'}),drinks=h('p',{class:'helper'}),options=h('div');card.append(price,contents,drinks,options);
    const update=()=>{
@@ -38,11 +38,11 @@
    const detail=h('details',{class:'coupon-options'},h('summary',{},'餐點與使用細節'));
    if(o.rawText)detail.append(h('p',{},o.rawText));if(o.reviewReason)detail.append(h('p',{class:'helper'},o.reviewReason));
    for(const c of F.couponTerms(o))detail.append(h('p',{class:'helper'},c));
-   const end=o.validity?.validWindows?.[0]?.toExclusive;if(end)detail.append(h('p',{class:'helper'},'期限至 '+new Date(Date.parse(end+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})));
+   const end=o.validity?.validWindows?.[0]?.toExclusive;if(end&&o.kind!=='direct_menu')detail.append(h('p',{class:'helper'},'期限至 '+new Date(Date.parse(end+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})));
    detail.append(safeLink(o.provenance.sourceUrl,'資料記錄'));card.append(detail);
    const actions=h('div',{class:'order-actions'});
    if(eligible&&base)actions.append(h('button',{type:'button',class:'outline-button',onclick:()=>onAdd(selected.items)},'加入配餐需求'));
-   if(data.mode!=='demo')actions.append(h('button',{type:'button',class:'text-button',onclick:()=>onCopy([brandName(o.brand)+'・'+o.code,selected?format(selected.items):o.rawText,price.textContent,o.officialUrl].join('\n'))},'複製優惠碼與餐點'));
+   if(data.mode!=='demo')actions.append(h('button',{type:'button',class:'text-button',onclick:()=>onCopy([brandName(o.brand)+'・'+(o.kind==='direct_menu'?'官方單點':o.code),selected?format(selected.items):o.rawText,price.textContent,o.officialUrl].join('\n'))},o.kind==='direct_menu'?'複製餐點':'複製優惠碼與餐點'));
    if(eligible)actions.append(safeLink(o.officialUrl,'查看官方訂餐'));card.append(actions);renderOptions();update();$('browse-grid').append(card);
   }
   if(rows.length>limit)$('browse-grid').append(h('button',{type:'button',class:'outline-button browse-more',onclick:()=>{limit+=24;render(ctx);}},'再看 24 個優惠'));

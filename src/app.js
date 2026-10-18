@@ -6,6 +6,7 @@
   F.extendItems(snapshots.real);
   const state={mealMode:'meal',mealMains:['pizza','chicken'],intentRun:0,mode:'real',mains:['pizza','chicken'],richness:'normal',fixedSnacks:[],demand:{},manual:false,result:null,lastRequest:null,worker:null,dirty:false,showMore:false,activePlan:0,autoEnabled:false,run:0};
   const brandName=b=>b==='KFC'?'肯德基':'必勝客';
+  const snackLabel=id=>I[id].name+(snapshots[state.mode].menuOffers?.some(o=>o.menuSnapshot?.limited&&o.variants.some(v=>v.items[id]>0))?'（期間限定）':'');
   const money=n=>'NT$'+(n/100).toLocaleString('zh-TW',{maximumFractionDigits:2});
   const dateTime=s=>{const d=new Date(s);return Number.isFinite(+d)?d.toLocaleString('zh-TW',{timeZone:'Asia/Taipei',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}):'未知';};
   const drinkNames={any:'不限飲料',cola:'可樂',soda:'汽水',unsweetened:'無糖茶',milkTea:'奶茶（冷熱皆可）',coldMilkTea:'冰奶茶',hotMilkTea:'熱奶茶',soup:'玉米濃湯'};
@@ -18,10 +19,14 @@
     const value=P.planningContext(snapshots[state.mode],request);state.contextCache={key,value};return value;
   }
   function renderContextTimes(){
-    const box=$('available-times');box.replaceChildren();if(!$('at').value){box.append(h('p',{},'請先選擇日期與點餐時間。'));return;}
+    const box=$('available-times');box.replaceChildren();if(!$('at').value){box.append(h('p',{},'請先選擇日期與用餐時間。'));return;}
     const context=contextMenu(state.demand),minute=Number($('order-time').value.slice(0,2))*60+Number($('order-time').value.slice(3,5));
-    box.append(h('strong',{},'所選餐點的優惠時段'));
-    for(const s of context.schedules)box.append(h('p',{},brandName(s.brand)+'：'+(!s.windows.length?'這個日期沒有可計價優惠':s.unknown?'優惠資料未標示完整供餐時段':P.formatWindows(s.windows))));
+    box.append(h('strong',{},'可查詢的優惠時段'));
+    for(const s of context.schedules){
+      const range=!s.windows.length?'這個日期沒有可計價選項':s.unknown?'完整供餐時段待門市確認':s.periods.length?s.periods.map(p=>p.label+' '+P.formatWindows(p.windows)).join('；'):P.formatWindows(s.windows);
+      box.append(h('p',{},brandName(s.brand)+'：'+range+(!s.requested.length?'（尚未指定該店餐點）':'')));
+    }
+    box.append(h('small',{},'不同時段可用餐點與優惠不同；整份需求是否湊齊，以試算結果為準。'));
     if(context.schedules.some(s=>!s.unknown&&s.windows.length&&!s.windows.some(w=>minute>=w[0]&&minute<w[1])))box.append(h('p',{class:'time-outside'},'目前選擇的時間不在上述優惠時段內。'));
   }
   function refreshMenu(notify=false){
@@ -62,8 +67,13 @@
     $('main-fieldset').hidden=state.mealMode==='snack';$('tea-fieldset').hidden=state.mealMode!=='snack';
     document.querySelectorAll('[data-meal-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mealMode===state.mealMode)));
     $('richness-label').textContent=state.mealMode==='snack'?'點心份量':'點心搭配';
-    const picks=(state.menu?.snacks||[]).slice(0,8);
-    $('tea-snack-choices').replaceChildren(h('button',{type:'button','data-tea-snack':'any','aria-pressed':String(!state.fixedSnacks.length)},'幫我搭配'),...picks.map(id=>h('button',{type:'button','data-tea-snack':id,'aria-pressed':String(state.fixedSnacks.includes(id))},I[id].emoji+' '+I[id].name)));
+    const picks=(state.menu?.snacks||[]);
+    $('tea-snack-choices').replaceChildren(h('button',{type:'button','data-tea-snack':'any','aria-pressed':String(!state.fixedSnacks.length)},'幫我搭配'));
+    for(const brand of ($('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value]))for(const category of ['鹹點','甜點','拼盤與烤雞']){
+      const ids=picks.filter(id=>{const m=P.SNACK_META[id],group=/綜合拼盤|烤雞/.test(m.group)?'拼盤與烤雞':/蛋撻|QQ 球|起司塔|蛋糕|冰淇淋/.test(m.group)?'甜點':'鹹點';return m.brand===brand&&group===category;});
+      if(!ids.length)continue;
+      $('tea-snack-choices').append(h('section',{class:'tea-snack-section'},h('h4',{},($('brand-scope').value==='all'?brandName(brand)+'・':'')+category),h('div',{class:'tea-snack-list'},ids.map(id=>h('button',{type:'button','data-tea-snack':id,'aria-pressed':String(state.fixedSnacks.includes(id))},I[id].emoji+' '+snackLabel(id))))));
+    }
     $('drink-preference').disabled=!$('drinks').checked;
   }
   function renderSnackGroups(){
@@ -71,7 +81,7 @@
     for(const brand of ($('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value])){
       const list=h('div',{class:'brand-snack-list'}),section=h('section',{class:'snack-brand-section'},h('h3',{},brandName(brand)),list);
       for(const [id,meta] of Object.entries(P.SNACK_META).filter(([id,m])=>m.brand===brand&&state.menu?.snacks.includes(id))){
-        list.append(h('label',{},h('input',{type:'checkbox','data-fixed-snack':id,checked:state.fixedSnacks.includes(id)}),I[id].name));
+        list.append(h('label',{},h('input',{type:'checkbox','data-fixed-snack':id,checked:state.fixedSnacks.includes(id)}),snackLabel(id)));
       }
       if(list.childElementCount)$('snack-groups').append(section);
     }
@@ -84,7 +94,7 @@
     if(recalculate)state.autoTimer=setTimeout(()=>{try{readRequest();}catch{return;}search();},650);
   }
   function readRequest(){
-    if(!$('at').value)throw Error('請填寫點餐日期與時間。');
+    if(!$('at').value)throw Error('請填寫用餐日期與時間。');
     const b=P.buildSimple(simpleConfig()),raw=$('budget').value,people=b.people;
     P.validateMainDemand(b,state.demand);
     const available=new Set([...contextMenu().items,'snackPortions','drinkServing','individual']);
@@ -92,7 +102,7 @@
     if(raw!==''&&(!Number.isFinite(Number(raw))||Number(raw)<0))throw Error('預算請填有效的非負金額。');
     const budgetMinor=raw===''?null:Math.round(Number(raw)*100)*($('budget-type').value==='person'?people:1);
     const fees={KFC:[],PH:[]};document.querySelectorAll('[data-fee-brand]').forEach(e=>{if(e.value!==''&&(!Number.isFinite(Number(e.value))||Number(e.value)<0))throw Error('外送費請填有效的非負金額。');fees[e.dataset.feeBrand][Number(e.dataset.feeSlot)]=e.value===''?null:Math.round(Number(e.value)*100);});
-    const at=$('at').value;if(!at)throw Error('請填寫預計點餐時間。');
+    const at=$('at').value;if(!at)throw Error('請填寫預計用餐時間。');
     return F.validateRequest({demand:{...state.demand},people,budgetMinor,brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],cross:$('cross-brand').checked,allowMealReplacement:$('meal-replacement').checked,channel:$('channel').value,at:at+':00+08:00',maxOrders:$('max-orders').value==='auto'?b.maxOrders:Number($('max-orders').value),estimate:state.mode==='real',exact:false,allowExtras:true,avoid:[],member:$('member').checked,app:$('order-method').value==='pk_app',orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,dataScope:$('data-scope').value,allowUnknownOrdering:$('unknown-ordering').checked,fees,snackGoal:b.snackGoal,pizzaPreference:b.pizzaPreference,pastaPreference:b.pastaPreference,drinkPreference:$('drink-preference').value});
   }
   function feeUI(){
@@ -215,7 +225,7 @@
   function search(){
     stop();$('form-error').hidden=true;let r;try{r=readRequest();}catch(e){$('form-error').textContent=e.message;$('form-error').hidden=false;return;}
     state.lastRequest=r;state.dirty=false;state.showMore=false;state.activePlan=0;$('dirty-notice').hidden=true;save();
-    $('request-summary').replaceChildren(h('span',{},`${r.people} 人`),h('span',{},({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])),h('span',{},'點餐 '+dateTime(r.at)),h('span',{},`最多 ${r.maxOrders} 筆`),h('span',{},r.exact?'指定數量剛好':'至少滿足需求'),h('span',{},r.budgetMinor===null?'不限預算':'整團 '+money(r.budgetMinor)));$('request-summary').hidden=false;
+    $('request-summary').replaceChildren(h('span',{},`${r.people} 人`),h('span',{},({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])),h('span',{},'用餐 '+dateTime(r.at)),h('span',{},`最多 ${r.maxOrders} 筆`),h('span',{},r.exact?'指定數量剛好':'至少滿足需求'),h('span',{},r.budgetMinor===null?'不限預算':'整團 '+money(r.budgetMinor)));$('request-summary').hidden=false;
     setBusy(true);showState('正在幫這一餐算一算…','比較符合條件的優惠配置與訂單費用。');$('results').firstChild.prepend(h('div',{class:'loading-dot','aria-hidden':'true'}));$('search-meta').textContent='';const token=state.run;
     const done=result=>{if(token!==state.run)return;if(state.worker){state.worker.terminate();state.worker=null;}state.result=result;state.autoEnabled=true;setBusy(false);renderResults();if(window.innerWidth<=760)$('results-title').scrollIntoView({block:'start'});};
     try{const code=$('engine-source').textContent+'\nself.onmessage=e=>{try{self.postMessage({result:Feast.recommend(e.data.dataset,e.data.request)})}catch(err){self.postMessage({error:err.message})}};';const url=URL.createObjectURL(new Blob([code],{type:'application/javascript'}));state.worker=new Worker(url);URL.revokeObjectURL(url);state.worker.onmessage=e=>{if(e.data.error){stop();showState('這次計算未完成',e.data.error);}else done(e.data.result);};state.worker.onerror=()=>{stop();showState('計算未能啟動','瀏覽器無法執行背景計算。請用新版瀏覽器開啟此頁再試。');};state.worker.postMessage({dataset:snapshots[state.mode],request:r});}catch{setTimeout(()=>{try{done(F.recommend(snapshots[state.mode],r,{timeLimitMs:500,maxStates:200000}));}catch(e){stop();showState('這次計算未完成',e.message);}},25);}
@@ -236,7 +246,7 @@
     if(p.partial)lines.push('還缺：'+shortageText(p),'');
     if(p.overBudget)lines.push('超出原預算 '+money(p.totalCost-state.lastRequest.budgetMinor),'');
     for(const [i,o] of p.orders.entries()){
-      lines.push(`${i+1}. ${brandName(o.brand)} ${money(o.base)}`,formatItems(o.items),'優惠碼：'+o.code,'下單：'+routeName(o,r)+(o.paymentMethod==='online'?'・線上付款':''));
+      lines.push(`${i+1}. ${brandName(o.brand)} ${money(o.base)}`,formatItems(o.items),o.kind==='direct_menu'?'官方單點：直接選購':'優惠碼：'+o.code,'下單：'+routeName(o,r)+(o.paymentMethod==='online'?'・線上付款':''));
       if(o.beverages?.length)lines.push('飲料：'+o.beverages.map(d=>d.name+' × '+d.quantity).join('、'));
       if(o.optionChoices?.some(c=>c.surchargeMinor))lines.push('替換：'+o.optionChoices.filter(c=>c.surchargeMinor).map(c=>c.name+'（加 '+money(c.surchargeMinor)+'）').join('、'));
       if(o.pizzaChoices?.length)lines.push('口味：'+o.pizzaChoices.map(c=>c.name).join('、'));
@@ -276,8 +286,11 @@
       if(o.beverages?.length)row.append(h('p',{class:'order-choice'},o.beverages.map(d=>d.name+' × '+d.quantity).join('、')));
       if(o.pizzaChoices?.length)row.append(h('p',{class:'pizza-choice'},o.pizzaChoices.map(x=>x.name).join('、')));
       if(o.optionChoices?.some(c=>c.from!==c.name))row.append(h('p',{class:'order-choice'},'已選：'+o.optionChoices.filter(c=>c.from!==c.name).map(c=>c.name+(c.surchargeMinor?'（加 '+money(c.surchargeMinor)+'）':'')).join('、')));
-      const guide=h('div',{class:'checkout-guide'},h('span',{class:'step-label'},'第 '+(i+1)+' 步・'+routeName(o,r)),h('p',{},'使用優惠碼 '+o.code+'・'+({takeaway:'外帶取餐',delivery:'官方外送',dinein:'店內用餐'}[r.channel])+(o.paymentMethod==='online'?'・線上付款':'')));
-      const actions=h('div',{class:'order-actions'},h('button',{type:'button',class:'code-button',onclick:()=>copy(o.code),'aria-label':'複製優惠碼 '+o.code},'複製 '+o.code));
+      const guide=h('div',{class:'checkout-guide'},h('span',{class:'step-label'},'第 '+(i+1)+' 步・'+routeName(o,r)),h('p',{},(o.kind==='direct_menu'?'官方單點・直接選購':'使用優惠碼 '+o.code)+'・'+({takeaway:'外帶取餐',delivery:'官方外送',dinein:'店內用餐'}[r.channel])+(o.paymentMethod==='online'?'・線上付款':'')));
+      const actions=h('div',{class:'order-actions'});
+      if(o.kind!=='direct_menu')actions.append(h('button',{type:'button',class:'code-button',onclick:()=>copy(o.code),'aria-label':'複製優惠碼 '+o.code},'複製 '+o.code));
+      if(o.kind==='direct_menu')row.append(h('p',{class:'helper'},'單點供餐時段與庫存以門市為準。'));
+      if(o.menuSnapshot?.limited)row.append(h('p',{class:'helper'},'期間限定・售完為止'));
       if(!isDemo)actions.append(safeLink(o.officialUrl,o.orderMethod==='official_web'?'前往官方訂餐':'查看優惠','outline-button'));
       guide.append(actions);row.append(guide);
       if(o.orderingStatus==='unknown')row.append(h('p',{class:'helper'},'適用下單管道請於點餐確認。'));
@@ -314,7 +327,7 @@
       }else{
         const reason=x.quoteUnavailable;
         const channelName={delivery:'官方外送',dinein:'內用',takeaway:'外帶'}[r.channel];
-        const detail=x.timeReference?'目前選定的點餐時間（'+dateTime(r.at)+'）不在這份組合的優惠適用時段。':reason?.channelMismatchItems?.length?'目前條件下，'+reason.channelMismatchItems.map(m=>I[m.id].name).join('、')+'有外帶優惠，但沒有可計價的'+channelName+'優惠；目前無法報出完整'+channelName+'總價。':reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
+        const detail=x.timeReference?'目前選定的用餐時間（'+dateTime(r.at)+'）不在這份組合的優惠適用時段。':reason?.channelMismatchItems?.length?'目前條件下，'+reason.channelMismatchItems.map(m=>I[m.id].name).join('、')+'有外帶優惠，但沒有可計價的'+channelName+'優惠；目前無法報出完整'+channelName+'總價。':reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
         box.append(h('div',{class:'state-card'},h('h3',{},'完整需求尚未湊齊'),h('p',{},detail)));
         if(x.channelReference){
           const p=x.channelReference.plan;
