@@ -1,9 +1,9 @@
 (function(root){
  'use strict';
  const enums={mealMode:['meal','snack'],budgetType:['person','total'],richness:['none','light','normal','rich'],brandScope:['all','KFC','PH'],channel:['takeaway','delivery','dinein'],drinkPreference:['any','unsweetened','cola','soda','milkTea','coldMilkTea','hotMilkTea','soup'],appetite:['light','normal','big'],pizzaSize:['small','large'],flavorTag:['any','seafood','meat'],orderMethod:['auto','official_web','pk_app','counter','kiosk','phone'],paymentMethod:['any','online','in_store']};
- const mains=['pizza','chicken','burger','wrapped','pasta'];
+ const mains=['pizza','chicken','burger','wrapped','pasta','smallBurger','porridge','eggFlatbread','chickenFlatbread'];
  const snacks=['tart','friesSmall','friesLarge','friesMedium','nuggets','qq','qqPack','hashBrown','daifuku','potatoCoinsSmall','potatoCoinsLarge','chickenCartilageSmall','chickenCartilageLarge','germanSausage','spicySausage','codBites','chocolateQQ','mochiQQ','seafoodPlatter','fishRings','chipsMini','shrimpPack'];
- const items=[...snacks,'chicken','burgerMain','paperChicken','pasta','pizza9','pizza13','drinkServing','drinkSmall','drinkMedium'];
+ const items=[...snacks,'burgerSmall','chickenPorridge','omeletFlatbread','chickenFlatbread','chicken','burgerMain','paperChicken','pasta','pizza9','pizza13','drinkServing','drinkSmall','drinkMedium'];
  const properties={};
  for(const [key,values] of Object.entries(enums))properties[key]={type:['string','null'],enum:[...values,null]};
  for(const key of ['people','budget','flavorKinds'])properties[key]={type:[key==='budget'?'number':'integer','null']};

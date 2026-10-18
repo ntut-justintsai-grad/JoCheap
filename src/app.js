@@ -18,6 +18,11 @@
     if(state.contextCache?.key===key)return state.contextCache.value;
     const value=P.planningContext(snapshots[state.mode],request);state.contextCache={key,value};return value;
   }
+  function mainTimeInfo(id){
+    const hours=state.menu?.mainTimes?.[id],time=$('order-time').value,minute=Number(time.slice(0,2))*60+Number(time.slice(3,5));
+    const current=!hours||hours.unknown?null:hours.windows.some(([start,end])=>minute>=start&&minute<end);
+    return {current,label:current===null?'供餐時段待確認':current?'目前時段有優惠':'其他時段 '+P.formatWindows(hours.windows)};
+  }
   function renderContextTimes(){
     const box=$('available-times');box.replaceChildren();if(!$('at').value){box.append(h('p',{},'請先選擇日期與用餐時間。'));return;}
     const context=contextMenu(state.demand),minute=Number($('order-time').value.slice(0,2))*60+Number($('order-time').value.slice(3,5));
@@ -26,8 +31,7 @@
       if(s.allPeriods.length&&!s.allUnknown){
         box.append(h('p',{},h('strong',{},brandName(s.brand))));
         for(const period of s.allPeriods){
-          const selected=s.periods.find(p=>p.label===period.label);
-          const match=!s.requested.length?'尚未指定餐點':s.unknown?'所選餐點時段待確認':!selected?'所選餐點不適用':P.formatWindows(selected.windows)===P.formatWindows(period.windows)?'所選餐點適用':'所選餐點 '+P.formatWindows(selected.windows);
+          const match={outside_period:'非目前用餐時段',no_selection:'目前用餐時段・尚未指定餐點',unknown:'目前時段・餐點優惠時段待確認',matching:'目前時段可搭配所選餐點',unavailable:'目前時段無法搭配所選餐點'}[P.periodStatus(s,period,minute)];
           box.append(h('p',{},period.label+' '+P.formatWindows(period.windows),h('small',{},' · '+match)));
         }
       }else{
@@ -37,7 +41,7 @@
       }
     }
     box.append(h('small',{},'不同時段可用餐點與優惠不同；整份需求是否湊齊，以試算結果為準。'));
-    if(context.schedules.some(s=>s.requested.length&&!s.unknown&&s.windows.length&&!s.windows.some(w=>minute>=w[0]&&minute<w[1])))box.append(h('p',{class:'time-outside'},'目前用餐時間不適用所選餐點的優惠。'));
+    if(context.schedules.some(s=>s.requested.length&&!s.unknown&&!s.windows.some(w=>minute>=w[0]&&minute<w[1])))box.append(h('p',{class:'time-outside'},'目前用餐時間不適用所選餐點的優惠。'));
   }
   function refreshMenu(notify=false){
     if(!$('at').value){renderContextTimes();return [];}
@@ -46,7 +50,7 @@
     if($('pizza-size').selectedOptions[0]?.disabled){const size=[...$('pizza-size').options].find(o=>!o.disabled);if(size){$('pizza-size').value=size.value;state.manual=false;}}
     const removed=Object.entries(state.demand).filter(([id,n])=>n>0&&!allowed.has(id)).map(([id])=>I[id]?.name||id);
     const mains=state.mains.filter(id=>menu.mains.includes(id));
-    if(state.mealMode==='meal'&&!mains.length&&menu.mains.length)mains.push(menu.mains[0]);
+    if(state.mealMode==='meal'&&!mains.length&&menu.mains.length)mains.push(menu.mains.find(id=>mainTimeInfo(id).current===true)||menu.mains[0]);
     if(JSON.stringify(mains)!==JSON.stringify(state.mains))state.manual=false;
     state.mains=mains;state.mealMains=state.mealMains.filter(id=>menu.mains.includes(id));if(state.mealMode==='meal')state.mealMains=[...mains];
     state.fixedSnacks=state.fixedSnacks.filter(id=>menu.snacks.includes(id));
@@ -69,7 +73,8 @@
     $('portion-guide').textContent='份量按人數與食量估算，可在餐點數量中調整。披薩切法是試算用，不會改變整個披薩份量。';renderContextTimes();
   }
   function renderChoices(){
-    $('main-choices').replaceChildren(...Object.entries(P.MAINS).filter(([id])=>state.menu?.mains.includes(id)).map(([id,main])=>h('button',{type:'button','data-main':id,'aria-pressed':String(state.mains.includes(id))},h('span',{'aria-hidden':'true'},main.emoji),h('strong',{},main.name),h('small',{'aria-hidden':'true'},state.mains.includes(id)?'✓ 已選':'＋ 選擇'))));
+    const rank=id=>mainTimeInfo(id).current===true?2:mainTimeInfo(id).current===null?1:0;
+    $('main-choices').replaceChildren(...Object.entries(P.MAINS).filter(([id])=>state.menu?.mains.includes(id)).sort(([a],[b])=>rank(b)-rank(a)).map(([id,main])=>h('button',{type:'button','data-main':id,'data-available-now':String(mainTimeInfo(id).current),'aria-pressed':String(state.mains.includes(id))},h('span',{'aria-hidden':'true'},main.emoji),h('strong',{},main.name),h('small',{'aria-hidden':'true'},state.mains.includes(id)?'✓ 已選':'＋ 選擇'),h('small',{class:'main-time'},mainTimeInfo(id).label))));
     if(!state.menu?.mains.length)$('main-choices').append(h('p',{class:'helper'},'目前設定沒有可計價主餐，請調整上方店家、日期或取餐方式。'));
     $('richness-choices').replaceChildren(...['light','normal','rich'].map(id=>h('button',{type:'button','data-richness':id,'aria-pressed':String(state.richness===id)},h('strong',{},P.RICHNESS[id].name),h('small',{},'至少 '+P.RICHNESS[id].types+' 類點心'))));
     $('no-snacks').setAttribute('aria-pressed',String(state.richness==='none'));
@@ -390,7 +395,7 @@
   $('at').value=new Date(Date.now()+8*3600000).toISOString().slice(0,16);
   restore();syncDateFields();orderingUI();refreshMenu();feeUI();sourceUI();researchUI();initIntent();refreshAge();setInterval(refreshAge,60000);
   document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
-  $('main-choices').addEventListener('click',e=>{const b=e.target.closest('[data-main]');if(!b)return;const id=b.dataset.main;if(state.mains.includes(id)&&state.mains.length===1){toast('至少保留一種主餐；可先選另一種，再取消這一種。');return;}state.mains=state.mains.includes(id)?state.mains.filter(k=>k!==id):[...state.mains,id];state.mealMains=[...state.mains];state.manual=false;$('drinks').checked=state.mains.some(k=>['burger','wrapped','pasta'].includes(k));regenerate(true);renderChoices();feeUI();markDirty();});
+  $('main-choices').addEventListener('click',e=>{const b=e.target.closest('[data-main]');if(!b)return;const id=b.dataset.main;if(state.mains.includes(id)&&state.mains.length===1){toast('至少保留一種主餐；可先選另一種，再取消這一種。');return;}state.mains=state.mains.includes(id)?state.mains.filter(k=>k!==id):[...state.mains,id];state.mealMains=[...state.mains];state.manual=false;$('drinks').checked=state.mains.some(k=>!['pizza','chicken'].includes(k));regenerate(true);renderChoices();feeUI();markDirty();});
   document.querySelectorAll('[data-meal-mode]').forEach(b=>b.addEventListener('click',()=>setMealMode(b.dataset.mealMode)));
   $('tea-snack-choices').addEventListener('click',e=>{const b=e.target.closest('[data-tea-snack]');if(!b)return;const id=b.dataset.teaSnack;state.fixedSnacks=id==='any'?[]:state.fixedSnacks.includes(id)?state.fixedSnacks.filter(x=>x!==id):[...state.fixedSnacks,id];state.richness=state.fixedSnacks.length?'none':'normal';state.manual=false;regenerate(true);renderChoices();renderSnackGroups();markDirty();});
   $('main-portion-list').addEventListener('input',e=>{const id=e.target.dataset.mainQuantity;if(!id)return;state.demand[id]=e.target.value===''?NaN:Number(e.target.value);state.manual=true;renderSummary();markDirty();});

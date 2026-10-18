@@ -1,9 +1,9 @@
 (function(root){
   'use strict';
   const F=root.Feast||(typeof require==='function'?require('./engine.js'):null);
-  const FAMILY={mixed:'披薩＋炸雞',pizza:'披薩共享',chicken:'炸雞共享',burger:'漢堡個人餐',wrapped:'紙包雞',pasta:'義大利麵'};
-  const MAINS={pizza:{name:'披薩',emoji:'🍕'},chicken:{name:'炸雞',emoji:'🍗'},burger:{name:'漢堡',emoji:'🍔'},wrapped:{name:'紙包雞',emoji:'🥘'},pasta:{name:'義大利麵',emoji:'🍝'}};
-  const MAIN_ITEMS={pizza:['pizza9','pizza13'],chicken:['chicken'],burger:['burgerMain'],wrapped:['paperChicken'],pasta:['pasta']};
+  const FAMILY={mixed:'披薩＋炸雞',pizza:'披薩共享',chicken:'炸雞共享',burger:'漢堡個人餐',wrapped:'紙包雞',pasta:'義大利麵',smallBurger:'脆雞堡（小）',porridge:'紅藜燕麥脆雞粥',eggFlatbread:'總匯歐姆蛋燒餅',chickenFlatbread:'吮指脆雞燒餅'};
+  const MAINS={pizza:{name:'披薩',emoji:'🍕'},chicken:{name:'炸雞',emoji:'🍗'},burger:{name:'漢堡',emoji:'🍔'},wrapped:{name:'紙包雞',emoji:'🥘'},pasta:{name:'義大利麵',emoji:'🍝'},smallBurger:{name:'脆雞堡（小）',emoji:'🍔'},porridge:{name:'紅藜燕麥脆雞粥',emoji:'🥣'},eggFlatbread:{name:'總匯歐姆蛋燒餅',emoji:'🥙'},chickenFlatbread:{name:'吮指脆雞燒餅',emoji:'🥙'}};
+  const MAIN_ITEMS={pizza:['pizza9','pizza13'],chicken:['chicken'],burger:['burgerMain'],wrapped:['paperChicken'],pasta:['pasta'],smallBurger:['burgerSmall'],porridge:['chickenPorridge'],eggFlatbread:['omeletFlatbread'],chickenFlatbread:['chickenFlatbread']};
   function mergeWindows(windows){
     const out=[];for(const w of windows.sort((a,b)=>a[0]-b[0])){const last=out[out.length-1];if(last&&w[0]<=last[1])last[1]=Math.max(last[1],w[1]);else out.push([...w]);}return out;
   }
@@ -20,6 +20,13 @@
   }
   function intersectWindows(a,b){return mergeWindows(a.flatMap(x=>b.map(y=>[Math.max(x[0],y[0]),Math.min(x[1],y[1])]).filter(w=>w[0]<w[1])));}
   function formatWindows(windows){const time=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');return windows.map(w=>time(w[0])+'–'+time(w[1])).join('、');}
+  function periodStatus(schedule,period,minute){
+    const includes=windows=>windows.some(([start,end])=>minute>=start&&minute<end);
+    if(!includes(period.windows))return 'outside_period';
+    if(!schedule.requested.length)return 'no_selection';
+    if(schedule.unknown)return 'unknown';
+    return includes(schedule.windows)?'matching':'unavailable';
+  }
   function planningContext(dataset,request,now=Date.now()){
     const r={estimate:true,dataScope:'all',allowUnknownOrdering:true,orderMethod:'auto',paymentMethod:'any',...request};
     const date=F.taipeiDate(Date.parse(r.at)),records=[],items=new Set();
@@ -48,7 +55,8 @@
       const periods=split(windows),allPeriods=split(allWindows);
       return {brand,windows,unknown,requested,periods,allWindows,allUnknown,allPeriods};
     });
-    return {date,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
+    const mainTimes=Object.fromEntries(Object.entries(MAIN_ITEMS).map(([main,ids])=>{const matches=records.filter(o=>ids.some(id=>o.items.has(id)));return [main,{windows:mergeWindows(matches.flatMap(o=>o.windows)),unknown:matches.some(o=>o.unknown)}];}));
+    return {date,mainTimes,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
   }
   function planTimeWindows(plan,at){
     const date=F.taipeiDate(Date.parse(at));let windows=[[0,1440]],unknown=false;
@@ -91,11 +99,11 @@
     // Canonical order makes the allocation stable regardless of click order.
     const mainAllocation=mains.map((id,i)=>{
       const people=Math.max(1,Math.floor(n/mains.length)+(i<n%mains.length?1:0));
-      const item={pizza:size,chicken:'chicken',burger:'burgerMain',wrapped:'paperChicken',pasta:'pasta'}[id];
+      const item={pizza:size,chicken:'chicken',burger:'burgerMain',wrapped:'paperChicken',pasta:'pasta',smallBurger:'burgerSmall',porridge:'chickenPorridge',eggFlatbread:'omeletFlatbread',chickenFlatbread:'chickenFlatbread'}[id];
       const quantity=id==='pizza'?Math.ceil(people*slicesPerPerson/cuts):id==='chicken'?people*(light?1:big?3:2):people;
       demand[item]=quantity;return {id,item,name:MAINS[id].name,people,quantity};
     });
-    const personal=mains.some(k=>['burger','wrapped','pasta'].includes(k));
+    const personal=mains.some(k=>!['pizza','chicken'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
     for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=SNACK_META[id].perGroup?1:Math.ceil(n*(SNACK_META[id].perPerson??F.SNACKS[id]?.perPerson??.5));}
     const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
@@ -127,10 +135,11 @@
     else if(/剛剛好|適量點心|豐富一點|豐富點/.test(t)){patch.richness='normal';recognized.push('點心：剛剛好');}
     else if(/有一點|一點點心|少量點心|點心.{0,5}(?:不要太多|少一點)/.test(t)){patch.richness='light';recognized.push('點心：有一點');}
     const families=[];
-    for(const [id,names] of Object.entries({pizza:'披薩|比薩|批薩|批撒|pizza',chicken:'炸雞|炸機|脆雞',burger:'漢堡',wrapped:'紙包雞',pasta:'義大利麵|義麵|意大利麵|筆管麵'})){
+    for(const [id,names] of Object.entries({pizza:'披薩|比薩|批薩|批撒|pizza',chicken:'炸雞|炸機|脆雞',burger:'漢堡|起司蛋堡',wrapped:'紙包雞',pasta:'義大利麵|義麵|意大利麵|筆管麵',smallBurger:'(?:原味|花生)?脆雞堡|小漢堡',porridge:'(?:紅藜燕麥)?脆雞粥|早餐粥|燕麥粥',eggFlatbread:'(?:總匯)?歐姆蛋燒餅',chickenFlatbread:'(?:吮指)?脆雞燒餅'})){
+      const subject=id==='chicken'?t.replace(/(?:紅藜燕麥)?脆雞粥|(?:吮指)?脆雞燒餅|(?:原味|花生)?脆雞堡/g,''):id==='burger'?t.replace(/小漢堡/g,''):t;
       const negative=new RegExp('(?:不要|不吃|不用|不想吃|不選|不點)\\s*(?:'+names+')','ig');
-      if(negative.test(t))warnings.push('未要求「'+MAINS[id].name+'」，但優惠附帶餐點仍可能包含；尚未套用完全排除。');
-      if(new RegExp(names,'i').test(t.replace(negative,'')))families.push(id);
+      if(negative.test(subject))warnings.push('未要求「'+MAINS[id].name+'」，但優惠附帶餐點仍可能包含；尚未套用完全排除。');
+      if(new RegExp(names,'i').test(subject.replace(negative,'')))families.push(id);
     }
     if(families.length){patch.mains=families;patch.family=families.length===1?families[0]:'mixed';recognized.push('主餐混搭：'+families.map(id=>MAINS[id].name).join('＋'));}
     if(/下午茶|只(?:想|要)?吃(?:點心|小點)|不(?:要|用|吃)主餐/.test(t)){patch.mealMode='snack';patch.mains=[];patch.fixedSnacks=[];recognized.push('下午茶／點心');}
@@ -148,7 +157,7 @@
     if(/肯德基|KFC/i.test(t)&&!/必勝客|pizza\s*hut/i.test(t))patch.brandScope='KFC';else if(/必勝客|pizza\s*hut/i.test(t)&&!/肯德基|KFC/i.test(t))patch.brandScope='PH';
     if(/很餓|吃很飽|食量大/.test(t))patch.appetite='big';else if(/小食量|吃少|輕食/.test(t))patch.appetite='light';
     const explicit={};
-    for(const [id,unit,name] of [['chicken','塊','(?:原塊炸雞|炸雞|咔啦脆雞)'],['burgerMain','(?:個|份)','漢堡'],['tart','(?:顆|個)','(?:原味)?蛋撻'],['nuggets','塊','(?:上校)?雞塊'],['paperChicken','份','(?:香草)?紙包雞'],['pasta','份','(?:義大利麵|義麵|筆管麵)'],['pizza13','個','(?:13吋)?大(?:披薩|比薩|批薩|批撒)'],['pizza9','個','(?:9吋)?小(?:披薩|比薩|批薩|批撒)']]){
+    for(const [id,unit,name] of [['chicken','塊','(?:原塊炸雞|炸雞|咔啦脆雞)'],['burgerSmall','個','(?:(?:原味|花生)?脆雞堡|小漢堡)'],['chickenPorridge','(?:份|碗|個)','(?:(?:紅藜燕麥)?脆雞粥|早餐粥|燕麥粥)'],['omeletFlatbread','(?:個|份)','(?:總匯)?歐姆蛋燒餅'],['chickenFlatbread','(?:個|份)','(?:吮指)?脆雞燒餅'],['burgerMain','(?:個|份)','漢堡'],['tart','(?:顆|個)','(?:原味)?蛋撻'],['nuggets','塊','(?:上校)?雞塊'],['paperChicken','份','(?:香草)?紙包雞'],['pasta','份','(?:義大利麵|義麵|筆管麵)'],['pizza13','個','(?:13吋)?大(?:披薩|比薩|批薩|批撒)'],['pizza9','個','(?:9吋)?小(?:披薩|比薩|批薩|批撒)']]){
       const m=t.match(new RegExp('('+num+')\\s*'+unit+'\\s*'+name))||t.match(new RegExp(name+'\\s*(?:要|[:：])?\\s*('+num+')\\s*'+unit));if(m){explicit[id]=number(m[1]);recognized.push(F.ITEMS[id].name+'：'+m[1]+F.ITEMS[id].unit);}
     }
     if(Object.keys(explicit).length)patch.explicitDemand=explicit;
@@ -164,5 +173,5 @@
     if(!recognized.length)warnings.push('尚未辨識到可套用條件，請補充人數、主餐、預算或點心程度。');
     return {patch,recognized,warnings,text:t,method:'local_rules',partial:true};
   }
-  const api={FAMILY,MAINS,MAIN_ITEMS,RICHNESS,SNACK_META,planningContext,planTimeWindows,formatWindows,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
+  const api={FAMILY,MAINS,MAIN_ITEMS,RICHNESS,SNACK_META,planningContext,planTimeWindows,formatWindows,periodStatus,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

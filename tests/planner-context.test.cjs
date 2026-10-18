@@ -57,3 +57,21 @@ test('production Pizza Hut menu excludes KFC mains and an 8-plus-3 quote exposes
  const x=F.recommend(data,r,{maxStates:10000,timeLimitMs:100,referenceMaxStates:10000,referenceTimeLimitMs:100});assert(x.timeReference);
  const hours=P.planTimeWindows(x.timeReference.plan,x.timeReference.at);assert.equal(hours.unknown,false);assert.equal(P.formatWindows(hours.windows),'10:30–23:00');
 });
+test('period badges require both the selected meal time and the selected food windows',()=>{
+ const breakfast={windows:[[480,630]]},regular={windows:[[630,1380]]};
+ const chicken={requested:['chicken'],unknown:false,windows:[[630,1380]]};
+ assert.equal(P.periodStatus(chicken,breakfast,490),'unavailable'); // 08:10
+ assert.equal(P.periodStatus(chicken,regular,490),'outside_period');
+ assert.equal(P.periodStatus(chicken,breakfast,629),'unavailable');
+ assert.equal(P.periodStatus(chicken,breakfast,630),'outside_period');
+ assert.equal(P.periodStatus(chicken,regular,630),'matching');
+ assert.equal(P.periodStatus(chicken,regular,780),'matching');
+ assert.equal(P.periodStatus(chicken,regular,1380),'outside_period');
+ const hashBrown={...chicken,requested:['hashBrown'],windows:[[480,1380]]};
+ assert.equal(P.periodStatus(hashBrown,breakfast,490),'matching');
+ assert.equal(P.periodStatus(hashBrown,regular,490),'outside_period');
+ const lunchOnly={...chicken,windows:[[720,840],[1020,1320]]};
+ assert.equal(P.periodStatus(lunchOnly,regular,900),'unavailable');
+ assert.equal(P.periodStatus({...chicken,unknown:true},regular,780),'unknown');
+ assert.equal(P.periodStatus({...chicken,requested:[]},breakfast,490),'no_selection');
+});

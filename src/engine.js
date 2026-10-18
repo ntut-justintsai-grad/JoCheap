@@ -2,6 +2,10 @@
   'use strict';
   const FRESH_MS=24*60*60*1000;
   const ITEMS={
+    burgerSmall:{name:'脆雞堡（小）',unit:'個',emoji:'🍔'},
+    chickenPorridge:{name:'紅藜燕麥脆雞粥',unit:'份',emoji:'🥣'},
+    omeletFlatbread:{name:'總匯歐姆蛋燒餅',unit:'份',emoji:'🥙'},
+    chickenFlatbread:{name:'吮指脆雞燒餅',unit:'份',emoji:'🥙'},
     chicken:{name:'原塊炸雞',unit:'塊',emoji:'🍗'},
     tart:{name:'原味蛋撻',unit:'顆',emoji:'🥧'},
     burger:{name:'漢堡',unit:'個',emoji:'🍔'},
@@ -496,7 +500,7 @@
           const currentGroups=new Set(selected.flatMap(c=>c.snackGroups));let best=null,score=0;
           for(const c of cs){if(!versionCompatible(selected,c)||(uses[c.offer.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit||!r.cross&&selected.length&&selected[0].offer.brand!==c.offer.brand)continue;
             if(r.exact&&demandKeys.some(k=>(counts[k]||0)+(c.items[k]||0)>r.demand[k]))continue;
-            const gain=sum(demandKeys.map(k=>Math.min(Math.max(0,r.demand[k]-(counts[k]||0)),c.items[k]||0)/r.demand[k]*(['paperChicken','pasta','burgerMain','chicken','pizza6','pizza9','pizza13'].includes(k)?8:1)))+Math.max(0,(r.snackGoal?.minTypes||0)-currentGroups.size)*c.snackGroups.filter(g=>!currentGroups.has(g)).length*.2;
+            const gain=sum(demandKeys.map(k=>Math.min(Math.max(0,r.demand[k]-(counts[k]||0)),c.items[k]||0)/r.demand[k]*(['paperChicken','pasta','burgerMain','chicken','pizza6','pizza9','pizza13','burgerSmall','chickenPorridge','omeletFlatbread','chickenFlatbread'].includes(k)?8:1)))+Math.max(0,(r.snackGoal?.minTypes||0)-currentGroups.size)*c.snackGroups.filter(g=>!currentGroups.has(g)).length*.2;
             const value=gain/Math.pow(Math.max(c.base,1),factor);if(value>score){score=value;best=c;}
           }
           if(!best||!score)break;selected.push(best);uses[best.offer.id]=(uses[best.offer.id]||0)+1;if(best.group)groups[best.group]=(groups[best.group]||0)+1;for(const [k,n] of Object.entries(best.items))counts[k]=(counts[k]||0)+n;
@@ -510,7 +514,7 @@
     const partials=[];
     if(!leaders.length&&config.collectPartials!==false&&config.collectAlternatives!==false){
       const partialStart=Date.now(),limit=config.partialTimeLimitMs??350;
-      const mains=new Set(['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13']);
+      const mains=new Set(['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13','burgerSmall','chickenPorridge','omeletFlatbread','chickenFlatbread']);
       const rank=(a,b)=>a.mainDeficit-b.mainDeficit||a.deficit-b.deficit||(a.totalCost??Infinity)-(b.totalCost??Infinity)||a.knownSubtotal-b.knownSubtotal||a.selected.length-b.selected.length||a.key.localeCompare(b.key);
       let beam=[{selected:[],counts:{},uses:{},groups:{},from:0,knownSubtotal:0,totalCost:0}],examined=0;
       const retained=new Map();
@@ -661,7 +665,7 @@
         if(reference)result.timeReference=reference;
       }
     }
-    const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
+    const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13','burgerSmall','chickenPorridge','omeletFlatbread','chickenFlatbread'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
     const noSnackGoal={minTypes:0,servings:0};
@@ -720,8 +724,8 @@
     }
     // Different main families are complete alternative meals for the same
     // headcount; their serving assumptions are shown alongside the quantities.
-    const units={burgerMain:1,paperChicken:1,pasta:1,chicken:2,pizza9:.5,pizza13:.25};
-    const servingNotes={burgerMain:'替代主餐按每人 1 個一般漢堡估算',paperChicken:'替代主餐按每人 1 份紙包雞估算',pasta:'替代主餐按每人 1 份義大利麵估算',chicken:'替代主餐按每人 2 塊原塊炸雞估算',pizza9:'替代主餐按小披薩切 6 片、每人 3 片估算',pizza13:'替代主餐按大披薩切 8 片、每人 2 片估算'};
+    const units={burgerMain:1,paperChicken:1,pasta:1,chicken:2,pizza9:.5,pizza13:.25,burgerSmall:1,chickenPorridge:1,omeletFlatbread:1,chickenFlatbread:1};
+    const servingNotes={burgerSmall:'替代主餐按每人 1 個小脆雞堡估算',chickenPorridge:'替代主餐按每人 1 份脆雞粥估算',omeletFlatbread:'替代主餐按每人 1 份歐姆蛋燒餅估算',chickenFlatbread:'替代主餐按每人 1 份脆雞燒餅估算',burgerMain:'替代主餐按每人 1 個一般漢堡估算',paperChicken:'替代主餐按每人 1 份紙包雞估算',pasta:'替代主餐按每人 1 份義大利麵估算',chicken:'替代主餐按每人 2 塊原塊炸雞估算',pizza9:'替代主餐按小披薩切 6 片、每人 3 片估算',pizza13:'替代主餐按大披薩切 8 片、每人 2 片估算'};
     const families=Object.keys(units);
     const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:r.maxOrders};
     const probe=chooseCandidates(dataset,{...base,demand:Object.fromEntries(families.map(id=>[id,1]))},config.now??Date.now()).candidates;
