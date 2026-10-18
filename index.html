@@ -702,7 +702,7 @@
     return null;
   }
   function recommend(dataset,request,config={}){
-    const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
+    extendItems(dataset);const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
     // Complete plans already satisfy the requested meal. Do not pad this list
     // with a different meal merely to reach a recommendation count.
     if(result.plans.length)return {...result,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
