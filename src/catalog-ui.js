@@ -15,10 +15,10 @@
     const checked=o=>F.verificationCheck(o).allowed;
     const effectivePrice=o=>choices.get(o.id)?.total??price(o);
     const searchable=o=>[o.title,o.code,o.rawText||'',...o.variants.flatMap(v=>[format(v.items),...(v.optionGroups||[]).flatMap(g=>g.options.map(a=>a.name+' '+format(a.items)))])].join(' ').toLowerCase();
-    let rows=offers.filter(o=>(brand==='all'||o.brand===brand)&&(status==='all'||(status==='official'?checked(o):status==='conflict'?o.sourceConflict||o.dataStatus==='conflict':(identity(o)?'pending':o.dataStatus)===status))&&(!q||searchable(o).includes(q))&&(rawMax===''||effectivePrice(o)<=max)&&(queryCategory==='all'||choices.get(o.id))&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
+    let rows=offers.filter(o=>(brand==='all'||o.brand===brand)&&(status==='all'||(status==='matched'?o.brand==='PH'&&F.couponLookupCheck(o).allowed:status==='invalid_code'?o.brand==='PH'&&F.couponLookupCheck(o).status==='invalid':status==='lookup_pending'?o.brand==='PH'&&!F.couponLookupCheck(o).allowed&&F.couponLookupCheck(o).status!=='invalid':status==='official'?checked(o):status==='conflict'?o.sourceConflict||o.dataStatus==='conflict':(identity(o)?'pending':o.dataStatus)===status))&&(!q||searchable(o).includes(q))&&(rawMax===''||effectivePrice(o)<=max)&&(queryCategory==='all'||choices.get(o.id))&&(!$('browse-active').checked||F.isActive(o,Date.now())!==false));
     const rank=o=>checked(o)?0:o.dataStatus==='conflict'?3:o.dataStatus==='pending'||identity(o)?2:1;
     rows.sort((a,b)=>rank(a)-rank(b)||($('browse-sort').value==='price'?effectivePrice(a)-effectivePrice(b):(a.validity.validWindows[0]?.toExclusive||'9999').localeCompare(b.validity.validWindows[0]?.toExclusive||'9999'))||a.id.localeCompare(b.id));
-    $('browse-summary').textContent=`找到 ${rows.length} / ${data.offers.length} 個優惠碼，先顯示 ${Math.min(limit,rows.length)} 個。所有來源均可納入估算；同碼不同來源版本分開保留。缺價或未完整辨識的內容會顯示原文與問題。`;
+    $('browse-summary').textContent=`找到 ${rows.length} / ${data.offers.length} 個優惠碼，先顯示 ${Math.min(limit,rows.length)} 個。同碼不同來源版本分開保留；必勝客須有官方查碼配對，官方不接受的碼不參與配餐。缺價或未完整辨識的內容會顯示原文與問題。`;
     $('browse-grid').replaceChildren();
     for(const o of rows.slice(0,limit)){
       const choice=choices.get(o.id),identityIssue=identity(o);
@@ -35,6 +35,15 @@
         card.append(h('label',{class:'variant-label'},'資料來源版本（餐點與價目整組切換）',selector));
       }
       card.append(h('p',{class:'helper'},'本次採用：'+(checked(o)?'官方基本配置':o.provenance.sourcePublisher)+'；本站讀取 '+new Date(o.provenance.fetchedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})));
+      if(!demo&&o.brand==='PH'){
+        const pair=F.couponLookupCheck(o),query=o.couponLookup,box=h('div',{class:'lookup-proof'},h('strong',{},pair.label));
+        if(pair.productId)box.append(h('p',{class:'helper'},'官方商品 ID：'+pair.productId+'；查碼時間：'+new Date(pair.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})));
+        if(query?.status==='error')box.append(h('p',{class:'warning-text'},'本次查詢失敗，未判定為無效券。'+(pair.allowed?'沿用上次成功的商品配對。':'尚無可用的成功配對，暫不參與配餐。')));
+        if(!pair.allowed&&pair.status==='invalid')box.append(h('p',{class:'warning-text'},'保留外部來源原文；官方目前不接受此碼，已停止參與配餐。'));
+        box.append(h('p',{class:'helper'},'查碼只確認優惠碼與商品對應；餐點、價格及升級差額仍依本次選定的外部來源估算。'));
+        if(pair.detailUrl)box.append(safeLink(pair.detailUrl,'查看官方配對套餐'));
+        card.append(box);
+      }
       if(o.sourceConflict)card.append(h('p',{class:'warning-text'},'各來源記載不同：'+o.conflictReason+'。本卡依選定版本計價，請核對原文。'));
       const priceBox=h('div',{class:'coupon-price'}),contents=h('p',{class:'coupon-contents'}),costs=h('p',{class:'selection-cost'}),drinks=h('p',{class:'order-choice'}),options=h('div');card.append(priceBox);
       const update=()=>{
@@ -90,7 +99,7 @@
       for(const review of o.ordering?.officialRestrictionEvidence||[])evidence.append(h('p',{class:'helper'},safeLink(review.sourceUrl,'官方限制查核'),`・${review.checkedAt} 查閱，${review.reviewBy} 前需複查；僅確認所述限制。`));
       card.append(evidence);
       if(eligible&&base)card.append(h('button',{type:'button',class:'outline-button',onclick:()=>{if(!F.recommendationCheck(data,o).allowed){render(ctx);return;}onAdd(selected.items);}},'把目前選項加入需求'));
-      if(!demo)card.append(h('button',{type:'button',class:'text-button',onclick:()=>onCopy([`【${brandName(o.brand)} ${o.code}・${eligible?F.sourceConfidence(o).label:'暫無完整計價版本'}】`,o.title,selected?format(selected.items):o.rawText,selected?'飲料／湯：'+drinkText(selected.beverages):'',priceBox.textContent,selected?'替換差額：'+money(selected.surchargeMinor||0):'',orderingText,verification?.checkedAt?'官方讀取：'+verification.checkedAt:'',...(verification?.limitations||[]),...(o.ordering?.officialRestrictionEvidence||[]).map(r=>r.finding),verification?.sourceUrl||o.provenance.sourceUrl,'門市供應與結帳接受情況仍需向官方確認。'].filter(Boolean).join('\n'))},'複製優惠與目前選項'));
+      if(!demo)card.append(h('button',{type:'button',class:'text-button',onclick:()=>onCopy([`【${brandName(o.brand)} ${o.code}・${eligible?F.sourceConfidence(o).label:'暫不參與配餐：'+F.recommendationCheck(data,o).reason}】`,o.title,o.brand==='PH'?F.couponLookupCheck(o).label:'',o.brand==='PH'&&F.couponLookupCheck(o).productId?'官方商品 ID：'+F.couponLookupCheck(o).productId+'；查碼時間：'+F.couponLookupCheck(o).checkedAt+'；餐點價目仍依外部來源估算':'',selected?format(selected.items):o.rawText,selected?'飲料／湯：'+drinkText(selected.beverages):'',priceBox.textContent,selected?'替換差額：'+money(selected.surchargeMinor||0):'',orderingText,verification?.checkedAt?'官方讀取：'+verification.checkedAt:'',...(verification?.limitations||[]),...(o.ordering?.officialRestrictionEvidence||[]).map(r=>r.finding),verification?.sourceUrl||o.provenance.sourceUrl,'門市供應與結帳接受情況仍需向官方確認。'].filter(Boolean).join('\n'))},'複製優惠與目前選項'));
       renderOptions();update();$('browse-grid').append(card);
     }
     if(rows.length>limit)$('browse-grid').append(h('button',{type:'button',class:'outline-button browse-more',onclick:()=>{limit+=24;render(ctx);}},'再看 24 個優惠'));

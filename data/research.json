@@ -85,14 +85,14 @@
     {
       "brand": "PH",
       "type": "api_research",
-      "title": "官方券碼查詢介面已實測",
-      "finding": "POST /order/?m=ajax，mode=get_dgtAll 可驗證券碼並取得商品 ID。16448 回傳有效，官方套餐頁另列兩個9吋披薩與250元。查碼 JSON 本身未提供餐點、價格與所有替換差額。",
-      "status": "official_readonly_api_tested",
+      "title": "官方查碼配對已接入",
+      "finding": "外部來源保留餐點、價格與條件；每週更新時逐碼呼叫官方 get_dgtAll，配對商品 ID 與套餐連結。官方不接受的碼停止配餐，查詢錯誤不冒充無效券。",
+      "status": "official_code_lookup_integrated",
       "sourceUrls": [
         "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
         "https://www.pizzahut.com.tw/order/?mode=step_2&type_id=1025&cno=16448"
       ],
-      "limit": "這是查碼介面，未找到可一次取得全部券碼與完整配置的官方公開 JSON API；必勝客目前仍保留既有資料來源。"
+      "limit": "查碼只確認碼與商品對應，餐點、價格、升級及實際供應仍依來源估算並需向官方確認。"
     }
   ]
 }

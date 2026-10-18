@@ -28,7 +28,7 @@ class WeeklyVersionTests(unittest.TestCase):
 
     def test_push_rebuild_reuses_current_week_snapshot_without_fetching(self):
         with tempfile.TemporaryDirectory() as directory:
-            path=Path(directory)/'offers.json';snapshot={'parserVersion':5,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
+            path=Path(directory)/'offers.json';snapshot={'parserVersion':6,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
             p=subprocess.run([sys.executable,str(ROOT/'tools/crawl_catalog.py'),'--if-due','--snapshot',str(path)],capture_output=True,text=True,timeout=5)
             self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(json.loads(path.read_text()),snapshot)
             self.assertFalse((path.parent/'source_records.json').exists())

@@ -10,6 +10,7 @@ from food_parser import CATALOG
 from ordering_rules import apply_reviewed_ordering
 from data_quality import audit_report
 from official_verification import refresh_official,fetch_official
+from pizzahut_lookup import refresh as refresh_pizzahut,fetch_coupon,save_cache
 
 ROOT=Path(__file__).resolve().parent.parent
 def fetch(url):
@@ -59,8 +60,8 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None,feeds=No
     if not observations:return previous,all_records,dict(status='all_failed',sources=source_status)
     data=copy.deepcopy(previous)
     data.update(schemaVersion=2,datasetVersion=stamp,generatedAt=stamp,updateStatus='crawled',coverage='public_feeds_with_review_queue',sources=source_status)
-    data['parserVersion']=5
-    data['sourcePolicy']=dict(KFC=dict(sourceIds=['kcouper'],upstream='KFC official ordering API',transport='kcouper_published_snapshot'),PH=dict(sourceIds=[f['id'] for f in feeds if f['brand']=='PH'],apiIntegration='research_only'))
+    data['parserVersion']=6
+    data['sourcePolicy']=dict(KFC=dict(sourceIds=['kcouper'],upstream='KFC official ordering API',transport='kcouper_published_snapshot'),PH=dict(sourceIds=[f['id'] for f in feeds if f['brand']=='PH'],apiIntegration='code_lookup'))
     data['offers']=merge(observations,previous,stamp)
     reviews=ROOT/'data/ordering_reviews.json'
     if reviews.exists():apply_reviewed_ordering(data,json.loads(reviews.read_text(encoding='utf-8')),stamp)
@@ -84,7 +85,7 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None,feeds=No
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--cache-dir');parser.add_argument('--if-due',action='store_true');parser.add_argument('--snapshot',default=str(ROOT/'data/offers.json'));args=parser.parse_args()
     target=Path(args.snapshot);old=json.loads(target.read_text(encoding='utf-8'))
-    if args.if_due and old.get('parserVersion')==5:
+    if args.if_due and old.get('parserVersion')==6:
         try:
             age=(datetime.now(timezone.utc)-datetime.fromisoformat(old['generatedAt'].replace('Z','+00:00'))).total_seconds()
             if 0<=age<7*86400:
@@ -105,6 +106,13 @@ def main():
     if report['status']=='all_failed':
         (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         raise SystemExit('All sources failed; previous snapshot retained.')
+    ph_cache=target.parent/'pizzahut_lookup.json'
+    ph_previous=json.loads(ph_cache.read_text(encoding='utf-8')) if ph_cache.exists() else {}
+    ph_result,ph_report=refresh_pizzahut(data,ph_previous,None if args.cache_dir else fetch_coupon,stamp,force=not args.if_due and not args.cache_dir,on_progress=lambda current:save_cache(ph_cache,current))
+    save_cache(ph_cache,ph_result)
+    report['pizzahutLookup']=ph_report
+    if not args.cache_dir:data['generatedAt']=datetime.now(timezone.utc).isoformat(timespec='seconds')
+    data['qualityReport']=audit_report(data,stamp)
     target.with_suffix('.previous.json').write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     target.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     cache.write_text(json.dumps(records,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
