@@ -212,6 +212,44 @@ test('takeaway references still obey membership, avoided food and selected brand
  assert.equal(quoted([paper],{...patch,member:true,avoid:['paperChicken']}).channelReference,undefined);
  assert.equal(quoted([paper],{...patch,member:true,brands:['PH']}).channelReference,undefined);
 });
+function daytimeOffer(id='day-meal',items={chicken:8,paperChicken:3},price=67700){
+ const o=offer(id,items,price);o.validity={validWindows:[{from:'2026-10-19',toExclusive:'2026-10-20',startMinute:630,endMinute:1380,days:[1]}]};return o;
+}
+test('late-night requests retain all food and show a separate next-window quote with a budget gap',()=>{
+ const r={demand:{chicken:8,paperChicken:3},at:'2026-10-18T23:43:00+08:00',maxOrders:1,budgetMinor:60000};
+ const x=quoted([daytimeOffer()],r);
+ assert.equal(x.plans.length,0);assert.equal(x.fullQuote,null);
+ assert.equal(x.timeReference.at,'2026-10-19T02:30:00.000Z');assert.equal(x.timeReference.channel,'takeaway');
+ assert.equal(x.timeReference.plan.totalCost,67700);assert.equal(x.timeReference.plan.budgetGapMinor,7700);
+ assert.deepEqual(x.timeReference.plan.coverage,[{id:'chicken',need:8,got:8},{id:'paperChicken',need:3,got:3}]);
+ assert.equal(r.at,'2026-10-18T23:43:00+08:00');assert.equal(r.budgetMinor,60000);
+});
+test('next-window references respect membership, expiry, excluded dates, avoided food and order limits',()=>{
+ const o=daytimeOffer(),r={demand:{chicken:8,paperChicken:3},at:'2026-10-18T23:43:00+08:00',maxOrders:1};
+ o.eligibility={memberRequired:true};assert.equal(quoted([o],r).timeReference,undefined);
+ assert(quoted([o],{...r,member:true}).timeReference);
+ assert.equal(quoted([o],{...r,member:true,avoid:['paperChicken']}).timeReference,undefined);
+ o.eligibility={};o.validity.excludedDates=['2026-10-19'];assert.equal(quoted([o],r).timeReference,undefined);
+ delete o.validity.excludedDates;o.validity.validWindows[0].toExclusive='2026-10-19';assert.equal(quoted([o],r).timeReference,undefined);
+ const chicken=daytimeOffer('chicken',{chicken:8},30000),paper=daytimeOffer('paper',{paperChicken:3},30000);
+ assert.equal(quoted([chicken,paper],r).timeReference,undefined);
+});
+test('night delivery fallback labels both the new time and takeaway without changing the request',()=>{
+ const o=daytimeOffer();o.variants[0].channels=['takeaway'];
+ const r={demand:{chicken:8,paperChicken:3},at:'2026-10-18T23:43:00+08:00',channel:'delivery',maxOrders:1};
+ const x=quoted([o],r);assert.equal(x.plans.length,0);
+ assert.equal(x.timeReference.originalChannel,'delivery');assert.equal(x.timeReference.channel,'takeaway');
+ assert.equal(x.timeReference.plan.effectiveRequest.channel,'takeaway');assert.equal(r.channel,'delivery');
+});
+test('real 8 fried chicken and 3 paper chicken request has a complete next-window takeaway quote',()=>{
+ const real=require('../data/offers.json');
+ const r={demand:{chicken:8,paperChicken:3},people:6,budgetMinor:null,brands:['KFC','PH'],cross:true,channel:'takeaway',at:'2026-10-18T23:43:00+08:00',maxOrders:6,estimate:true,orderMethod:'auto',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true};
+ const x=F.recommend(real,r,{maxStates:10000,timeLimitMs:100,referenceMaxStates:10000,referenceTimeLimitMs:100});
+ assert.equal(x.plans.length,0);assert(x.timeReference);assert.equal(x.timeReference.channel,'takeaway');
+ assert(x.timeReference.plan.coverage.every(c=>c.got>=c.need));
+ assert(x.timeReference.plan.orders.every(o=>F.isActive(real.offers.find(v=>v.id===o.offerId),Date.parse(x.timeReference.at))!==false));
+ assert.equal(r.at,'2026-10-18T23:43:00+08:00');
+});
 test('the seven-person screenshot is diagnosed as a channel mismatch and keeps all food in the takeaway quote',()=>{
  const real=require('../data/offers.json');
  const r={demand:{pizza9:2,chicken:4,paperChicken:2,snackPortions:6},people:7,budgetMinor:126000,brands:['KFC','PH'],cross:true,channel:'delivery',at:'2026-10-18T20:25:00+08:00',maxOrders:12,estimate:true,orderMethod:'auto',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true,snackGoal:{minTypes:2,servings:6},pizzaPreference:{tag:'any',minKinds:0},drinkPreference:'any',fees:{KFC:[],PH:[]}};

@@ -575,6 +575,33 @@
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
     return {plans:alternatives,partials,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing:partials[0]?.missing||missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
   }
+  function nextTimeReference(dataset,r,config){
+    const now=config.now??Date.now(),at=Date.parse(r.at),day=86400000,offset=8*3600000;
+    const midnight=Math.floor((at+offset)/day)*day-offset,points=new Set();
+    // Only propose recorded window starts in the next seven days. Every quote
+    // still goes through the normal date, channel, eligibility and order checks.
+    for(const o of planningOffers(dataset,r,now))for(const w of o.validity?.validWindows||[]){
+      for(let d=0;d<=7;d++){
+        const t=midnight+d*day+(w.startMinute||0)*60000;
+        if(t>at&&t<=at+7*day)points.add(t);
+      }
+    }
+    const times=[...points].sort((a,b)=>a-b),channels=[r.channel];
+    if(r.channel!=='takeaway'&&(!r.orderMethod||r.orderMethod==='auto'||ORDER_METHODS[r.orderMethod]?.channels.includes('takeaway')))channels.push('takeaway');
+    const keys=Object.keys(r.demand).filter(k=>r.demand[k]>0),seen=new Set();let attempts=0;
+    for(const channel of channels)for(const t of times){
+      const future={...r,at:new Date(t).toISOString(),channel,budgetMinor:null};
+      const candidates=chooseCandidates(dataset,future,now).candidates;
+      if(!keys.every(k=>candidates.some(c=>c.items[k]>0)))continue;
+      const signature=JSON.stringify([channel,candidates.map(c=>[c.id,c.base,c.maxUses])]);
+      if(seen.has(signature))continue;seen.add(signature);
+      if(attempts++>=4)return null;
+      const x=solve(dataset,future,{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+      const p=x.minimumIgnoringBudget;if(!p)continue;
+      return {at:future.at,channel,originalAt:r.at,originalChannel:r.channel,plan:{...p,effectiveRequest:{...r,at:future.at,channel},budgetGapMinor:r.budgetMinor===null||p.totalCost===null?null:Math.max(0,p.totalCost-r.budgetMinor)}};
+    }
+    return null;
+  }
   function recommend(dataset,request,config={}){
     const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
     // Complete plans already satisfy the requested meal. Do not pad this list
@@ -621,6 +648,10 @@
           const p=reference.minimumIgnoringBudget;
           if(p)result.channelReference={channel:'takeaway',originalChannel:r.channel,plan:{...p,effectiveRequest:{...r,channel:'takeaway'},budgetGapMinor:r.budgetMinor===null||p.totalCost===null?null:Math.max(0,p.totalCost-r.budgetMinor)}};
         }
+      }
+      if(missingItems.length&&!result.channelReference&&result.excluded.some(o=>o.reasons.includes('不在有效時段'))){
+        const reference=nextTimeReference(dataset,r,config);
+        if(reference)result.timeReference=reference;
       }
     }
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];

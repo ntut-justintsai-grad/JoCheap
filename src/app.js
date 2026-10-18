@@ -176,7 +176,7 @@
   function search(){
     stop();$('form-error').hidden=true;let r;try{r=readRequest();}catch(e){$('form-error').textContent=e.message;$('form-error').hidden=false;return;}
     state.lastRequest=r;state.dirty=false;state.showMore=false;state.activePlan=0;$('dirty-notice').hidden=true;save();
-    $('request-summary').replaceChildren(h('span',{},`${r.people} 人`),h('span',{},({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])),h('span',{},`最多 ${r.maxOrders} 筆`),h('span',{},r.exact?'指定數量剛好':'至少滿足需求'),h('span',{},r.budgetMinor===null?'不限預算':'整團 '+money(r.budgetMinor)));$('request-summary').hidden=false;
+    $('request-summary').replaceChildren(h('span',{},`${r.people} 人`),h('span',{},({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])),h('span',{},'點餐 '+dateTime(r.at)),h('span',{},`最多 ${r.maxOrders} 筆`),h('span',{},r.exact?'指定數量剛好':'至少滿足需求'),h('span',{},r.budgetMinor===null?'不限預算':'整團 '+money(r.budgetMinor)));$('request-summary').hidden=false;
     setBusy(true);showState('正在幫這一餐算一算…','比較符合條件的優惠配置與訂單費用。');$('results').firstChild.prepend(h('div',{class:'loading-dot','aria-hidden':'true'}));$('search-meta').textContent='';const token=state.run;
     const done=result=>{if(token!==state.run)return;if(state.worker){state.worker.terminate();state.worker=null;}state.result=result;state.autoEnabled=true;setBusy(false);renderResults();if(window.innerWidth<=760)$('results-title').scrollIntoView({block:'start'});};
     try{const code=$('engine-source').textContent+'\nself.onmessage=e=>{try{self.postMessage({result:Feast.recommend(e.data.dataset,e.data.request)})}catch(err){self.postMessage({error:err.message})}};';const url=URL.createObjectURL(new Blob([code],{type:'application/javascript'}));state.worker=new Worker(url);URL.revokeObjectURL(url);state.worker.onmessage=e=>{if(e.data.error){stop();showState('這次計算未完成',e.data.error);}else done(e.data.result);};state.worker.onerror=()=>{stop();showState('計算未能啟動','瀏覽器無法執行背景計算。請用新版瀏覽器開啟此頁再試。');};state.worker.postMessage({dataset:snapshots[state.mode],request:r});}catch{setTimeout(()=>{try{done(F.recommend(snapshots[state.mode],r,{timeLimitMs:500,maxStates:200000}));}catch(e){stop();showState('這次計算未完成',e.message);}},25);}
@@ -275,7 +275,7 @@
       }else{
         const reason=x.quoteUnavailable;
         const channelName={delivery:'官方外送',dinein:'內用',takeaway:'外帶'}[r.channel];
-        const detail=reason?.channelMismatchItems?.length?'目前條件下，'+reason.channelMismatchItems.map(m=>I[m.id].name).join('、')+'有外帶優惠，但沒有可計價的'+channelName+'優惠；目前無法報出完整'+channelName+'總價。':reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
+        const detail=x.timeReference?'目前選定的點餐時間（'+dateTime(r.at)+'）不在這份組合的優惠適用時段。':reason?.channelMismatchItems?.length?'目前條件下，'+reason.channelMismatchItems.map(m=>I[m.id].name).join('、')+'有外帶優惠，但沒有可計價的'+channelName+'優惠；目前無法報出完整'+channelName+'總價。':reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
         box.append(h('div',{class:'state-card'},h('h3',{},'完整需求尚未湊齊'),h('p',{},detail)));
         if(x.channelReference){
           const p=x.channelReference.plan;
@@ -283,6 +283,15 @@
           if(p.budgetGapMinor)reference.append(h('p',{},'超出原預算 '+money(p.budgetGapMinor)));
           if(!p.searchComplete)reference.append(h('small',{},'目前找到的完整外帶報價，還未確認最低價。'));
           reference.append(h('button',{type:'button',class:'outline-button',onclick:()=>{$('channel').value='takeaway';orderingUI();feeUI();markDirty();search();}},'改用外帶並重新試算'));
+          box.append(reference);
+        }
+        if(x.timeReference){
+          const t=x.timeReference,p=t.plan,changeChannel=t.channel!==r.channel;
+          const reference=h('div',{class:'full-quote-summary'},h('strong',{},'下一個可配餐時段'),h('p',{},dateTime(t.at)+'・'+({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[t.channel])),h('div',{class:'quote-total'},(p.totalCost===null?'餐點小計 ':'')+money(p.totalCost??p.knownSubtotal)),h('p',{},'保留原餐點與份量'+(changeChannel?'・需改用外帶':'')));
+          if(p.budgetGapMinor)reference.append(h('p',{},'超出原預算 '+money(p.budgetGapMinor)));
+          if(p.totalCost===null)reference.append(h('small',{},'外送等額外費用尚未確認。'));
+          else if(!p.searchComplete)reference.append(h('small',{},'目前找到的完整報價，還未確認最低價。'));
+          reference.append(h('button',{type:'button',class:'outline-button',onclick:()=>{$('at').value=new Date(Date.parse(t.at)+8*3600000).toISOString().slice(0,16);$('channel').value=t.channel;orderingUI();feeUI();markDirty();search();}},'改為此時段'+(changeChannel?'、外帶':'')+'並重新試算'));
           box.append(reference);
         }
       }
