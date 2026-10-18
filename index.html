@@ -63,7 +63,8 @@
 <fieldset id="tea-fieldset" class="plain-fieldset" hidden><legend>想吃哪些小點？ <span class="choice-label">可複選</span></legend><div id="tea-snack-choices" class="tea-snack-choices"></div></fieldset>
 <fieldset class="plain-fieldset richness-section"><legend id="richness-label">點心搭配</legend><div id="richness-choices" class="richness-choices"></div><button id="no-snacks" type="button" class="link-button">不另外要求點心</button></fieldset>
 <div class="drink-row"><label class="check-label"><input id="drinks" type="checkbox">每人一杯飲料</label><label for="drink-preference" class="sr-only">飲料種類</label><select id="drink-preference"><option value="any">不限飲料</option><option value="unsweetened">無糖茶</option><option value="cola">可樂</option><option value="soda">可樂／七喜</option><option value="milkTea">奶茶</option><option value="coldMilkTea">冰奶茶</option><option value="hotMilkTea">熱奶茶</option><option value="soup">玉米濃湯</option></select></div>
-<div class="two-fields"><div><label for="brand-scope">想買哪家？</label><select id="brand-scope"><option value="all">兩家都比較</option><option value="KFC">肯德基</option><option value="PH">必勝客</option></select></div><div><label for="channel">取餐方式</label><select id="channel"><option value="takeaway">外帶</option><option value="delivery">官方外送</option><option value="dinein">內用</option></select></div></div>
+<div class="two-fields"><div><label for="brand-scope">想買哪家？</label><select id="brand-scope"><option value="all">兩家比較・可混搭</option><option value="KFC">肯德基</option><option value="PH">必勝客</option></select></div><div><label for="channel">取餐方式</label><select id="channel"><option value="takeaway">外帶</option><option value="delivery">官方外送</option><option value="dinein">內用</option></select></div></div>
+<div class="check-row"><label><input id="cross-brand" type="checkbox" checked>接受肯德基＋必勝客分開買</label></div>
 <div id="simple-summary" class="simple-summary" aria-live="polite"></div>
 <details id="advanced" class="advanced"><summary>調整份量與其他偏好</summary><div class="advanced-body">
 <div class="two-fields"><div><label for="appetite">食量</label><select id="appetite"><option value="light">輕鬆吃</option><option value="normal" selected>一般</option><option value="big">吃多一點</option></select></div><div><label for="max-orders">最多分幾筆買？</label><select id="max-orders"><option value="auto">自動安排</option></select></div></div>
@@ -72,7 +73,7 @@
 <div id="flavor-settings"><label for="flavor-tag">口味</label><select id="flavor-tag"><option value="any">不限</option><option value="seafood">海鮮</option><option value="meat">肉類</option></select></div>
 <details class="minor-details"><summary>指定其他點心</summary><div id="snack-groups"></div></details>
 <details class="minor-details"><summary>逐項修改數量</summary><div class="demand-heading"><label id="demand-title">餐點數量</label><button id="reset-demand" type="button" class="link-button">恢復建議</button></div><div id="demand-list" aria-labelledby="demand-title"></div><div class="add-row"><label for="add-item" class="sr-only">新增餐點</label><select id="add-item"></select><button id="add-demand" type="button" class="outline-button">＋ 加入</button></div></details>
-<label for="at">預計點餐時間</label><input id="at" type="datetime-local"><div class="two-fields"><div><label for="order-method">指定下單管道</label><select id="order-method"><option value="auto">幫我安排</option><option value="official_web">官方網站</option><option value="pk_app">PK 雙饗卡 APP</option><option value="counter">臨櫃</option><option value="kiosk">自助點餐機</option><option value="phone">電話</option></select></div><div><label for="payment-method">付款方式</label><select id="payment-method"><option value="any">不限</option><option value="online">線上付款</option><option value="in_store">取餐時付款</option></select></div></div><div class="check-row"><label><input id="member" type="checkbox">可使用會員優惠</label><label><input id="cross-brand" type="checkbox" checked>接受兩家分開買</label></div><div id="fees-section" hidden><p class="helper">外送費未填時，先比較餐點小計。</p><div id="fee-inputs"></div></div>
+<label for="at">預計點餐時間</label><input id="at" type="datetime-local"><div class="two-fields"><div><label for="order-method">指定下單管道</label><select id="order-method"><option value="auto">幫我安排</option><option value="official_web">官方網站</option><option value="pk_app">PK 雙饗卡 APP</option><option value="counter">臨櫃</option><option value="kiosk">自助點餐機</option><option value="phone">電話</option></select></div><div><label for="payment-method">付款方式</label><select id="payment-method"><option value="any">不限</option><option value="online">線上付款</option><option value="in_store">取餐時付款</option></select></div></div><div class="check-row"><label><input id="member" type="checkbox">可使用會員優惠</label><label><input id="meal-replacement" type="checkbox">也接受更換餐點的方案</label></div><div id="fees-section" hidden><p class="helper">外送費未填時，先比較餐點小計。</p><div id="fee-inputs"></div></div>
 </div></details>
 <input id="data-scope" type="hidden" value="all"><input id="unknown-ordering" type="checkbox" checked hidden><p id="form-error" class="error" role="alert" hidden></p><button id="search-button" class="primary-button" type="submit"><span>幫我配這一餐</span><span aria-hidden="true">↗</span></button><button id="cancel-search" type="button" class="outline-button full" hidden>取消計算</button><p id="estimate-note" class="form-footnote">找到組合後，會告訴你優惠碼與下單管道。</p>
 </form>
@@ -445,9 +446,10 @@
       return utility(b)-utility(a)||a.id.localeCompare(b.id);
     });
     const maxStates=config.maxStates??1800000,timeLimit=config.timeLimitMs??1800;
-    let states=0,complete=true,minAny=null,minWithin=null,closest=null,bestSingle=null,bestFew=null;
-    const leaders=[],oneBrand=[],fewOrders=[];
+    let states=0,complete=true,minAny=null,minWithin=null,closest=null,bestSingle=null,bestFew=null,bestMixed=null;
+    const leaders=[],oneBrand=[],fewOrders=[],mixedBrand=[];
     const demandKeys=Object.keys(r.demand).filter(k=>r.demand[k]>0);
+    const mixedPossible=r.cross&&r.brands.length>1&&r.maxOrders>1&&new Set(cs.filter(c=>!demandKeys.every(k=>(c.items[k]||0)>=r.demand[k])).map(c=>c.offer.brand)).size>1;
     const singleBrandPossible=r.brands.filter(brand=>demandKeys.every(k=>cs.some(c=>c.offer.brand===brand&&(c.items[k]||0)>0))&&new Set(cs.filter(c=>c.offer.brand===brand).flatMap(c=>c.snackGroups)).size>=(r.snackGoal?.minTypes||0));
     const bounds=cs.map((_,i)=>{
       const remaining=cs.slice(i),weights={},maximum={};
@@ -512,9 +514,10 @@
           const p=makePlan(selected,counts);
           if(!minAny||compare(p,minAny)<0)minAny=p;
           if(p.brandCount===1&&(!bestSingle||compare(p,bestSingle)<0))bestSingle=p;
+          if(p.brandCount>1&&(!bestMixed||compare(p,bestMixed)<0))bestMixed=p;
           if(!bestFew||p.orders.length<bestFew.orders.length||p.orders.length===bestFew.orders.length&&compare(p,bestFew)<0)bestFew=p;
           if(r.budgetMinor===null||p.totalCost!==null&&p.totalCost<=r.budgetMinor){
-            keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);
+            keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);else keep(mixedBrand,p);
             keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
             if(!minWithin||compare(p,minWithin)<0)minWithin=p;
           }
@@ -536,7 +539,8 @@
         const canImproveSingle=brands.size<=1&&singleBrandPossible.some(b=>!brands.size||brands.has(b))&&(!bestSingle||lower<=(bestSingle.totalCost??Infinity)+.0001);
         const minOrders=selected.length+requiredOrders;
         const canImproveFew=!bestFew||minOrders<bestFew.orders.length||minOrders===bestFew.orders.length&&lower<=(bestFew.totalCost??Infinity)+.0001;
-        if(!canImproveMain&&!canImproveSingle&&!canImproveFew)return;
+        const canImproveMixed=mixedPossible&&(!bestMixed||lower<=(bestMixed.totalCost??Infinity)+.0001)&&minOrders<=r.maxOrders;
+        if(!canImproveMain&&!canImproveSingle&&!canImproveFew&&!canImproveMixed)return;
       }
       for(let i=from;i<cs.length;i++){
         const c=cs[i],o=c.offer;
@@ -551,9 +555,18 @@
       }
     }
     // Seed a few feasible plans before exhaustive enumeration of the larger catalogue.
-    if(r.snackGoal||r.drinkPreference){
-      for(const factor of [0.5,1,2]){
-        const selected=[],counts={},uses={},groups={};
+    {
+      // Start from current coupon candidates that cover each requested food.
+      // A rare main must get a feasible starting point before the timed search
+      // spends its budget enumerating many cheap side/drink combinations.
+      const seeds=[null],seedIds=new Set();
+      for(const k of demandKeys){
+        const ranked=cs.filter(c=>c.maxUses>=1&&(!c.group||c.groupLimit===null||c.groupLimit>=1)&&c.items[k]>0&&(!r.exact||demandKeys.every(id=>(c.items[id]||0)<=r.demand[id]))).sort((a,b)=>a.base/Math.min(r.demand[k],a.items[k])-b.base/Math.min(r.demand[k],b.items[k])||a.id.localeCompare(b.id));
+        for(const c of ranked.slice(0,2))if(!seedIds.has(c.id)){seedIds.add(c.id);seeds.push(c);}
+      }
+      for(const seed of seeds)for(const factor of [0.5,1,2]){
+        const selected=seed?[seed]:[],counts=seed?{...seed.items}:{},uses=seed?{[seed.offer.id]:1}:{},groups=seed?.group?{[seed.group]:1}:{};
+        if(seed&&demandKeys.every(k=>(counts[k]||0)>=r.demand[k])&&seed.snackGroups.length>=(r.snackGoal?.minTypes||0)&&assignFlavors(selected,r.pizzaPreference,dataset.pizzaFlavors).complete){visit(cs.length,selected,counts,uses,groups);continue;}
         while(selected.length<r.maxOrders){
           const currentGroups=new Set(selected.flatMap(c=>c.snackGroups));let best=null,score=0;
           for(const c of cs){if(!versionCompatible(selected,c)||(uses[c.offer.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit||!r.cross&&selected.length&&selected[0].offer.brand!==c.offer.brand)continue;
@@ -600,7 +613,7 @@
           const key=selected.map(a=>a.id).sort().join('|');
           const item={selected,counts,uses:{...s.uses,[o.id]:(s.uses[o.id]||0)+1},groups:{...s.groups,...(c.group?{[c.group]:(s.groups[c.group]||0)+1}:{})},from:i,knownSubtotal:s.knownSubtotal+c.base,totalCost,key,mainDeficit,deficit,missing,snackShortfall,flavorShortfall,coveragePercent:Math.floor((1-deficit/parts)*100)};
           if(!missing.length&&!snackShortfall&&!flavorShortfall&&flavors.complete){
-            const p=makePlan(selected,counts);keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
+            const p=makePlan(selected,counts);keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);else keep(mixedBrand,p);keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
             if(!minAny||compare(p,minAny)<0)minAny=p;
           }else{
             retained.set(key,item);
@@ -624,8 +637,8 @@
     if(r.budgetMinor!==null&&minAny?.totalCost===null){keep(leaders,minAny);}
     const alternatives=[];
     const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')).sort().join('|');
-    function add(p,label){if(p&&!alternatives.some(x=>mealKey(x)===mealKey(p)))alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});}
-    add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(fewOrders[0],'訂單較少');
+    function add(p,label){if(p&&alternatives.length<3&&!alternatives.some(x=>mealKey(x)===mealKey(p))){alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});if(!minAny||compare(p,minAny)<0)minAny=p;}}
+    add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(mixedBrand[0],'兩家混搭');add(fewOrders[0],'訂單較少');
     for(const p of leaders)if(alternatives.length<3)add(p,'其他組合');
     // Minimum-price pruning may collapse equivalent or dominated coupons. Search
     // a few exclusions separately so real alternative coupons can still appear.
@@ -640,16 +653,20 @@
         if(other.plans[0])queue.push([...new Set([...banned,...other.plans[0].orders.map(sourceKey)])]);
       }
     }
+    alternatives.sort(compare);
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
     return {plans:alternatives,partials,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing:partials[0]?.missing||missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
   }
   function recommend(dataset,request,config={}){
     const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
+    // Complete plans already satisfy the requested meal. Do not pad this list
+    // with a different meal merely to reach a recommendation count.
+    if(result.plans.length)return {...result,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
     const noSnackGoal={minTypes:0,servings:0};
-    const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=result.plans.length?2:3;
+    const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=3;
     const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')+'/'+o.variantId).sort().join('|');
     const seen=new Set(result.plans.map(mealKey));
     let attempts=0;
@@ -678,25 +695,36 @@
       // Rescue searches never change validity, membership, payment, channel,
       // excluded ingredients, or prices. Changed meal preferences are explicit.
       seen.add(mealKey(p));
-      suggestions.push({...p,label,substitution:true,effectiveRequest:q,adjustments:describe(q),originalCoverage:Object.entries(r.demand).filter(([,n])=>n>0).map(([id,need])=>({id,need,got:p.supplied[id]||0})),overBudget:r.budgetMinor!==null&&p.totalCost!==null&&p.totalCost>r.budgetMinor});
+      const originalCoverage=Object.entries(r.demand).filter(([,n])=>n>0).map(([id,need])=>({id,need,got:p.supplied[id]||0}));
+      const distance=sum(originalCoverage.map(c=>Math.max(0,c.need-c.got)/c.need*(mainSet.has(c.id)?2:1)));
+      suggestions.push({...p,label,substitution:true,effectiveRequest:q,adjustments:describe(q),originalCoverage,requestDistance:distance,overBudget:r.budgetMinor!==null&&p.totalCost!==null&&p.totalCost>r.budgetMinor});
     }
-    if(result.plans.length&&r.budgetMinor!==null){
-      const demand=Object.fromEntries(Object.entries(r.demand).map(([k,n])=>[k,n>0&&mainSet.has(k)?Math.min(60,Math.ceil(n*1.3)):n]));
-      if(Object.keys(demand).some(k=>demand[k]!==r.demand[k]))attempt({...r,demand},'預算內・主餐多一點');
+    // Relax one preference at a time, keeping every requested food and count.
+    if(r.pizzaPreference&&(r.pizzaPreference.tag!=='any'||r.pizzaPreference.minKinds>0)||r.pastaPreference&&r.pastaPreference!=='any')attempt({...r,pizzaPreference:null,pastaPreference:'any'},'餐點份量不變・口味不限');
+    if(r.drinkPreference&&r.drinkPreference!=='any')attempt({...r,drinkPreference:'any'},'餐點份量不變・飲料種類不限');
+    // Small quantity changes retain every selected food, at least 75% of each
+    // requested quantity, and the original snack variety and checkout rules.
+    for(const ratio of [.9,.8,.75]){
+      const demand=Object.fromEntries(Object.entries(r.demand).map(([id,n])=>[id,n>0?Math.max(1,Math.ceil(n*ratio)):0]));
+      attempt({...r,demand,snackGoal:r.snackGoal?{...r.snackGoal,servings:demand.snackPortions||0}:undefined},'原餐點・份量略減');
+    }
+    if(!(config.allowMealReplacement===true||r.allowMealReplacement===true)){
+      suggestions.sort((a,b)=>a.requestDistance-b.requestDistance||(a.totalCost??Infinity)-(b.totalCost??Infinity));
+      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
+      return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'原需求清單（未計價）',note:'保留你選的餐點，尚無可計價優惠；可至官方菜單確認單點價格。'}:null,elapsedMs:Date.now()-started};
     }
     const light={...r,demand:noSnacks,snackGoal:noSnackGoal};
     if(!result.plans.length){
       attempt(light,'主餐保留・減少點心');
       const flexible={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any'};
       attempt(flexible,'主餐保留・口味不限');
-      if(r.maxOrders<12)attempt({...flexible,maxOrders:12},'多分幾筆買・主餐保留');
     }
     // Different main families are complete alternative meals for the same
     // headcount; their serving assumptions are shown alongside the quantities.
     const units={burgerMain:1,paperChicken:1,pasta:1,chicken:2,pizza9:.5,pizza13:.25};
     const servingNotes={burgerMain:'替代主餐按每人 1 個一般漢堡估算',paperChicken:'替代主餐按每人 1 份紙包雞估算',pasta:'替代主餐按每人 1 份義大利麵估算',chicken:'替代主餐按每人 2 塊原塊炸雞估算',pizza9:'替代主餐按小披薩切 6 片、每人 3 片估算',pizza13:'替代主餐按大披薩切 8 片、每人 2 片估算'};
     const families=Object.keys(units);
-    const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:Math.max(r.maxOrders,Math.min(12,r.people))};
+    const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:r.maxOrders};
     const probe=chooseCandidates(dataset,{...base,demand:Object.fromEntries(families.map(id=>[id,1]))},config.now??Date.now()).candidates;
     const cost=id=>Math.min(...probe.filter(c=>c.items[id]>0).map(c=>c.base/(c.items[id]/units[id])));
     for(const id of families.sort((a,b)=>cost(a)-cost(b))){
@@ -704,14 +732,6 @@
       const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));
       demand[id]=Math.ceil(r.people*units[id]);
       attempt({...base,demand,servingNote:servingNotes[id]},'換主餐・'+ITEMS[id].name);
-    }
-    if(!result.plans.length&&suggestions.length<maxSuggestions&&(r.brands.length<2||!r.cross)){
-      const expanded={...base,brands:['KFC','PH'],cross:true};
-      attempt(expanded,'跨品牌找替代餐');
-      for(const id of ['burgerMain','chicken','pizza9']){
-        const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));demand[id]=Math.ceil(r.people*units[id]);
-        attempt({...expanded,demand,servingNote:servingNotes[id]},'跨品牌換餐・'+ITEMS[id].name);
-      }
     }
     if(!result.plans.length&&!suggestions.length){
       const flexible={...base,budgetMinor:null};
@@ -769,7 +789,7 @@
     const personal=mains.some(k=>['burger','wrapped','pasta'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
     for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=Math.ceil(n*(F.SNACKS[id]?.perPerson??.5));}
-    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):Math.max(rich.types,personal?1:0),servings:Math.max(Math.ceil(n*rich.ratio),personal?n:0)};
+    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
     if(snackGoal.servings)demand.snackPortions=snackGoal.servings;
     if(Object.values(demand).some(n=>!Number.isInteger(n)||n<0||n>60))throw Error('建議份量超過目前每項 60 的上限，請減少人數或調整食量。');
     const kinds=pizza?Number(p.flavorKinds??0):0;if(!Number.isInteger(kinds)||kinds<0||kinds>3)throw Error('披薩口味請選不指定或至少 1～3 種。');
@@ -968,6 +988,7 @@
     $('main-choices').replaceChildren(...Object.entries(P.MAINS).map(([id,main])=>h('button',{type:'button','data-main':id,'aria-pressed':String(state.mains.includes(id))},h('span',{'aria-hidden':'true'},main.emoji),h('strong',{},main.name),h('small',{'aria-hidden':'true'},state.mains.includes(id)?'✓ 已選':'＋ 選擇'))));
     $('richness-choices').replaceChildren(...['light','normal','rich'].map(id=>h('button',{type:'button','data-richness':id,'aria-pressed':String(state.richness===id)},h('strong',{},P.RICHNESS[id].name),h('small',{},'至少 '+P.RICHNESS[id].types+' 類點心'))));
     $('no-snacks').setAttribute('aria-pressed',String(state.richness==='none'));
+    $('no-snacks').textContent=state.mealMode==='snack'?(state.fixedSnacks.length?'只要選好的點心':'只要飲料'):'不另外要求點心';
     $('main-fieldset').hidden=state.mealMode==='snack';$('tea-fieldset').hidden=state.mealMode!=='snack';
     document.querySelectorAll('[data-meal-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mealMode===state.mealMode)));
     $('richness-label').textContent=state.mealMode==='snack'?'點心份量':'點心搭配';
@@ -1000,7 +1021,7 @@
     const budgetMinor=raw===''?null:Math.round(Number(raw)*100)*($('budget-type').value==='person'?people:1);
     const fees={KFC:[],PH:[]};document.querySelectorAll('[data-fee-brand]').forEach(e=>{if(e.value!==''&&(!Number.isFinite(Number(e.value))||Number(e.value)<0))throw Error('外送費請填有效的非負金額。');fees[e.dataset.feeBrand][Number(e.dataset.feeSlot)]=e.value===''?null:Math.round(Number(e.value)*100);});
     const at=$('at').value;if(!at)throw Error('請填寫預計點餐時間。');
-    return F.validateRequest({demand:{...state.demand},people,budgetMinor,brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],cross:$('cross-brand').checked,channel:$('channel').value,at:at+':00+08:00',maxOrders:$('max-orders').value==='auto'?b.maxOrders:Number($('max-orders').value),estimate:state.mode==='real',exact:false,allowExtras:true,avoid:[],member:$('member').checked,app:$('order-method').value==='pk_app',orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,dataScope:$('data-scope').value,allowUnknownOrdering:$('unknown-ordering').checked,fees,snackGoal:b.snackGoal,pizzaPreference:b.pizzaPreference,pastaPreference:b.pastaPreference,drinkPreference:$('drink-preference').value});
+    return F.validateRequest({demand:{...state.demand},people,budgetMinor,brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],cross:$('cross-brand').checked,allowMealReplacement:$('meal-replacement').checked,channel:$('channel').value,at:at+':00+08:00',maxOrders:$('max-orders').value==='auto'?b.maxOrders:Number($('max-orders').value),estimate:state.mode==='real',exact:false,allowExtras:true,avoid:[],member:$('member').checked,app:$('order-method').value==='pk_app',orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,dataScope:$('data-scope').value,allowUnknownOrdering:$('unknown-ordering').checked,fees,snackGoal:b.snackGoal,pizzaPreference:b.pizzaPreference,pastaPreference:b.pastaPreference,drinkPreference:$('drink-preference').value});
   }
   function feeUI(){
     const old=new Map(Array.from(document.querySelectorAll('[data-fee-brand]')).map(e=>[e.dataset.feeBrand+e.dataset.feeSlot,e.value]));$('fee-inputs').replaceChildren();
@@ -1062,7 +1083,7 @@
     state.mealMode=mode;state.mains=mode==='snack'?[]:[...state.mealMains];state.fixedSnacks=[];state.richness='normal';state.manual=false;
     $('drinks').checked=mode==='snack';regenerate(true);renderChoices();renderSnackGroups();feeUI();markDirty();
   }
-  const savedIds=['people','budget','budget-type','appetite','brand-scope','pizza-size','flavor-kinds','flavor-tag','small-cuts','large-cuts','drinks','drink-preference','order-method','payment-method','member','cross-brand','channel','max-orders'];
+  const savedIds=['people','budget','budget-type','appetite','brand-scope','pizza-size','flavor-kinds','flavor-tag','small-cuts','large-cuts','drinks','drink-preference','order-method','payment-method','member','cross-brand','meal-replacement','channel','max-orders'];
   function save(){try{const values={};for(const id of savedIds)values[id]=$(id).type==='checkbox'?$(id).checked:$(id).value;localStorage.setItem('feast-simple-v6',JSON.stringify({values,mealMode:state.mealMode,mealMains:state.mealMains,mains:state.mains,richness:state.richness,fixedSnacks:state.fixedSnacks,manual:state.manual,demand:state.demand}));}catch{}}
   function restore(){try{const current=localStorage.getItem('feast-simple-v6'),s=JSON.parse(current||localStorage.getItem('feast-simple-v5')||localStorage.getItem('feast-simple-v4')||localStorage.getItem('feast-simple-v3'));if(!s)return;for(const id of savedIds)if((current||id!=='order-method')&&s.values?.[id]!==undefined){if($(id).type==='checkbox')$(id).checked=Boolean(s.values[id]);else $(id).value=String(s.values[id]);}state.mealMode=s.mealMode==='snack'?'snack':'meal';state.mains=P.normalizeMains({...s,mealMode:state.mealMode});state.mealMains=s.mealMains?.length?s.mealMains:state.mealMode==='meal'?[...state.mains]:['pizza','chicken'];if(P.RICHNESS[s.richness])state.richness=s.richness;state.fixedSnacks=(s.fixedSnacks||[]).filter(k=>P.SNACK_META[k]);if(s.manual&&Object.entries(s.demand||{}).every(([k,n])=>I[k]&&Number.isInteger(n)&&n>=0&&n<=60)){state.manual=true;state.demand={...s.demand};if(!current&&s.family==='burger'&&state.demand.individual){state.demand.burgerMain=state.demand.individual;delete state.demand.individual;}if(!current&&s.values?.drinks&&!state.demand.drinkServing){state.demand.drinkServing=state.demand.drinkSmall||Number($('people').value);delete state.demand.drinkSmall;}}}catch{}}
 
@@ -1168,8 +1189,8 @@
   function planCard(p,index){
     const r=p.effectiveRequest||state.lastRequest,isDemo=state.mode==='demo';
     const card=h('article',{class:'plan-card'+(index===0?' best':'')});
-    const body=h('div',{class:'plan-body'}),title=p.substitution?'換個搭配也可以':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
-    body.append(h('div',{class:'plan-price-row'},h('div',{},h('h3',{},title),h('div',{class:'price'},h('small',{},p.totalCost===null?'餐點 NT$':'NT$'),((p.totalCost??p.knownSubtotal)/100).toLocaleString('zh-TW')),h('p',{class:'per-person'},p.totalCost===null?'外送等額外費用另計':`每人約 ${money(Math.ceil(p.totalCost/r.people))}`)),h('span',{class:'chip'},p.orders.length+' 筆購買')));
+    const body=h('div',{class:'plan-body'}),title=p.substitution?'接近原需求的搭配':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
+    body.append(h('div',{class:'plan-price-row'},h('div',{},h('h3',{},title),h('div',{class:'price'},h('small',{},p.totalCost===null?'餐點 NT$':'NT$'),((p.totalCost??p.knownSubtotal)/100).toLocaleString('zh-TW')),h('p',{class:'per-person'},p.totalCost===null?'外送等額外費用另計':`每人約 ${money(Math.ceil(p.totalCost/r.people))}`)),h('span',{class:'chip'},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買')));
     if(p.partial)body.append(h('p',{class:'shortfall-notice'},'還缺：'+shortageText(p)));
     if(p.substitution)body.append(h('div',{class:'shortfall-notice'},h('strong',{},'這份有調整'),h('ul',{},(p.adjustments||[]).map(x=>h('li',{},x)))));
     if(p.overBudget)body.append(h('p',{class:'shortfall-notice'},'超出預算 '+money(p.totalCost-state.lastRequest.budgetMinor)));
@@ -1197,16 +1218,20 @@
   function renderResults(){
     const x=state.result,r=state.lastRequest,box=$('results');box.replaceChildren();
     if(!x.searchComplete)box.append(h('div',{class:'notice'},'已達搜尋上限，以下是目前找到的方案，可先比較這幾份組合。'));
-    let choices=[...x.plans,...(x.suggestions||[])],extra=[];
+    let choices=[...x.plans],extra=[];
     if(x.plans.length){
       extra=x.more.filter(p=>!choices.some(q=>q.id===p.id));
       if(state.showMore)choices.push(...extra.map(p=>({...p,label:'更多餐點配置',searchComplete:x.searchComplete})));
       if(choices.length===1)box.append(h('p',{class:'recommendation-note'},'目前找到 1 份符合的組合。'));
     }else{
-      choices=[...(x.suggestions||[]),...(x.partials||[]).slice(0,1).map(p=>({...p,label:'保留原餐點・接近配置'}))];
       const best=x.minimumIgnoringBudget;
-      if(best&&best.totalCost!==null&&r.budgetMinor!==null&&best.totalCost>r.budgetMinor&&!choices.some(p=>p.id===best.id))choices.push({...best,overBudget:true,label:'加預算就能湊齊'});
-      box.append(h('div',{class:'state-card'},h('h3',{},choices.length?'先給你這幾種替代點法':'目前沒有符合需求的完整計價組合'),h('p',{},choices.length?'想換口味或調整預算，可以比較下面的搭配。':'也可以照下面清單，至官方菜單確認。')));
+      const over=best&&best.totalCost!==null&&r.budgetMinor!==null&&best.totalCost>r.budgetMinor?{...best,overBudget:true,label:'保留原餐點'}:null;
+      const near=(x.suggestions||[]).filter(p=>!over||p.id!==over.id);
+      const partials=(x.partials||[]).filter(p=>!near.some(q=>q.id===p.id)&&(!over||p.id!==over.id)).slice(0,2);
+      const modest=over&&over.totalCost<=r.budgetMinor*1.2;
+      choices=[...(modest?[over]:[]),...near,...(!modest&&over?[over]:[]),...partials];
+      box.append(h('div',{class:'state-card'},h('h3',{},choices.length?'優先保留你想吃的':'目前沒有符合需求的完整計價組合'),h('p',{},choices.length?'比較原餐點的預算差額，或少量調整份量。':'可照原需求清單，至官方菜單確認。')));
+      if(!r.allowMealReplacement)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('meal-replacement').checked=true;search();}},'也看看更換餐點的方案'));
     }
     $('result-count').textContent=choices.length?`${choices.length} 個可比較配置`:'';
     if(x.unpricedAlternative){
@@ -1219,7 +1244,7 @@
       const picker=h('div',{class:'recommendation-picker','aria-label':'比較餐點配置'});
       choices.forEach((p,i)=>{
         const price=p.totalCost===null?'餐點小計 '+money(p.knownSubtotal):money(p.totalCost);
-        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.partial?'先配到這些':p.overBudget?'加一點預算':p.substitution?'替代搭配':'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},p.orders.length+' 筆購買')));
+        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.partial?'原餐點・未湊齊':p.overBudget?(p.substitution?'換餐點・超出預算':'原餐點・超出預算'):p.substitution?p.label:'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買'),p.overBudget?h('small',{},'多 '+money(p.totalCost-r.budgetMinor)):p.partial?h('small',{},'缺 '+shortageText(p)):null));
       });
       box.append(picker,planCard(choices[state.activePlan],state.activePlan));
       const selected=choices[state.activePlan];
