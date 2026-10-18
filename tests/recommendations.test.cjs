@@ -153,3 +153,42 @@ test('current coupon contents are searched dynamically, including paper chicken 
  const absent=F.recommend(without,r,{timeLimitMs:300,collectAlternatives:false});
  assert.equal(absent.plans.length,0);assert.equal(absent.suggestions.length,0);assert(absent.unpricedAlternative);
 });
+
+function quoted(offers,patch={},config={}){
+ return F.recommend({...demo,offers},{demand:{chicken:4,tart:2},people:2,budgetMinor:1500,brands:['KFC','PH'],cross:true,channel:'takeaway',at,maxOrders:4,estimate:false,orderMethod:'official_web',paymentMethod:'any',member:false,...patch},{timeLimitMs:10000,...config});
+}
+test('the full original meal quote remains available even far over budget',()=>{
+ const smaller=offer('smaller',{chicken:3,tart:2},1400);smaller.limits.maxUsesPerUserPerDay=1;
+ const x=quoted([offer('ideal',{chicken:4,tart:2},10000),smaller]);
+ assert.equal(x.plans.length,0);assert(x.suggestions.length);assert.equal(x.fullQuote.totalCost,10000);assert.equal(x.fullQuote.budgetGapMinor,8500);
+ assert(x.fullQuote.coverage.every(c=>c.got>=c.need));assert.equal(x.fullQuote.substitution,undefined);
+});
+test('an independent full-price search recovers a quote after the main state limit is hit',()=>{
+ const x=quoted([offer('meal',{chicken:2,tart:1},1000)],{}, {maxStates:0});
+ assert.equal(x.fullQuote.totalCost,2000);assert.equal(x.fullQuote.budgetGapMinor,500);assert.equal(x.searchComplete,false);
+});
+test('a recovered complete meal within budget is promoted into the valid plans',()=>{
+ const x=quoted([offer('meal',{chicken:2,tart:1},1000)],{budgetMinor:2500},{maxStates:0});
+ assert(x.plans.length);assert.equal(x.plans[0].totalCost,2000);assert(x.plans[0].coverage.every(c=>c.got>=c.need));
+});
+test('the full quote can propose more orders without silently changing the original order cap',()=>{
+ const r={demand:{chicken:4,tart:2},people:2,budgetMinor:1500,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:1,estimate:false,member:false,paymentMethod:'in_store'};
+ const x=F.recommend({...demo,offers:[offer('meal',{chicken:2,tart:1},1000)]},r,{timeLimitMs:10000});
+ assert.equal(x.plans.length,0);assert.equal(x.fullQuote.totalCost,2000);assert.equal(x.fullQuote.requiredMaxOrders,2);assert.equal(x.fullQuote.budgetGapMinor,500);assert.equal(r.maxOrders,1);
+ assert.deepEqual(x.fullQuote.effectiveRequest.brands,['KFC']);assert.equal(x.fullQuote.effectiveRequest.cross,false);assert.equal(x.fullQuote.effectiveRequest.member,false);assert.equal(x.fullQuote.effectiveRequest.paymentMethod,'in_store');
+ assert.equal(x.unpricedAlternative,null);
+});
+test('missing required food is explained rather than quoted as a cheaper changed meal',()=>{
+ const x=quoted([offer('chicken',{chicken:4},1000)]);
+ assert.equal(x.fullQuote,null);assert.equal(x.quoteUnavailable.reason,'missing_items');assert.deepEqual(x.quoteUnavailable.missingItems,[{id:'tart',quantity:2}]);
+});
+test('full-price references preserve coupon usage caps, eligibility and fulfilment rules',()=>{
+ const one=offer('limited',{chicken:2,tart:1},1000);one.limits.maxUsesPerUserPerDay=1;
+ const member=offer('member',{chicken:4,tart:2},1);member.eligibility.memberRequired=true;
+ const delivery=offer('delivery',{chicken:4,tart:2},1);delivery.variants[0].channels=['delivery'];
+ const x=quoted([one,member,delivery]);assert.equal(x.fullQuote,null);assert.equal(x.minimumIgnoringBudget,null);
+});
+test('unknown delivery charges never become a numeric total or budget gap',()=>{
+ const x=quoted([offer('meal',{chicken:2,tart:1},1000)],{maxOrders:1,channel:'delivery',fees:{KFC:[100],PH:[]}});
+ assert(x.fullQuote);assert.equal(x.fullQuote.totalCost,null);assert.equal(x.fullQuote.budgetGapMinor,null);assert.equal(x.fullQuote.knownSubtotal,2000);
+});

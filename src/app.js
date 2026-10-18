@@ -193,6 +193,7 @@
     if(state.mode!=='demo'&&p.orders.some(o=>!orderUsable(o,r)))return '餐點資料已變更，請重新試算。';
     const lines=['【揪省購買清單】',`${r.people} 人・${({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])}`,p.totalCost===null?'餐點小計 '+money(p.knownSubtotal)+'（外送等費用另計）':'合計 '+money(p.totalCost),''];
     if(p.substitution)lines.push('替代方案：',...(p.adjustments||[]),'');
+    if(p.requiredMaxOrders)lines.push('完整滿足原需求需分 '+p.requiredMaxOrders+' 筆購買（原上限 '+state.lastRequest.maxOrders+' 筆）','');
     if(p.partial)lines.push('還缺：'+shortageText(p),'');
     if(p.overBudget)lines.push('超出原預算 '+money(p.totalCost-state.lastRequest.budgetMinor),'');
     for(const [i,o] of p.orders.entries()){
@@ -226,11 +227,12 @@
   function planCard(p,index){
     const r=p.effectiveRequest||state.lastRequest,isDemo=state.mode==='demo';
     const card=h('article',{class:'plan-card'+(index===0?' best':'')});
-    const body=h('div',{class:'plan-body'}),title=p.substitution?'接近原需求的搭配':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
+    const body=h('div',{class:'plan-body'}),title=p.priceReference?'完整滿足原需求':p.substitution?'接近原需求的搭配':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
     body.append(h('div',{class:'plan-price-row'},h('div',{},h('h3',{},title),h('div',{class:'price'},h('small',{},p.totalCost===null?'餐點 NT$':'NT$'),((p.totalCost??p.knownSubtotal)/100).toLocaleString('zh-TW')),h('p',{class:'per-person'},p.totalCost===null?'外送等額外費用另計':`每人約 ${money(Math.ceil(p.totalCost/r.people))}`)),h('span',{class:'chip'},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買')));
     if(p.partial)body.append(h('p',{class:'shortfall-notice'},'還缺：'+shortageText(p)));
     if(p.substitution)body.append(h('div',{class:'shortfall-notice'},h('strong',{},'這份有調整'),h('ul',{},(p.adjustments||[]).map(x=>h('li',{},x)))));
     if(p.overBudget)body.append(h('p',{class:'shortfall-notice'},'超出預算 '+money(p.totalCost-state.lastRequest.budgetMinor)));
+    if(p.requiredMaxOrders)body.append(h('p',{class:'shortfall-notice'},'需分 '+p.requiredMaxOrders+' 筆購買；你目前設定最多 '+state.lastRequest.maxOrders+' 筆。'));
     for(const [i,o] of p.orders.entries()){
       const row=h('div',{class:'order-row'},h('div',{class:'order-title'},h('span',{class:'brand-dot'+(o.brand==='PH'?' ph':'')},o.brand==='KFC'?'KFC':'PH'),h('strong',{},brandName(o.brand)),h('span',{},money(o.base))),h('p',{class:'order-items'},formatItems(o.items)));
       if(o.beverages?.length)row.append(h('p',{class:'order-choice'},o.beverages.map(d=>d.name+' × '+d.quantity).join('、')));
@@ -261,14 +263,22 @@
       if(state.showMore)choices.push(...extra.map(p=>({...p,label:'更多餐點配置',searchComplete:x.searchComplete})));
       if(choices.length===1)box.append(h('p',{class:'recommendation-note'},'目前找到 1 份符合的組合。'));
     }else{
-      const best=x.minimumIgnoringBudget;
-      const over=best&&best.totalCost!==null&&r.budgetMinor!==null&&best.totalCost>r.budgetMinor?{...best,overBudget:true,label:'保留原餐點'}:null;
-      const near=(x.suggestions||[]).filter(p=>!over||p.id!==over.id);
-      const partials=(x.partials||[]).filter(p=>!near.some(q=>q.id===p.id)&&(!over||p.id!==over.id)).slice(0,2);
-      const modest=over&&over.totalCost<=r.budgetMinor*1.2;
-      choices=[...(modest?[over]:[]),...near,...(!modest&&over?[over]:[]),...partials];
-      box.append(h('div',{class:'state-card'},h('h3',{},choices.length?'優先保留你想吃的':'目前沒有符合需求的完整計價組合'),h('p',{},choices.length?'比較原餐點的預算差額，或少量調整份量。':'可照原需求清單，至官方菜單確認。')));
-      if(!r.allowMealReplacement)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('meal-replacement').checked=true;search();}},'也看看更換餐點的方案'));
+      const full=x.fullQuote;
+      const near=(x.suggestions||[]).filter(p=>!full||p.id!==full.id);
+      const partials=(x.partials||[]).filter(p=>!near.some(q=>q.id===p.id)&&(!full||p.id!==full.id)).slice(0,2);
+      choices=[...(full?[full]:[]),...near,...partials];
+      if(full){
+        const summary=h('div',{class:'full-quote-summary'},h('strong',{},'照原需求湊齊'),h('div',{class:'quote-total'},full.totalCost===null?'餐點小計 '+money(full.knownSubtotal):money(full.totalCost)));
+        if(r.budgetMinor!==null&&full.totalCost!==null)summary.append(h('p',{},'目前預算 '+money(r.budgetMinor)+'・'+(full.budgetGapMinor?'還差 '+money(full.budgetGapMinor):'預算足夠')));
+        if(full.requiredMaxOrders)summary.append(h('p',{},'需分 '+full.requiredMaxOrders+' 筆購買（目前上限 '+r.maxOrders+' 筆）'));
+        if(full.totalCost===null)summary.append(h('p',{},'外送等額外費用尚未填齊，還不能確認完整總額。'));
+        else if(!full.searchComplete)summary.append(h('small',{},'這是目前找到的完整報價，還未確認最低價。'));
+        box.append(summary);
+      }else{
+        const reason=x.quoteUnavailable;
+        const detail=reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
+        box.append(h('div',{class:'state-card'},h('h3',{},'完整需求尚未湊齊'),h('p',{},detail)));
+      }
     }
     $('result-count').textContent=choices.length?`${choices.length} 個可比較配置`:'';
     if(x.unpricedAlternative){
@@ -281,13 +291,14 @@
       const picker=h('div',{class:'recommendation-picker','aria-label':'比較餐點配置'});
       choices.forEach((p,i)=>{
         const price=p.totalCost===null?'餐點小計 '+money(p.knownSubtotal):money(p.totalCost);
-        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.partial?'原餐點・未湊齊':p.overBudget?(p.substitution?'換餐點・超出預算':'原餐點・超出預算'):p.substitution?p.label:'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買'),p.overBudget?h('small',{},'多 '+money(p.totalCost-r.budgetMinor)):p.partial?h('small',{},'缺 '+shortageText(p)):null));
+        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.priceReference?'原需求・完整報價':p.partial?'原餐點・未湊齊':p.overBudget?(p.substitution?'換餐點・超出預算':'原餐點・超出預算'):p.substitution?p.label:'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買'),p.overBudget?h('small',{},'多 '+money(p.totalCost-r.budgetMinor)):p.partial?h('small',{},'缺 '+shortageText(p)):null));
       });
       box.append(picker,planCard(choices[state.activePlan],state.activePlan));
       const selected=choices[state.activePlan];
-      if(selected.overBudget)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('budget-type').value='total';$('budget').value=selected.totalCost/100;markDirty();search();}},'將整團預算調為 '+money(selected.totalCost)+' 再試算'));
+      if(selected.overBudget||selected.requiredMaxOrders)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{if(selected.totalCost!==null){$('budget-type').value='total';$('budget').value=selected.totalCost/100;}if(selected.requiredMaxOrders)$('max-orders').value=String(selected.requiredMaxOrders);feeUI();markDirty();search();}},selected.requiredMaxOrders?'改為最多 '+selected.requiredMaxOrders+' 筆'+(selected.totalCost!==null?'、預算 '+money(selected.totalCost):'')+' 再試算':'將整團預算調為 '+money(selected.totalCost)+' 再試算'));
       if(extra.length&&!state.showMore)box.append(h('button',{type:'button',class:'outline-button more-button',onclick:()=>{state.showMore=true;renderResults();}},'再看其他搭配'));
     }
+    if(!x.plans.length&&!r.allowMealReplacement)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('meal-replacement').checked=true;search();}},'也看看更換餐點的方案'));
     $('search-meta').textContent=`從 ${x.candidateCount} 個可用優惠選項重新計算・探索 ${x.states.toLocaleString()} 個狀態・${x.elapsedMs} ms・${x.searchComplete?'完整組合搜尋完成':'搜尋未完成'}。${x.excluded.length} 筆因條件或資料不足未參與。${state.mode==='real'?'依本次資料範圍及各來源版本估算；門市供應與結帳接受情況仍需確認。':''}`;
   }
   function browse(){globalThis.CatalogUI.render({data:snapshots[state.mode],F,I,h,$,money,brandName,safeLink,onCopy:copy,onAdd:items=>{for(const [id,n] of Object.entries(items))state.demand[id]=(state.demand[id]||0)+n;state.manual=true;renderDemand();renderSummary();$('advanced').open=true;setPage('planner');markDirty();toast('已加入目前選項的餐點數量；可再修改。');}});}

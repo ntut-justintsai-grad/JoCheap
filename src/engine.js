@@ -453,7 +453,7 @@
         const minOrders=selected.length+requiredOrders;
         const canImproveFew=!bestFew||minOrders<bestFew.orders.length||minOrders===bestFew.orders.length&&lower<=(bestFew.totalCost??Infinity)+.0001;
         const canImproveMixed=mixedPossible&&(!bestMixed||lower<=(bestMixed.totalCost??Infinity)+.0001)&&minOrders<=r.maxOrders;
-        if(!canImproveMain&&!canImproveSingle&&!canImproveFew&&!canImproveMixed)return;
+        if(!canImproveMain&&(config.priceReferenceOnly||!canImproveSingle&&!canImproveFew&&!canImproveMixed))return;
       }
       for(let i=from;i<cs.length;i++){
         const c=cs[i],o=c.offer;
@@ -496,7 +496,7 @@
     // A bounded fallback explores affordable partial meals even when a missing
     // item makes the complete-cover lower bound reject the entire search tree.
     const partials=[];
-    if(!leaders.length&&config.collectAlternatives!==false){
+    if(!leaders.length&&config.collectPartials!==false&&config.collectAlternatives!==false){
       const partialStart=Date.now(),limit=config.partialTimeLimitMs??350;
       const mains=new Set(['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13']);
       const rank=(a,b)=>a.mainDeficit-b.mainDeficit||a.deficit-b.deficit||(a.totalCost??Infinity)-(b.totalCost??Infinity)||a.knownSubtotal-b.knownSubtotal||a.selected.length-b.selected.length||a.key.localeCompare(b.key);
@@ -575,6 +575,37 @@
     // Complete plans already satisfy the requested meal. Do not pad this list
     // with a different meal merely to reach a recommendation count.
     if(result.plans.length)return {...result,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
+    // Reserve an independent search for the exact original meal with only the
+    // budget removed. Near matches must never become its required-price quote.
+    if(result.candidateCount&&(!result.minimumIgnoringBudget||!result.searchComplete)){
+      const reference=solve(dataset,{...r,budgetMinor:null},{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+      result.states+=reference.states;
+      const p=reference.minimumIgnoringBudget;
+      if(p&&(!result.minimumIgnoringBudget||p.totalCost!==null&&(result.minimumIgnoringBudget.totalCost===null||p.totalCost<result.minimumIgnoringBudget.totalCost)))result.minimumIgnoringBudget=p;
+    }
+    let fullQuote=result.minimumIgnoringBudget;
+    // A quote requiring more orders is a separately labelled proposal. Do not
+    // silently change the user's order cap, meal, eligibility or payment rules.
+    if(!fullQuote&&result.candidateCount&&r.maxOrders<12){
+      const expanded={...r,budgetMinor:null,maxOrders:12};
+      const reference=solve(dataset,expanded,{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+      result.states+=reference.states;
+      if(reference.minimumIgnoringBudget){
+        const p=reference.minimumIgnoringBudget;
+        if(p.orders.length<=r.maxOrders){result.minimumIgnoringBudget=p;fullQuote=p;}
+        else fullQuote={...p,effectiveRequest:{...r,maxOrders:p.orders.length},requiredMaxOrders:p.orders.length};
+      }
+    }
+    if(fullQuote)fullQuote={...fullQuote,priceReference:true,overBudget:r.budgetMinor!==null&&fullQuote.totalCost!==null&&fullQuote.totalCost>r.budgetMinor,budgetGapMinor:r.budgetMinor===null||fullQuote.totalCost===null?null:Math.max(0,fullQuote.totalCost-r.budgetMinor)};
+    if(fullQuote&&!fullQuote.requiredMaxOrders&&(r.budgetMinor===null||fullQuote.totalCost!==null&&fullQuote.totalCost<=r.budgetMinor)){
+      return {...result,plans:[fullQuote],fullQuote,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
+    }
+    result.fullQuote=fullQuote||null;
+    if(!fullQuote){
+      const candidates=chooseCandidates(dataset,r,config.now??Date.now()).candidates;
+      const missingItems=Object.entries(r.demand).filter(([id,n])=>n>0&&!candidates.some(c=>c.items[id]>0)).map(([id,quantity])=>({id,quantity}));
+      result.quoteUnavailable={reason:missingItems.length?'missing_items':!result.searchComplete?'search_limit':'conditions',missingItems};
+    }
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
@@ -623,7 +654,7 @@
     }
     if(!(config.allowMealReplacement===true||r.allowMealReplacement===true)){
       suggestions.sort((a,b)=>a.requestDistance-b.requestDistance||(a.totalCost??Infinity)-(b.totalCost??Infinity));
-      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
+      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
       return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'原需求清單（未計價）',note:'保留你選的餐點，尚無可計價優惠；可至官方菜單確認單點價格。'}:null,elapsedMs:Date.now()-started};
     }
     const light={...r,demand:noSnacks,snackGoal:noSnackGoal};
@@ -654,7 +685,7 @@
         attempt({...flexible,demand,servingNote:servingNotes[id]},'替代主餐・預算參考');
       }
     }
-    const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget;
+    const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
   const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
