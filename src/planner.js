@@ -3,6 +3,51 @@
   const F=root.Feast||(typeof require==='function'?require('./engine.js'):null);
   const FAMILY={mixed:'披薩＋炸雞',pizza:'披薩共享',chicken:'炸雞共享',burger:'漢堡個人餐',wrapped:'紙包雞',pasta:'義大利麵'};
   const MAINS={pizza:{name:'披薩',emoji:'🍕'},chicken:{name:'炸雞',emoji:'🍗'},burger:{name:'漢堡',emoji:'🍔'},wrapped:{name:'紙包雞',emoji:'🥘'},pasta:{name:'義大利麵',emoji:'🍝'}};
+  const MAIN_ITEMS={pizza:['pizza9','pizza13'],chicken:['chicken'],burger:['burgerMain'],wrapped:['paperChicken'],pasta:['pasta']};
+  function mergeWindows(windows){
+    const out=[];for(const w of windows.sort((a,b)=>a[0]-b[0])){const last=out[out.length-1];if(last&&w[0]<=last[1])last[1]=Math.max(last[1],w[1]);else out.push([...w]);}return out;
+  }
+  function dayWindows(validity,date){
+    const windows=validity?.validWindows||[];if(!windows.length)return {windows:[[0,1440]],unknown:true};
+    const out=[];let unknown=false;
+    for(const w of windows){
+      const start=w.startMinute??0,end=w.endMinute??1440;
+      const at=Date.parse(date+'T00:00:00+08:00')+(start+(end-start)/2)*60000;
+      if(end<=start||!Number.isFinite(at)||F.isActive({validity:{...validity,validWindows:[w]}},at)!==true)continue;
+      out.push([start,end]);if(w.startMinute===undefined||w.endMinute===undefined)unknown=true;
+    }
+    return {windows:mergeWindows(out),unknown};
+  }
+  function intersectWindows(a,b){return mergeWindows(a.flatMap(x=>b.map(y=>[Math.max(x[0],y[0]),Math.min(x[1],y[1])]).filter(w=>w[0]<w[1])));}
+  function formatWindows(windows){const time=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');return windows.map(w=>time(w[0])+'–'+time(w[1])).join('、');}
+  function planningContext(dataset,request,now=Date.now()){
+    const r={estimate:true,dataScope:'all',allowUnknownOrdering:true,orderMethod:'auto',paymentMethod:'any',...request};
+    const date=F.taipeiDate(Date.parse(r.at)),records=[],items=new Set();
+    for(const o of F.planningOffers(dataset,r,now)){
+      if(!r.brands.includes(o.brand)||!F.recommendationCheck(dataset,o,now,r).allowed||!F.orderingCheck(o,r).allowed||o.eligibility?.personalCoupon||o.eligibility?.memberRequired&&!r.member||o.requiresParent)continue;
+      const hours=dayWindows(o.validity,date);if(!hours.windows.length)continue;
+      for(const v of o.variants||[]){
+        if(v.requiresParent||!(v.channels||[]).includes(r.channel)&&!(v.channels||[]).includes('unknown')||!Number.isSafeInteger(v.priceMinor))continue;
+        const ids=new Set(Object.keys(v.items||{}).filter(k=>v.items[k]>0));
+        for(const g of v.optionGroups||[])for(const option of g.options||[])for(const [k,n] of Object.entries(option.items||{}))if(n>0)ids.add(k);
+        if(v.individualMainItems?.burger||v.individualMains&&v.items?.burger)ids.add('burgerMain');
+        for(const k of ids)items.add(k);records.push({brand:o.brand,items:ids,...hours});
+      }
+    }
+    const schedules=r.brands.map(brand=>{
+      const rows=records.filter(o=>o.brand===brand),requested=Object.keys(r.demand||{}).filter(k=>r.demand[k]>0&&!['snackPortions','drinkServing','individual'].includes(k)&&rows.some(o=>o.items.has(k)));
+      let windows=mergeWindows(rows.flatMap(o=>o.windows)),unknown=false;
+      for(const id of requested){const matches=rows.filter(o=>o.items.has(id));windows=intersectWindows(windows,mergeWindows(matches.flatMap(o=>o.windows)));unknown=unknown||matches.some(o=>o.unknown);}
+      if(!requested.length)unknown=rows.some(o=>o.unknown);
+      return {brand,windows,unknown};
+    });
+    return {date,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
+  }
+  function planTimeWindows(plan,at){
+    const date=F.taipeiDate(Date.parse(at));let windows=[[0,1440]],unknown=false;
+    for(const o of plan.orders){const hours=dayWindows(o.validity,date);windows=intersectWindows(windows,hours.windows);unknown=unknown||hours.unknown;}
+    return {windows,unknown};
+  }
   function normalizeMains(p){
     if(p.mealMode==='snack')return [];
     const raw=p.mains??(p.family==='mixed'||!p.family?['pizza','chicken']:[p.family]);
@@ -105,5 +150,5 @@
     if(!recognized.length)warnings.push('尚未辨識到可套用條件，請補充人數、主餐、預算或點心程度。');
     return {patch,recognized,warnings,text:t,method:'local_rules',partial:true};
   }
-  const api={FAMILY,MAINS,RICHNESS,SNACK_META,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
+  const api={FAMILY,MAINS,MAIN_ITEMS,RICHNESS,SNACK_META,planningContext,planTimeWindows,formatWindows,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
