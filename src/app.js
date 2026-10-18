@@ -247,7 +247,7 @@
       const detail=h('details',{class:'minor-details'},h('summary',{},'餐點與使用細節'));
       if(o.mainDescription)detail.append(h('p',{},o.mainDescription));
       if(o.surchargeMinor)detail.append(h('p',{},'基本餐 '+money(o.mealBase)+'＋替換 '+money(o.surchargeMinor)));
-      for(const note of o.conditions||[])detail.append(h('p',{class:'helper'},note));
+      for(const note of F.couponTerms(o))detail.append(h('p',{class:'helper'},note));
       if(!isDemo)detail.append(safeLink(o.sourceUrl,'資料記錄'));row.append(detail);body.append(row);
     }
     if(Object.keys(p.extras||{}).length)body.append(h('details',{class:'minor-details'},h('summary',{},'另外得到的餐點'),h('p',{},formatItems(p.extras))));

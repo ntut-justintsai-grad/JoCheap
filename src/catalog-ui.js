@@ -39,11 +39,7 @@
    if(o.rawText)detail.append(h('p',{},o.rawText));if(o.reviewReason)detail.append(h('p',{class:'helper'},o.reviewReason));
    const official=o.sourceMetadata?.officialMeal;
    if(official?.soldOut===true)detail.append(h('p',{class:'availability-note'},official.shopName+'於查詢時回報售罄；其他門市供應請另行確認。'));
-   if(official?.orderingDiffers){const differences=h('details',{},h('summary',{},'點餐可選明細'));
-    for(const g of official.orderingOptions||[])differences.append(h('p',{class:'helper'},g.title+' × '+g.count+'：'+g.options.map(x=>x.name+(Number.isFinite(x.addPrice)?'（明細加價 NT$'+x.addPrice+'）':'')).join('／')));
-    differences.append(h('p',{class:'helper'},'上方基本組合依餐點說明；這些明細未自動套入。'));detail.append(differences);
-   }
-   for(const c of o.conditions||[])detail.append(h('p',{class:'helper'},c));
+   for(const c of F.couponTerms(o))detail.append(h('p',{class:'helper'},c));
    const end=o.validity?.validWindows?.[0]?.toExclusive;if(end)detail.append(h('p',{class:'helper'},'期限至 '+new Date(Date.parse(end+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})));
    detail.append(safeLink(o.provenance.sourceUrl,'資料記錄'));card.append(detail);
    const actions=h('div',{class:'order-actions'});

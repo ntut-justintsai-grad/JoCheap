@@ -158,6 +158,11 @@
     const day=new Date(at+8*3600000).getUTCDay();
     return windows.some(w=> (!w.from||date>=w.from)&&(!w.toExclusive||date<w.toExclusive)&&(!w.days||w.days.includes(day))&&(!w.startMinute||minute>=w.startMinute)&&(w.endMinute===undefined||minute<w.endMinute));
   }
+  function couponTerms(o){
+    // Keep ingestion diagnostics in the dataset, outside customer-facing terms.
+    const diagnostic=/^(?:基本組合與套餐價採官方 API|官方查詢參考門市：|點餐明細與餐點說明未能完整配對|來源整理資料，|供餐時段與取餐方式依 KCouper|KCouper 將可用餐期與取餐方式|本次官方查詢失敗，沿用|含未完成對照的餐點；|來源標示起價，升級差額|套餐敘述尚待分解：|活動名稱提及紙包雞；)/;
+    return [...new Set((o.conditions||[]).filter(note=>typeof note==='string'&&note.trim()&&!diagnostic.test(note.trim())&&!note.includes('於查詢當下回報售罄；本配置僅供估算')) )];
+  }
   function mealIdentityIssue(o){
     if(o.sourceMetadata?.compositionBasis==='structured_items')return null;
     const title=[o.title,o.rawText].filter(Boolean).join(' '),variants=o.variants||[];
@@ -700,6 +705,6 @@
     const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,couponTerms,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
