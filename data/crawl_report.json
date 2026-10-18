@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-18T04:56:32+00:00",
+  "fetchedAt": "2026-10-18T05:19:35+00:00",
   "status": "parsed",
   "sources": [
     {
@@ -8,10 +8,10 @@
       "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
       "sourcePublisher": "好康情報誌",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
+      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
+      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
       "parsedCount": 81,
       "contentHash": "7eaaa92fae15e2062b0bfe000c5206569757e19c5a758bfc2733e59929dbe5c7",
       "responseBytes": 299579,
@@ -23,13 +23,13 @@
       "sourceUrl": "https://www.callingtaiwan.com.tw/pizzahut-coupon-code/",
       "sourcePublisher": "Calling Taiwan",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
+      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
+      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
       "parsedCount": 188,
-      "contentHash": "6dbdf59947fb87d08d010bc1e47e422a44eee86e3c935b7543f5464ac500bae8",
-      "responseBytes": 833826,
+      "contentHash": "cdce7e655e18cf0766eae1812c9d0cd084252a4ea990b03ff6179b10d62cf331",
+      "responseBytes": 833860,
       "errorSummary": null
     },
     {
@@ -38,10 +38,10 @@
       "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
       "sourcePublisher": "KCouper 公開資料",
       "sourceType": "public_dataset",
-      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
+      "lastAttemptAt": "2026-10-18T05:19:35+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
+      "lastSuccessAt": "2026-10-18T05:19:35+00:00",
       "parsedCount": 971,
       "contentHash": "015940cddcc56484f66217b6a8eebd672625a054fce964a33ee8ae3864b73053",
       "responseBytes": 2344087,
@@ -61,5 +61,19 @@
     "conflict": 2
   },
   "variants": 1695,
-  "optionGroups": 1475
+  "optionGroups": 1475,
+  "pizzahutLookup": {
+    "attemptedAt": "2026-10-18T05:19:35+00:00",
+    "endpoint": "https://www.pizzahut.com.tw/order/?m=ajax",
+    "total": 194,
+    "queried": 156,
+    "reused": 38,
+    "stopped": false,
+    "byStatus": {
+      "matched": 190,
+      "error": 2,
+      "invalid": 2
+    },
+    "retainedSuccessful": 0
+  }
 }
