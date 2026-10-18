@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
@@ -7,9 +8,11 @@ const [html,css,engine,planner,intent,catalogUI,app,data,demo,llm]=await Promise
 const safeJson=s=>JSON.stringify(JSON.parse(s)).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 const llmSettings=JSON.parse(llm);
 if(process.env.JOCHEAP_LLM_ENDPOINT)llmSettings.endpoint=process.env.JOCHEAP_LLM_ENDPOINT;
-const result=html.replace('/*INLINE_STYLE*/',css).replace('/*INLINE_ENGINE*/',()=>engine+'\n'+planner+'\n'+intent+'\n'+catalogUI).replace('/*INLINE_APP*/',()=>app).replace('DATA_SNAPSHOT',()=>safeJson(data)).replace('DEMO_SNAPSHOT',()=>safeJson(demo)).replace('LLM_CONFIG',()=>safeJson(JSON.stringify(llmSettings)));
+const version=createHash('sha256').update(JSON.stringify([html,css,engine,planner,intent,catalogUI,app,data,demo,llmSettings])).digest('hex').slice(0,12);
+const result=html.replace('BUILD_VERSION',version).replace('/*INLINE_STYLE*/',css).replace('/*INLINE_ENGINE*/',()=>engine+'\n'+planner+'\n'+intent+'\n'+catalogUI).replace('/*INLINE_APP*/',()=>app).replace('DATA_SNAPSHOT',()=>safeJson(data)).replace('DEMO_SNAPSHOT',()=>safeJson(demo)).replace('LLM_CONFIG',()=>safeJson(JSON.stringify(llmSettings)));
 if(/INLINE_|DATA_SNAPSHOT|DEMO_SNAPSHOT|LLM_CONFIG/.test(result))throw Error('Missing build input');
 await mkdir(path.join(root,'dist'),{recursive:true});
 await writeFile(path.join(root,'dist/index.html'),result);
 await writeFile(path.join(root,'index.html'),result);
+await writeFile(path.join(root,'dist/release.json'),JSON.stringify({version,builtAt:new Date().toISOString()}));
 console.log(`Built standalone index.html (${Buffer.byteLength(result)} bytes)`);

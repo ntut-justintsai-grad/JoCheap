@@ -12,11 +12,12 @@
   const drinkNames={any:'不限飲料',cola:'可樂',soda:'汽水',unsweetened:'無糖茶',milkTea:'奶茶（冷熱皆可）',coldMilkTea:'冰奶茶',hotMilkTea:'熱奶茶',soup:'玉米濃湯'};
   function syncDateFields(){const at=$('at').value;[$('order-date').value,$('order-time').value]=[at.slice(0,10),at.slice(11,16)];}
   function syncAt(){const date=$('order-date').value,time=$('order-time').value;$('at').value=date&&time?date+'T'+time:'';}
-  function contextMenu(demand={}){
-    const request={brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],at:$('at').value+':00+08:00',channel:$('channel').value,orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,member:$('member').checked,dataScope:$('data-scope').value,demand};
+  function contextMenu(demand={},overrides={}){
+    const request={brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],at:$('at').value+':00+08:00',channel:$('channel').value,orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,member:$('member').checked,dataScope:$('data-scope').value,demand,...overrides};
     const key=JSON.stringify([state.mode,{...request,at:request.at.slice(0,10)}]);
-    if(state.contextCache?.key===key)return state.contextCache.value;
-    const value=P.planningContext(snapshots[state.mode],request);state.contextCache={key,value};return value;
+    const cache=state.contextCache||(state.contextCache=new Map());
+    if(cache.has(key))return cache.get(key);
+    const value=P.planningContext(snapshots[state.mode],request);if(cache.size>=12)cache.clear();cache.set(key,value);return value;
   }
   function mainTimeInfo(id){
     const hours=state.menu?.mainTimes?.[id],time=$('order-time').value,minute=Number(time.slice(0,2))*60+Number(time.slice(3,5));
@@ -28,6 +29,14 @@
     const context=contextMenu(state.demand),minute=Number($('order-time').value.slice(0,2))*60+Number($('order-time').value.slice(3,5));
     box.append(h('strong',{},'可查詢的優惠時段'));
     for(const s of context.schedules){
+      if(s.brand==='KFC'&&$('channel').value!=='takeaway'&&!s.allPeriods.some(p=>p.label==='早餐優惠')){
+        const reference=contextMenu({}, {brands:['KFC'],channel:'takeaway'}).schedules[0];
+        const breakfast=reference.allPeriods.find(p=>p.label==='早餐優惠');
+        if(breakfast&&!reference.allUnknown){
+          box.append(h('p',{},'肯德基早餐優惠 '+P.formatWindows(breakfast.windows)+' · 目前'+({delivery:'官方外送',dinein:'內用'}[$('channel').value])+'條件沒有可計價早餐券'));
+          box.append(h('button',{type:'button',class:'text-button',onclick:()=>{$('channel').value='takeaway';orderingUI();refreshMenu(true);feeUI();markDirty();}},'改用外帶查看早餐'));
+        }
+      }
       if(s.allPeriods.length&&!s.allUnknown){
         box.append(h('p',{},h('strong',{},brandName(s.brand))));
         for(const period of s.allPeriods){
@@ -36,7 +45,8 @@
         }
       }else{
         const range=!s.allWindows.length?'這個日期沒有可計價選項':s.allUnknown?'完整供餐時段待門市確認':P.formatWindows(s.allWindows);
-        box.append(h('p',{},brandName(s.brand)+'：'+range+(!s.requested.length?'（尚未指定該店餐點）':'')));
+        const status=!s.allUnknown&&s.allWindows.length?{outside_period:'非目前用餐時段',no_selection:'目前用餐時段・尚未指定餐點',unknown:'餐點優惠時段待確認',matching:'目前時段可搭配所選餐點',unavailable:'目前時段無法搭配所選餐點'}[P.periodStatus(s,{windows:s.allWindows},minute)]:'';
+        box.append(h('p',{},brandName(s.brand)+'：'+range+(status?' · '+status:!s.requested.length?'（尚未指定該店餐點）':'')));
         if(s.requested.length&&!s.unknown&&s.allUnknown)box.append(h('p',{},'所選餐點：'+(s.windows.length?P.formatWindows(s.windows):'沒有共同優惠時段')));
       }
     }
@@ -188,6 +198,32 @@
   function save(){try{const values={};for(const id of savedIds)values[id]=$(id).type==='checkbox'?$(id).checked:$(id).value;localStorage.setItem('feast-simple-v6',JSON.stringify({values,mealMode:state.mealMode,mealMains:state.mealMains,mains:state.mains,richness:state.richness,fixedSnacks:state.fixedSnacks,manual:state.manual,demand:state.demand}));}catch{}}
   function restore(){try{const current=localStorage.getItem('feast-simple-v6'),s=JSON.parse(current||localStorage.getItem('feast-simple-v5')||localStorage.getItem('feast-simple-v4')||localStorage.getItem('feast-simple-v3'));if(!s)return;for(const id of savedIds)if((current||id!=='order-method')&&s.values?.[id]!==undefined){if($(id).type==='checkbox')$(id).checked=Boolean(s.values[id]);else $(id).value=String(s.values[id]);}state.mealMode=s.mealMode==='snack'?'snack':'meal';state.mains=P.normalizeMains({...s,mealMode:state.mealMode});state.mealMains=s.mealMains?.length?s.mealMains:state.mealMode==='meal'?[...state.mains]:['pizza','chicken'];if(P.RICHNESS[s.richness])state.richness=s.richness;state.fixedSnacks=(s.fixedSnacks||[]).filter(k=>P.SNACK_META[k]);if(s.manual&&Object.entries(s.demand||{}).every(([k,n])=>I[k]&&Number.isInteger(n)&&n>=0&&n<=60)){state.manual=true;state.demand={...s.demand};if(!current&&s.family==='burger'&&state.demand.individual){state.demand.burgerMain=state.demand.individual;delete state.demand.individual;}if(!current&&s.values?.drinks&&!state.demand.drinkServing){state.demand.drinkServing=state.demand.drinkSmall||Number($('people').value);delete state.demand.drinkSmall;}}}catch{}}
 
+  const buildVersion=document.querySelector('meta[name="jocheap-build"]')?.content||'';
+  let latestVersion=buildVersion,versionChecking=false,lastVersionCheck=0;
+  async function checkVersion(){
+    if(!/^https?:$/.test(location.protocol)||!buildVersion||versionChecking||Date.now()-lastVersionCheck<10000)return;
+    versionChecking=true;lastVersionCheck=Date.now();
+    try{
+      const url=new URL('release.json',location.href);url.searchParams.set('t',String(Date.now()));
+      const response=await fetch(url,{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(8000)});
+      if(!response.ok)return;const release=await response.json();
+      if(!/^[a-f0-9]{12}$/.test(release.version))return;
+      latestVersion=release.version;$('update-notice').hidden=latestVersion===buildVersion;
+      $('app-version').textContent='版本 '+buildVersion.slice(0,8)+(latestVersion!==buildVersion?'（有新版）':'');
+    }catch{}finally{versionChecking=false;}
+  }
+  function reloadLatest(){
+    save();
+    try{sessionStorage.setItem('jocheap-update-form',JSON.stringify({savedAt:Date.now(),at:$('at').value,text:$('meal-text').value,recalculate:!!state.result,fees:[...document.querySelectorAll('[data-fee-brand]')].map(e=>({brand:e.dataset.feeBrand,slot:Number(e.dataset.feeSlot),value:e.value}))}));}catch{}
+    const url=new URL(location.href);url.searchParams.set('v',latestVersion||String(Date.now()));url.searchParams.set('_refresh',String(Date.now()));location.replace(url.href);
+  }
+  function takeUpdateForm(){
+    try{const raw=sessionStorage.getItem('jocheap-update-form');sessionStorage.removeItem('jocheap-update-form');if(!raw)return null;const s=JSON.parse(raw);
+      if(!Number.isFinite(s.savedAt)||Date.now()-s.savedAt<0||Date.now()-s.savedAt>5*60000||typeof s.at!=='string'||!/^20\d\d-\d\d-\d\dT\d\d:\d\d$/.test(s.at)||!Number.isFinite(Date.parse(s.at+':00+08:00')))return null;
+      if(!Array.isArray(s.fees))s.fees=[];
+      return s;
+    }catch{return null;}
+  }
   function h(tag,attrs={},...children){const e=document.createElement(tag);for(const [k,v] of Object.entries(attrs)){if(v===null||v===undefined)continue;if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='checked')e.checked=v;else e.setAttribute(k,v);}for(const c of children.flat(Infinity))if(c!==null&&c!==undefined)e.append(c instanceof Node?c:document.createTextNode(String(c)));return e;}
   function safeLink(url,text,cls='source-link'){try{const u=new URL(url);if(u.protocol!=='https:'||!['info.talk.tw','www.callingtaiwan.com.tw','winedays.github.io','www.kfcclub.com.tw','www.pizzahut.com.tw','kfcoosfs.kfcclub.com.tw'].includes(u.hostname)&&!(u.hostname==='github.com'&&(u.pathname.startsWith('/ntut-justintsai-grad/JoCheap/')||u.pathname.startsWith('/Winedays/KCouper/'))))return h('span',{},text+'（無可用連結）');return h('a',{href:u.href,target:'_blank',rel:'noopener noreferrer',class:cls},text);}catch{return h('span',{},text+'（無可用連結）');}}
   function toast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
@@ -393,7 +429,13 @@
     $('browse-category').append(h('option',{value:id},item.name));
   }
   $('at').value=new Date(Date.now()+8*3600000).toISOString().slice(0,16);
-  restore();syncDateFields();orderingUI();refreshMenu();feeUI();sourceUI();researchUI();initIntent();refreshAge();setInterval(refreshAge,60000);
+  restore();const updateForm=takeUpdateForm();if(updateForm){$('at').value=updateForm.at;if(typeof updateForm.text==='string'&&updateForm.text.length<=2000)$('meal-text').value=updateForm.text;}
+  syncDateFields();orderingUI();refreshMenu();feeUI();
+  for(const fee of updateForm?.fees||[])if(['KFC','PH'].includes(fee.brand)&&Number.isInteger(fee.slot)&&fee.slot>=0&&fee.slot<12&&typeof fee.value==='string'){const e=document.querySelector('[data-fee-brand="'+fee.brand+'"][data-fee-slot="'+fee.slot+'"]');if(e)e.value=fee.value;}
+  sourceUI();researchUI();initIntent();refreshAge();setInterval(refreshAge,60000);
+  $('app-version').textContent=buildVersion?'版本 '+buildVersion.slice(0,8):'';
+  $('reload-latest').addEventListener('click',reloadLatest);$('apply-update').addEventListener('click',reloadLatest);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkVersion();});window.addEventListener('focus',checkVersion);setInterval(checkVersion,60000);checkVersion();
   document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
   $('main-choices').addEventListener('click',e=>{const b=e.target.closest('[data-main]');if(!b)return;const id=b.dataset.main;if(state.mains.includes(id)&&state.mains.length===1){toast('至少保留一種主餐；可先選另一種，再取消這一種。');return;}state.mains=state.mains.includes(id)?state.mains.filter(k=>k!==id):[...state.mains,id];state.mealMains=[...state.mains];state.manual=false;$('drinks').checked=state.mains.some(k=>!['pizza','chicken'].includes(k));regenerate(true);renderChoices();feeUI();markDirty();});
   document.querySelectorAll('[data-meal-mode]').forEach(b=>b.addEventListener('click',()=>setMealMode(b.dataset.mealMode)));
@@ -411,7 +453,7 @@
   $('reset-demand').addEventListener('click',()=>{state.manual=false;regenerate(true);markDirty();});
   const regenerateIds=['people','appetite','pizza-size','flavor-kinds','flavor-tag','small-cuts','large-cuts','drinks','drink-preference'];
   $('planner-form').addEventListener('change',e=>{if(['brand-scope','channel','order-date','order-time','order-method','payment-method','member'].includes(e.target.id)){if(['order-date','order-time'].includes(e.target.id))syncAt();orderingUI();refreshMenu(true);feeUI();markDirty();return;}if(e.target.id==='drink-preference')$('drinks').checked=true;if(['drinks','drink-preference'].includes(e.target.id)&&state.manual){if($('drinks').checked)state.demand.drinkServing=Number($('people').value);else delete state.demand.drinkServing;}if(regenerateIds.includes(e.target.id)){regenerate(e.target.id==='pizza-size');renderChoices();}if(['people','max-orders'].includes(e.target.id))feeUI();if(e.target.id!=='meal-text')markDirty();});
-  $('planner-form').addEventListener('input',e=>{if(['budget','people'].includes(e.target.id)){if(e.target.id==='people')regenerate();markDirty();}else if(e.target.dataset.feeBrand)markDirty();});
+  $('planner-form').addEventListener('input',e=>{if(['order-date','order-time'].includes(e.target.id)){if(!$('order-date').value||!$('order-time').value)return;syncAt();orderingUI();refreshMenu(true);feeUI();markDirty();return;}if(['budget','people'].includes(e.target.id)){if(e.target.id==='people')regenerate();markDirty();}else if(e.target.dataset.feeBrand)markDirty();});
   $('planner-form').addEventListener('submit',e=>{e.preventDefault();search();});
   $('cancel-search').addEventListener('click',()=>{stop();state.result=null;showState('這次試算已取消','需求已保留。');});
   $('interpret-text').addEventListener('click',interpretText);
@@ -422,6 +464,7 @@
   ['browse-search','browse-brand','browse-category','browse-sort','browse-max','browse-active','browse-status'].forEach(id=>$(id).addEventListener('input',browse));
   $('clear-filters').addEventListener('click',()=>{$('browse-search').value='';$('browse-brand').value='all';$('browse-category').value='all';$('browse-sort').value='price';$('browse-max').value='';$('browse-status').value='all';$('browse-active').checked=true;browse();});
   for(const id of ['source-button'])$(id).addEventListener('click',()=>{sourceUI();$('source-dialog').showModal();});
-  $('close-source').addEventListener('click',()=>$('source-dialog').close());$('close-copy').addEventListener('click',()=>$('copy-dialog').close());$('reload-data').addEventListener('click',()=>location.reload());
+  $('close-source').addEventListener('click',()=>$('source-dialog').close());$('close-copy').addEventListener('click',()=>$('copy-dialog').close());$('reload-data').addEventListener('click',reloadLatest);
   $('clear-local').addEventListener('click',()=>{try{for(const key of ['feast-simple-v6','feast-simple-v5','feast-simple-v4','feast-simple-v3','feast-demand-v2','feast-demand-v1'])localStorage.removeItem(key);toast('已清除本機需求。');}catch{toast('目前無法使用本機儲存。');}});
+  if(updateForm?.recalculate)search();
 })();

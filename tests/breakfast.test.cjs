@@ -19,6 +19,8 @@ test('breakfast choices respect brand, method, and their actual time ranges',()=
  for(const id of ['porridge','eggFlatbread','chickenFlatbread','smallBurger'])assert(!ph.mains.includes(id),id);
  const delivery=P.planningContext(data,{...request,channel:'delivery'});
  for(const id of ['porridge','eggFlatbread','chickenFlatbread'])assert(!delivery.mains.includes(id),id);
+ assert(!delivery.schedules[0].allPeriods.some(p=>p.label==='早餐優惠'));
+ assert(menu.schedules[0].allPeriods.some(p=>p.label==='早餐優惠'));
 });
 test('08:10 breakfast searches satisfy all selected mains, with genuine official-description coupons',()=>{
  const demand={chickenPorridge:1,omeletFlatbread:1,chickenFlatbread:1};

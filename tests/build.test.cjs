@@ -6,6 +6,10 @@ const cp=require('node:child_process');
 test('standalone HTML builds without remote runtime dependencies and safely embeds JSON',()=>{
  cp.execFileSync(process.execPath,['tools/build.mjs'],{cwd:__dirname+'/..'});
  const html=fs.readFileSync(__dirname+'/../index.html','utf8');
+ const release=JSON.parse(fs.readFileSync(__dirname+'/../dist/release.json','utf8'));
+ assert.match(release.version,/^[a-f0-9]{12}$/);
+ assert(html.includes('<meta name="jocheap-build" content="'+release.version+'">'));
+ assert(!html.includes('BUILD_VERSION'));
  assert(!/<script\b[^>]*\bsrc=/i.test(html));
  assert(!/<link[^>]*\brel=["']stylesheet/i.test(html));
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];
