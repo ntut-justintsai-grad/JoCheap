@@ -3,6 +3,7 @@ const assert=require('node:assert/strict'),F=require('../src/engine.js'),data=re
 assert.equal(data.recommendationPolicy?.allowAllSources,true);
 assert.equal(data.recommendationPolicy?.requireOfficial,false);
 assert.equal(data.parserVersion,5);
+assert.deepEqual(data.sources.map(s=>s.sourceId).sort(),['calling-ph','kcouper','talk-ph']);
 assert.equal(data.qualityReport?.total,data.offers.length);
 const now=Date.parse(data.generatedAt),checked=data.offers.filter(o=>F.verificationCheck(o,now).allowed);
 assert.equal(checked.length,data.officialRefresh.checked||0);

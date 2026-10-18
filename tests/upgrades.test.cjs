@@ -45,11 +45,13 @@ test('time-dependent rice replacement follows Taipei collection time',()=>{
  assert.equal(F.applyOptions(v,{},'2026-10-17T19:59:00+08:00').items.chickenRice,1);
  const late=F.applyOptions(v,{},'2026-10-17T20:00:00+08:00');assert.equal(late.items.chickenRice,undefined);assert.equal(late.items.friesMedium,1);
 });
-test('large catalogue metadata agrees with the records, conflicts stay excluded',()=>{
+test('active source metadata agrees with preserved records and calculation versions',()=>{
  const snapshot=live;F.extendItems(snapshot);
  assert.equal(snapshot.schemaVersion,2);assert.equal(snapshot.offers.length,snapshot.crawlReport.uniqueCodes);
  assert.equal(new Set(snapshot.offers.map(o=>o.brand+'/'+o.code)).size,snapshot.offers.length);
- assert.equal(snapshot.sources.length,5);assert(snapshot.sources.every(s=>s.parsedCount>0&&s.contentHash.length===64));
+ assert.equal(new Set(snapshot.sources.map(s=>s.sourceId)).size,snapshot.sources.length);
+ if(snapshot.sourcePolicy?.KFC)assert.deepEqual(snapshot.sources.map(s=>s.sourceId).sort(),['calling-ph','kcouper','talk-ph']);
+ assert(snapshot.sources.every(s=>s.parsedCount>0&&s.contentHash.length===64));
  assert(snapshot.offers.length>0);assert(snapshot.offers.some(o=>o.brand==='PH'&&o.variants.some(v=>v.pizzaSlots?.length)));
  for(const o of snapshot.offers){assert.equal(o.provenance.officialVerifiedAt,null);for(const v of o.variants)for(const [k,n] of Object.entries(v.items)){assert(F.ITEMS[k],k);assert(Number.isInteger(n)&&n>=0&&n<=60,k);}}
  const available=F.chooseCandidates(snapshot,req({demand:{chicken:1},drinkPreference:'any'}),Date.now()).candidates;
