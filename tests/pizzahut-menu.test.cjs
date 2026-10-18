@@ -30,3 +30,10 @@ test('Pizza Hut selections include all mapped sides, and respect channel and sna
  const built=P.buildSimple({people:6,mealMode:'snack',richness:'none',fixedSnacks:['basque8','coldCheeseTart']});
  assert.equal(built.demand.basque8,1);assert.equal(built.demand.coldCheeseTart,6);
 });
+
+test('a fresh browser worker registers new menu identities before validating requests',()=>{
+ const vm=require('node:vm'),fs=require('node:fs'),context=vm.createContext({});
+ vm.runInContext(fs.readFileSync(require.resolve('../src/engine.js'),'utf8')+'\n'+fs.readFileSync(require.resolve('../src/planner.js'),'utf8'),context);
+ const x=context.Feast.recommend({...production,offers:[]},request,{now,timeLimitMs:300,maxStates:20000});
+ assert(x.plans.length);assert.equal(x.plans[0].totalCost,13400);
+});
