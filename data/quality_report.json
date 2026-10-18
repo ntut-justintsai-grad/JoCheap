@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-10-18T04:41:47+00:00",
-  "total": 1167,
+  "generatedAt": "2026-10-18T04:56:32+00:00",
+  "total": 1165,
   "byDataStatus": {
-    "estimate": 1005,
-    "conflict": 92,
-    "pending": 68,
-    "official": 2
+    "estimate": 1095,
+    "official": 2,
+    "pending": 66,
+    "conflict": 2
   },
   "byVerificationStatus": {
-    "unverified": 1162,
+    "unverified": 1160,
     "changed": 3,
     "checked": 2
   },
-  "withQualityIssues": 160,
+  "withQualityIssues": 68,
   "recommendationPolicy": "all_source_versions_with_evidence_labels",
   "offers": [
     {
@@ -28,12 +28,10 @@
     {
       "brand": "KFC",
       "code": "16003",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -43,7 +41,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -163,7 +161,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -173,7 +171,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -183,19 +181,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16036",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -205,19 +201,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16038",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -227,19 +221,6 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
-      "checkedAt": null,
-      "reviewBy": null
-    },
-    {
-      "brand": "KFC",
-      "code": "16040",
-      "dataStatus": "pending",
-      "verificationStatus": "unverified",
-      "issues": [
-        "沒有完整可辨識的套餐配置",
-        "套餐敘述尚待分解：買蛋撻送蛋撻 1個冰心蛋撻風味冰淇淋"
-      ],
       "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
@@ -340,7 +321,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -350,7 +331,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -370,7 +351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -380,7 +361,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -390,7 +371,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -400,7 +381,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -410,7 +391,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -490,7 +471,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -500,7 +481,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -510,7 +491,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -537,12 +518,10 @@
     {
       "brand": "KFC",
       "code": "16077",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -552,7 +531,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -562,7 +541,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -572,7 +551,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -582,7 +561,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -592,7 +571,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -602,7 +581,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -612,7 +591,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -622,7 +601,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -632,7 +611,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -642,7 +621,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -652,7 +631,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -662,7 +641,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -672,7 +651,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -682,7 +661,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -692,7 +671,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -702,7 +681,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -752,7 +731,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -762,19 +741,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16100",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -784,7 +761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -794,7 +771,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -834,7 +811,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -844,7 +821,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -854,7 +831,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -954,7 +931,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -994,7 +971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1021,12 +998,10 @@
     {
       "brand": "KFC",
       "code": "16128",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1036,7 +1011,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1046,31 +1021,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16131",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16132",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1080,19 +1051,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16134",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1102,7 +1071,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1132,7 +1101,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1142,19 +1111,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16146",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1164,7 +1131,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1224,7 +1191,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1234,7 +1201,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1244,7 +1211,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1254,7 +1221,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1314,7 +1281,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1344,7 +1311,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1374,7 +1341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1384,7 +1351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1394,7 +1361,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1454,7 +1421,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1464,55 +1431,47 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16180",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16181",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16182",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16183",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1792,7 +1751,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1802,7 +1761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1812,7 +1771,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1822,7 +1781,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1832,7 +1791,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1842,7 +1801,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1852,7 +1811,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1862,7 +1821,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1872,7 +1831,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1882,7 +1841,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1892,7 +1851,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -1962,7 +1921,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2012,7 +1971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2039,24 +1998,20 @@
     {
       "brand": "KFC",
       "code": "16237",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16238",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2066,7 +2021,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2076,7 +2031,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2103,12 +2058,10 @@
     {
       "brand": "KFC",
       "code": "16243",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2118,7 +2071,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2128,7 +2081,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2138,7 +2091,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2178,7 +2131,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2188,7 +2141,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2218,7 +2171,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2228,7 +2181,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2265,12 +2218,10 @@
     {
       "brand": "KFC",
       "code": "16275",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2280,7 +2231,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2290,19 +2241,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16278",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2362,7 +2311,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2372,7 +2321,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2382,7 +2331,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2392,7 +2341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2402,7 +2351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2412,7 +2361,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2422,7 +2371,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2499,72 +2448,60 @@
     {
       "brand": "KFC",
       "code": "16298",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16299",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16300",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16301",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16302",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16303",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2581,36 +2518,30 @@
     {
       "brand": "KFC",
       "code": "16305",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16306",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16307",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2700,19 +2631,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16317",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2762,7 +2691,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -2772,7 +2701,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3002,7 +2931,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3012,7 +2941,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3032,7 +2961,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3042,7 +2971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3082,19 +3011,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16355",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3124,19 +3051,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16359",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3146,7 +3071,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3316,19 +3241,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16378",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3338,7 +3261,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3395,12 +3318,10 @@
     {
       "brand": "KFC",
       "code": "16387",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3410,7 +3331,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3420,7 +3341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3430,7 +3351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3440,19 +3361,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16392",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3492,7 +3411,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3572,7 +3491,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3582,7 +3501,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3592,7 +3511,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3602,7 +3521,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3612,7 +3531,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3632,7 +3551,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3672,7 +3591,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3682,7 +3601,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3722,7 +3641,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3782,7 +3701,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3792,7 +3711,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3802,7 +3721,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3842,7 +3761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3852,7 +3771,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3862,7 +3781,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3872,7 +3791,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3882,7 +3801,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3892,7 +3811,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3902,7 +3821,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3912,7 +3831,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3922,7 +3841,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3972,7 +3891,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3982,7 +3901,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -3992,43 +3911,37 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16456",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16457",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16458",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4055,12 +3968,10 @@
     {
       "brand": "KFC",
       "code": "16461",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4100,7 +4011,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4110,19 +4021,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16467",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4142,7 +4051,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4152,7 +4061,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4172,7 +4081,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4189,12 +4098,10 @@
     {
       "brand": "KFC",
       "code": "16474",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4254,7 +4161,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4314,7 +4221,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4324,7 +4231,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4334,7 +4241,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4344,7 +4251,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4354,7 +4261,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4364,7 +4271,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4374,7 +4281,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4384,7 +4291,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4394,7 +4301,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4404,7 +4311,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4414,7 +4321,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4424,7 +4331,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4554,7 +4461,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4564,19 +4471,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16521",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4596,7 +4501,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4666,7 +4571,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4676,7 +4581,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4686,7 +4591,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4696,7 +4601,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4706,7 +4611,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4716,7 +4621,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4726,7 +4631,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4806,7 +4711,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4816,7 +4721,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -4856,7 +4761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5066,7 +4971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5106,7 +5011,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5116,7 +5021,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5126,7 +5031,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5136,19 +5041,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16583",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5158,7 +5061,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5168,19 +5071,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16586",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5190,7 +5091,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5230,7 +5131,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5240,7 +5141,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5250,7 +5151,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5260,7 +5161,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5270,7 +5171,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5280,7 +5181,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5290,7 +5191,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5300,7 +5201,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5310,7 +5211,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5320,7 +5221,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5330,19 +5231,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16604",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5352,55 +5251,47 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16606",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16607",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16608",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16609",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5410,7 +5301,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5420,7 +5311,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5430,19 +5321,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16613",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5452,7 +5341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5462,7 +5351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5502,7 +5391,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5592,7 +5481,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5602,7 +5491,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5612,7 +5501,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5622,19 +5511,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16632",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5704,7 +5591,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5714,19 +5601,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16641",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5736,7 +5621,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5746,7 +5631,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5756,7 +5641,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5766,7 +5651,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5776,7 +5661,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5786,7 +5671,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5796,7 +5681,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5806,7 +5691,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5816,7 +5701,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5826,7 +5711,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5836,67 +5721,57 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16653",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16654",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16655",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16656",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16657",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5906,7 +5781,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5946,7 +5821,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5956,7 +5831,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5966,7 +5841,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5976,7 +5851,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5986,7 +5861,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -5996,7 +5871,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6006,31 +5881,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16669",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16670",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6050,7 +5921,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6080,7 +5951,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6090,19 +5961,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16677",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6112,7 +5981,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6202,7 +6071,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6212,19 +6081,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16689",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6234,19 +6101,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16691",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6286,7 +6151,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6306,19 +6171,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16701",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6348,7 +6211,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6378,7 +6241,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6398,7 +6261,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6408,7 +6271,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6418,7 +6281,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6428,7 +6291,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6438,7 +6301,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6488,7 +6351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6498,7 +6361,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6508,7 +6371,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6518,7 +6381,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6528,31 +6391,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16725",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16726",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6662,7 +6521,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6672,7 +6531,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6682,7 +6541,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6692,7 +6551,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6702,7 +6561,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6712,7 +6571,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6822,7 +6681,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6832,7 +6691,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6852,7 +6711,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6862,7 +6721,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6892,7 +6751,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6902,7 +6761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6912,7 +6771,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -6922,31 +6781,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16766",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16767",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7046,7 +6901,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7056,7 +6911,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7066,7 +6921,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7086,7 +6941,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7096,7 +6951,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7106,7 +6961,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7116,7 +6971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7126,7 +6981,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7136,19 +6991,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16789",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7158,7 +7011,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7198,7 +7051,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7268,7 +7121,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7278,7 +7131,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7388,7 +7241,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7398,7 +7251,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7408,7 +7261,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7418,7 +7271,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7468,7 +7321,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7478,7 +7331,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7488,7 +7341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7498,7 +7351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7508,7 +7361,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7518,7 +7371,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7528,7 +7381,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7538,7 +7391,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7548,7 +7401,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7558,19 +7411,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16836",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7580,7 +7431,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7590,31 +7441,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16839",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16840",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7634,7 +7481,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7644,7 +7491,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7654,7 +7501,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7664,7 +7511,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 4,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7674,7 +7521,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7684,19 +7531,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "16848",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7706,7 +7551,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7716,7 +7561,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7726,7 +7571,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7736,7 +7581,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7746,7 +7591,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7756,7 +7601,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7766,7 +7611,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7776,7 +7621,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7786,7 +7631,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7796,7 +7641,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7806,7 +7651,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7906,7 +7751,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -7916,7 +7761,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8046,19 +7891,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26505",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8068,7 +7911,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8098,7 +7941,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8108,7 +7951,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8118,7 +7961,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8128,7 +7971,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8235,12 +8078,10 @@
     {
       "brand": "KFC",
       "code": "26772",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8270,7 +8111,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8280,7 +8121,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8290,7 +8131,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8350,19 +8191,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26811",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8412,31 +8251,27 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26820",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26821",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8446,7 +8281,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8456,19 +8291,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26824",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8558,7 +8391,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8618,7 +8451,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8628,19 +8461,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26852",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8650,7 +8481,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8660,7 +8491,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8670,7 +8501,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8690,7 +8521,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8710,19 +8541,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26860",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8732,7 +8561,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8742,7 +8571,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8752,19 +8581,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26864",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8814,7 +8641,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8824,7 +8651,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8854,7 +8681,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8864,7 +8691,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8954,7 +8781,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8984,7 +8811,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -8994,7 +8821,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9004,7 +8831,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9014,7 +8841,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9034,7 +8861,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9074,55 +8901,47 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26919",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26920",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26921",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26922",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9132,7 +8951,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9142,19 +8961,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26925",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9164,7 +8981,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9181,12 +8998,10 @@
     {
       "brand": "KFC",
       "code": "26928",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9306,19 +9121,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26953",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "不同來源或同一來源的同碼價格不一致"
-      ],
-      "sourceCount": 4,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9348,7 +9161,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9358,7 +9171,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9498,7 +9311,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9508,19 +9321,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26974",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9530,7 +9341,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9540,7 +9351,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9560,7 +9371,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9580,19 +9391,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26984",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 3,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9602,19 +9411,17 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
     {
       "brand": "KFC",
       "code": "26986",
-      "dataStatus": "conflict",
+      "dataStatus": "estimate",
       "verificationStatus": "unverified",
-      "issues": [
-        "同碼的主餐或已知規格數量不同"
-      ],
-      "sourceCount": 2,
+      "issues": [],
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9644,7 +9451,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9654,7 +9461,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9664,7 +9471,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 3,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null
     },
@@ -9855,7 +9662,7 @@
       "verificationStatus": "checked",
       "issues": [],
       "sourceCount": 1,
-      "checkedAt": "2026-10-18T04:41:47+00:00",
+      "checkedAt": "2026-10-18T04:56:32+00:00",
       "reviewBy": "2026-10-24T15:59:59+00:00"
     },
     {
@@ -9877,7 +9684,7 @@
       "verificationStatus": "checked",
       "issues": [],
       "sourceCount": 1,
-      "checkedAt": "2026-10-18T04:41:47+00:00",
+      "checkedAt": "2026-10-18T04:56:32+00:00",
       "reviewBy": "2026-10-24T15:59:59+00:00"
     },
     {
@@ -9908,7 +9715,7 @@
       "dataStatus": "estimate",
       "verificationStatus": "changed",
       "issues": [],
-      "sourceCount": 2,
+      "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": "2026-10-24T15:59:59+00:00"
     },
@@ -9918,19 +9725,6 @@
       "dataStatus": "estimate",
       "verificationStatus": "unverified",
       "issues": [],
-      "sourceCount": 1,
-      "checkedAt": null,
-      "reviewBy": null
-    },
-    {
-      "brand": "KFC",
-      "code": "NEW50",
-      "dataStatus": "pending",
-      "verificationStatus": "unverified",
-      "issues": [
-        "沒有完整可辨識的套餐配置",
-        "套餐敘述尚待分解：首次線上訂餐滿 250 元現折 50 元"
-      ],
       "sourceCount": 1,
       "checkedAt": null,
       "reviewBy": null

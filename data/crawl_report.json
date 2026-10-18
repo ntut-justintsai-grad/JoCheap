@@ -1,50 +1,20 @@
 {
-  "fetchedAt": "2026-10-18T04:41:47+00:00",
+  "fetchedAt": "2026-10-18T04:56:32+00:00",
   "status": "parsed",
   "sources": [
-    {
-      "brand": "KFC",
-      "sourceId": "talk-kfc",
-      "sourceUrl": "https://info.talk.tw/kfc-coupon/",
-      "sourcePublisher": "好康情報誌",
-      "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:41:47+00:00",
-      "coverage": "parsed_public_feed",
-      "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:41:47+00:00",
-      "parsedCount": 297,
-      "contentHash": "fe5e92b84885bf9e298dfd15af8a3df3827975a77cb88642666ac0acf6c470d6",
-      "responseBytes": 549578,
-      "errorSummary": null
-    },
     {
       "brand": "PH",
       "sourceId": "talk-ph",
       "sourceUrl": "https://info.talk.tw/pizzahut-coupon/",
       "sourcePublisher": "好康情報誌",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:41:47+00:00",
+      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:41:47+00:00",
+      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
       "parsedCount": 81,
       "contentHash": "7eaaa92fae15e2062b0bfe000c5206569757e19c5a758bfc2733e59929dbe5c7",
       "responseBytes": 299579,
-      "errorSummary": null
-    },
-    {
-      "brand": "KFC",
-      "sourceId": "calling-kfc",
-      "sourceUrl": "https://www.callingtaiwan.com.tw/kfc-coupon-code/",
-      "sourcePublisher": "Calling Taiwan",
-      "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:41:47+00:00",
-      "coverage": "parsed_public_feed",
-      "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:41:47+00:00",
-      "parsedCount": 427,
-      "contentHash": "e7ac071fefb93e6e0f7592166120fbe786c5dc19a4043df0fbe1507b798af08f",
-      "responseBytes": 1408293,
       "errorSummary": null
     },
     {
@@ -53,12 +23,12 @@
       "sourceUrl": "https://www.callingtaiwan.com.tw/pizzahut-coupon-code/",
       "sourcePublisher": "Calling Taiwan",
       "sourceType": "aggregator",
-      "lastAttemptAt": "2026-10-18T04:41:47+00:00",
+      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:41:47+00:00",
+      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
       "parsedCount": 188,
-      "contentHash": "c8a7dddf6ae70768e7ab13345cb669c97c26536e6d435d000df4298b272cd319",
+      "contentHash": "6dbdf59947fb87d08d010bc1e47e422a44eee86e3c935b7543f5464ac500bae8",
       "responseBytes": 833826,
       "errorSummary": null
     },
@@ -68,27 +38,27 @@
       "sourceUrl": "https://winedays.github.io/KCouper/coupon.js",
       "sourcePublisher": "KCouper 公開資料",
       "sourceType": "public_dataset",
-      "lastAttemptAt": "2026-10-18T04:41:47+00:00",
+      "lastAttemptAt": "2026-10-18T04:56:32+00:00",
       "coverage": "parsed_public_feed",
       "status": "parsed_success",
-      "lastSuccessAt": "2026-10-18T04:41:47+00:00",
+      "lastSuccessAt": "2026-10-18T04:56:32+00:00",
       "parsedCount": 971,
       "contentHash": "015940cddcc56484f66217b6a8eebd672625a054fce964a33ee8ae3864b73053",
       "responseBytes": 2344087,
       "errorSummary": null
     }
   ],
-  "sourceRows": 1964,
-  "uniqueCodes": 1167,
+  "sourceRows": 1240,
+  "uniqueCodes": 1165,
   "byBrand": {
-    "KFC": 973,
+    "KFC": 971,
     "PH": 194
   },
   "byStatus": {
-    "estimate": 1005,
-    "conflict": 92,
-    "pending": 68,
-    "official": 2
+    "estimate": 1095,
+    "official": 2,
+    "pending": 66,
+    "conflict": 2
   },
   "variants": 1695,
   "optionGroups": 1475
