@@ -137,4 +137,7 @@ def update_file(target,fetcher=fetch,stamp=None):
 
 if __name__=='__main__':
  import argparse
- p=argparse.ArgumentParser();p.add_argument('--snapshot',default=str(Path(__file__).resolve().parent.parent/'data/offers.json'));args=p.parse_args();update_file(args.snapshot)
+ p=argparse.ArgumentParser();p.add_argument('--snapshot',default=str(Path(__file__).resolve().parent.parent/'data/offers.json'));p.add_argument('--apply-cache',action='store_true');args=p.parse_args()
+ if args.apply_cache:
+  target=Path(args.snapshot);data=json.loads(target.read_text());cache=json.loads((target.parent/'pizzahut_menu.json').read_text());apply(data,cache);target.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')))
+ else:update_file(args.snapshot)

@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Load reviewed official side-menu snapshot
+        run: python tools/pizzahut_menu.py --apply-cache
       - name: Validate independent calculation and parser fixtures
         run: |
           npm test
