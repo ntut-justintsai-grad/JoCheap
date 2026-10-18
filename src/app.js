@@ -202,7 +202,6 @@
       if(o.optionChoices?.some(c=>c.surchargeMinor))lines.push('替換：'+o.optionChoices.filter(c=>c.surchargeMinor).map(c=>c.name+'（加 '+money(c.surchargeMinor)+'）').join('、'));
       if(o.pizzaChoices?.length)lines.push('口味：'+o.pizzaChoices.map(c=>c.name).join('、'));
       if(o.orderingStatus==='unknown')lines.push('此碼的適用下單管道需於點餐確認。');
-      if(o.officialMeal?.soldOut===true)lines.push(o.officialMeal.shopName+'於資料查詢時售罄，請確認取餐門市供應。');
       if(state.mode!=='demo')lines.push(o.officialUrl);lines.push('');
     }
     lines.push('價格與供應以點餐時為準。');return lines.join('\n');
@@ -243,7 +242,6 @@
       if(!isDemo)actions.append(safeLink(o.officialUrl,o.orderMethod==='official_web'?'前往官方訂餐':'查看優惠','outline-button'));
       guide.append(actions);row.append(guide);
       if(o.orderingStatus==='unknown')row.append(h('p',{class:'helper'},'適用下單管道請於點餐確認。'));
-      if(o.officialMeal?.soldOut===true)row.append(h('p',{class:'availability-note'},o.officialMeal.shopName+'曾回報售罄，請先確認取餐門市供應。'));
       const detail=h('details',{class:'minor-details'},h('summary',{},'餐點與使用細節'));
       if(o.mainDescription)detail.append(h('p',{},o.mainDescription));
       if(o.surchargeMinor)detail.append(h('p',{},'基本餐 '+money(o.mealBase)+'＋替換 '+money(o.surchargeMinor)));

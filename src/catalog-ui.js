@@ -37,8 +37,6 @@
    if(o.eligibility?.memberRequired)card.append(h('p',{class:'helper'},'需會員資格'));
    const detail=h('details',{class:'coupon-options'},h('summary',{},'餐點與使用細節'));
    if(o.rawText)detail.append(h('p',{},o.rawText));if(o.reviewReason)detail.append(h('p',{class:'helper'},o.reviewReason));
-   const official=o.sourceMetadata?.officialMeal;
-   if(official?.soldOut===true)detail.append(h('p',{class:'availability-note'},official.shopName+'於查詢時回報售罄；其他門市供應請另行確認。'));
    for(const c of F.couponTerms(o))detail.append(h('p',{class:'helper'},c));
    const end=o.validity?.validWindows?.[0]?.toExclusive;if(end)detail.append(h('p',{class:'helper'},'期限至 '+new Date(Date.parse(end+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})));
    detail.append(safeLink(o.provenance.sourceUrl,'資料記錄'));card.append(detail);
