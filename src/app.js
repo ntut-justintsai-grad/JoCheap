@@ -23,11 +23,21 @@
     const context=contextMenu(state.demand),minute=Number($('order-time').value.slice(0,2))*60+Number($('order-time').value.slice(3,5));
     box.append(h('strong',{},'可查詢的優惠時段'));
     for(const s of context.schedules){
-      const range=!s.windows.length?'這個日期沒有可計價選項':s.unknown?'完整供餐時段待門市確認':s.periods.length?s.periods.map(p=>p.label+' '+P.formatWindows(p.windows)).join('；'):P.formatWindows(s.windows);
-      box.append(h('p',{},brandName(s.brand)+'：'+range+(!s.requested.length?'（尚未指定該店餐點）':'')));
+      if(s.allPeriods.length&&!s.allUnknown){
+        box.append(h('p',{},h('strong',{},brandName(s.brand))));
+        for(const period of s.allPeriods){
+          const selected=s.periods.find(p=>p.label===period.label);
+          const match=!s.requested.length?'尚未指定餐點':s.unknown?'所選餐點時段待確認':!selected?'所選餐點不適用':P.formatWindows(selected.windows)===P.formatWindows(period.windows)?'所選餐點適用':'所選餐點 '+P.formatWindows(selected.windows);
+          box.append(h('p',{},period.label+' '+P.formatWindows(period.windows),h('small',{},' · '+match)));
+        }
+      }else{
+        const range=!s.allWindows.length?'這個日期沒有可計價選項':s.allUnknown?'完整供餐時段待門市確認':P.formatWindows(s.allWindows);
+        box.append(h('p',{},brandName(s.brand)+'：'+range+(!s.requested.length?'（尚未指定該店餐點）':'')));
+        if(s.requested.length&&!s.unknown&&s.allUnknown)box.append(h('p',{},'所選餐點：'+(s.windows.length?P.formatWindows(s.windows):'沒有共同優惠時段')));
+      }
     }
     box.append(h('small',{},'不同時段可用餐點與優惠不同；整份需求是否湊齊，以試算結果為準。'));
-    if(context.schedules.some(s=>!s.unknown&&s.windows.length&&!s.windows.some(w=>minute>=w[0]&&minute<w[1])))box.append(h('p',{class:'time-outside'},'目前選擇的時間不在上述優惠時段內。'));
+    if(context.schedules.some(s=>s.requested.length&&!s.unknown&&s.windows.length&&!s.windows.some(w=>minute>=w[0]&&minute<w[1])))box.append(h('p',{class:'time-outside'},'目前用餐時間不適用所選餐點的優惠。'));
   }
   function refreshMenu(notify=false){
     if(!$('at').value){renderContextTimes();return [];}

@@ -41,6 +41,14 @@ test('breakfast and regular meal windows remain distinguishable after changing s
  }
  const s=P.planningContext(data,{...request,demand:{hashBrown:2,chicken:8}}).schedules[0];
  assert.deepEqual(s.windows,[[630,1380]]);assert.equal(s.periods.length,1);assert.equal(s.periods[0].label,'一般餐點優惠');
+ assert.deepEqual(s.allPeriods,[{label:'早餐優惠',windows:[[480,630]]},{label:'一般餐點優惠',windows:[[630,1380]]}]);
+ assert.equal(s.allUnknown,false);
+ // Selecting a regular meal cannot hide the breakfast reference. Brand/date/
+ // fulfilment restrictions still apply to that reference, just like the menu.
+ const dayOff=P.planningContext(data,{...request,at:'2026-10-18T13:00:00+08:00',demand:{chicken:8}}).schedules[0];
+ assert.deepEqual(dayOff.allPeriods,[]);
+ const delivery=P.planningContext(data,{...request,channel:'delivery',demand:{chicken:8}}).schedules[0];
+ assert.deepEqual(delivery.allPeriods,[]);
 });
 test('production Pizza Hut menu excludes KFC mains and an 8-plus-3 quote exposes its full time range',()=>{
  const data=require('../data/offers.json');

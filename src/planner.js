@@ -36,15 +36,17 @@
     }
     const schedules=r.brands.map(brand=>{
       const rows=records.filter(o=>o.brand===brand),requested=Object.keys(r.demand||{}).filter(k=>r.demand[k]>0&&!['snackPortions','drinkServing','individual'].includes(k)&&rows.some(o=>o.items.has(k)));
-      let windows=mergeWindows(rows.flatMap(o=>o.windows)),unknown=false;
+      const allWindows=mergeWindows(rows.flatMap(o=>o.windows)),allUnknown=rows.some(o=>o.unknown);
+      let windows=allWindows,unknown=false;
       for(const id of requested){const matches=rows.filter(o=>o.items.has(id));windows=intersectWindows(windows,mergeWindows(matches.flatMap(o=>o.windows)));unknown=unknown||matches.some(o=>o.unknown);}
       if(!requested.length)unknown=rows.some(o=>o.unknown);
       // Keep the breakfast boundary visible even when the same abstract food
       // (e.g. a burger or hash brown) has coupons on both sides of it.
       const breakfastEnds=records.filter(o=>o.brand===brand&&o.breakfastOnly).flatMap(o=>o.windows.map(w=>w[1]));
       const boundary=breakfastEnds.length?Math.max(...breakfastEnds):null;
-      const periods=boundary===null?[]:[{label:'早餐優惠',windows:intersectWindows(windows,[[0,boundary]])},{label:'一般餐點優惠',windows:intersectWindows(windows,[[boundary,1440]])}].filter(p=>p.windows.length);
-      return {brand,windows,unknown,requested,periods};
+      const split=hours=>boundary===null?[]:[{label:'早餐優惠',windows:intersectWindows(hours,[[0,boundary]])},{label:'一般餐點優惠',windows:intersectWindows(hours,[[boundary,1440]])}].filter(p=>p.windows.length);
+      const periods=split(windows),allPeriods=split(allWindows);
+      return {brand,windows,unknown,requested,periods,allWindows,allUnknown,allPeriods};
     });
     return {date,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
   }
