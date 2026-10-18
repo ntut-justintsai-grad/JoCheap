@@ -17,9 +17,9 @@ test('pizza slice estimates differ by selected size and editable cut assumption'
  assert.equal(s.portion.slicesPerPerson,3);assert.equal(l.portion.slicesPerPerson,2);assert.equal(s.portion.referenceOnly,true);
  assert.equal(P.buildSimple({people:6,family:'pizza',smallCuts:4}).demand.pizza9,5);
 });
-test('paper chicken and pasta are real main families with individual side/drink defaults',()=>{
+test('paper chicken and pasta use the same explicit snack richness as other mains',()=>{
  for(const [family,id] of [['wrapped','paperChicken'],['pasta','pasta']]){
-  const b=P.buildSimple({people:6,family});assert.equal(b.demand[id],6);assert.equal(b.demand.drinkServing,6);assert.equal(b.demand.snackPortions,6);assert.equal(b.maxOrders,12);
+  const b=P.buildSimple({people:6,family});assert.equal(b.demand[id],6);assert.equal(b.demand.drinkServing,6);assert.equal(b.demand.snackPortions,5);assert.equal(b.maxOrders,12);
   assert(real.offers.some(o=>o.dataStatus!=='conflict'&&o.variants.some(v=>v.items[id]>0)));
  }
 });
@@ -62,7 +62,7 @@ test('newly discovered source code conflict is quarantined in both records',()=>
 test('arbitrary main selections divide diners instead of multiplying full meals',()=>{
  const pair=P.buildSimple({people:6,mains:['pasta','wrapped']});
  assert.deepEqual(pair.mains,['wrapped','pasta']);
- assert.deepEqual(pair.demand,{paperChicken:3,pasta:3,drinkServing:6,snackPortions:6});
+ assert.deepEqual(pair.demand,{paperChicken:3,pasta:3,drinkServing:6,snackPortions:5});
  const triple=P.buildSimple({people:6,mains:['pizza','wrapped','pasta'],flavorTag:'seafood'});
  assert.deepEqual(triple.mainAllocation.map(m=>m.people),[2,2,2]);
  assert.equal(triple.demand.pizza9,1);assert.equal(triple.demand.paperChicken,2);assert.equal(triple.demand.pasta,2);
@@ -107,4 +107,11 @@ test('mixed text preserves all mains and explicit counts in either order',()=>{
  const b=P.interpret('6人，披薩加漢堡、義大利麵，兩種口味');assert.deepEqual(b.patch.mains,['pizza','burger','pasta']);
  const c=P.interpret('披薩和義大利麵，不要炸雞');assert.deepEqual(c.patch.mains,['pizza','pasta']);assert(c.warnings.some(s=>s.includes('完全排除')));
  assert.deepEqual(P.interpret('2個漢堡和4塊炸雞').patch.explicitDemand,{chicken:4,burgerMain:2});
+});
+
+test('no snacks never inserts hidden sides for paper chicken, burgers or pasta',()=>{
+ for(const main of ['wrapped','burger','pasta']){
+  const b=P.buildSimple({people:4,mains:[main],richness:'none',drinks:false});
+  assert.equal(b.snackGoal.minTypes,0);assert.equal(b.snackGoal.servings,0);assert(!b.demand.snackPortions);assert(!b.demand.drinkServing);
+ }
 });

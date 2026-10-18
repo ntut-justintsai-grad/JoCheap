@@ -67,7 +67,7 @@ test('closest ranking agrees with an independent small-budget enumeration',()=>{
 test('unavailable requested main is replaced by a complete priced alternative with explicit changes',()=>{
  const offers=[offer('burger',{burger:1},1000)];offers[0].variants[0].individualMains=1;
  const request={demand:{paperChicken:3},people:3,budgetMinor:5000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false};
- const x=F.recommend({...demo,offers},request,{timeLimitMs:10000});
+ const x=F.recommend({...demo,offers},request,{timeLimitMs:10000,allowMealReplacement:true});
  assert.equal(x.plans.length,0);assert(x.suggestions.length);
  const p=x.suggestions.find(p=>p.effectiveRequest.demand.burgerMain===3);
  assert(p);assert.equal(p.totalCost,3000);assert.equal(p.orders.length,3);
@@ -81,7 +81,7 @@ test('rescue preserves hard coupon eligibility and exclusions',()=>{
  const expired=offer('expired',{chicken:2},1);expired.validity.validWindows=[{toExclusive:'2026-10-01'}];
  const conflict=offer('conflict',{chicken:2},1);conflict.dataStatus='conflict';
  const r={demand:{paperChicken:2},people:2,budgetMinor:5000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false,member:false,avoid:[]};
- const x=F.recommend({...demo,offers:[member,normal,expired,conflict]},r,{timeLimitMs:10000});
+ const x=F.recommend({...demo,offers:[member,normal,expired,conflict]},r,{timeLimitMs:10000,allowMealReplacement:true});
  assert(x.suggestions.length);assert(x.suggestions.every(p=>p.orders.every(o=>o.offerId==='normal')));
  const avoided=F.recommend({...demo,offers:[normal]}, {...r,avoid:['burger']},{timeLimitMs:10000});
  assert.equal(avoided.suggestions.length,0);assert(avoided.unpricedAlternative);
@@ -100,16 +100,56 @@ test('headcount changes recompute real coupon quantities and prices',()=>{
  const prices=[];
  for(const people of [2,4]){
   const r={demand:{paperChicken:people},people,budgetMinor:10000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:6,estimate:false};
-  const x=F.recommend({...demo,offers:[burger]},r,{timeLimitMs:10000});
+  const x=F.recommend({...demo,offers:[burger]},r,{timeLimitMs:10000,allowMealReplacement:true});
   const p=x.suggestions.find(p=>p.effectiveRequest.demand.burgerMain===people);
   assert(p);prices.push(p.totalCost);assert.equal(p.orders.length,people);
  }
  assert.deepEqual(prices,[2000,4000]);
 });
-test('higher budget can offer a richer meal while preserving the original cheapest recommendation',()=>{
- const r={demand:{chicken:2},people:1,budgetMinor:3000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false};
- const x=F.recommend({...demo,offers:[offer('chicken',{chicken:2},1000)]},r,{timeLimitMs:10000});
- assert.equal(x.plans[0].totalCost,1000);
- const richer=x.suggestions.find(p=>p.label==='預算內・主餐多一點');assert(richer);
- assert.equal(richer.totalCost,2000);assert(richer.coverage.every(c=>c.got>=c.need));assert(richer.totalCost<=r.budgetMinor);
+test('complete meals are never padded with changed quantities or replacement food',()=>{
+ const x=F.recommend({...demo,offers:[offer('meal',{chicken:2},1000),offer('burger',{burger:1},500)]},{demand:{chicken:2},people:1,budgetMinor:3000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false},{timeLimitMs:10000});
+ assert.equal(x.plans[0].totalCost,1000);assert.deepEqual(x.suggestions,[]);
+});
+test('both a cheaper single-brand meal and a complete mixed-brand meal are retained',()=>{
+ const offers=[offer('all',{chicken:4,tart:2},5000),offer('chicken',{chicken:4},3000),offer('tarts',{tart:2},3000,'PH')];
+ const x=solve(offers,{maxOrders:2});
+ assert.equal(x.plans[0].totalCost,5000);assert(x.plans.some(p=>p.brandCount===2&&p.totalCost===6000));
+ assert(x.plans.every(p=>p.coverage.every(c=>c.got>=c.need)));
+ const single=solve(offers,{cross:false,maxOrders:2});assert(single.plans.every(p=>p.brandCount===1));
+});
+test('a snack request never turns into a main meal without explicitly opting in',()=>{
+ const r={demand:{tart:4,nuggets:8},people:4,budgetMinor:40000,brands:['KFC','PH'],cross:true,channel:'takeaway',at,maxOrders:4,estimate:false};
+ const x=F.recommend({...demo,offers:[offer('pizza',{pizza9:2},10000,'PH'),offer('nuggets',{nuggets:8},5000)]},r,{timeLimitMs:10000});
+ assert.equal(x.plans.length,0);assert.equal(x.suggestions.length,0);assert(x.partials.length);
+ assert(x.partials.every(p=>p.orders.every(o=>o.offerId==='nuggets')));
+ assert.deepEqual(x.partials[0].missing,[{id:'tart',quantity:4}]);
+});
+test('near alternatives retain every selected food and at least three quarters of each quantity',()=>{
+ const r={demand:{tart:4,nuggets:8},people:4,budgetMinor:9000,brands:['KFC','PH'],cross:true,channel:'takeaway',at,maxOrders:1,estimate:false};
+ const x=F.recommend({...demo,offers:[offer('ideal',{tart:4,nuggets:8},10000),offer('near',{tart:3,nuggets:6},8000),offer('pizza',{pizza9:2},1000,'PH')]},r,{timeLimitMs:10000});
+ assert.equal(x.plans.length,0);assert.equal(x.minimumIgnoringBudget.totalCost,10000);assert(x.suggestions.length);
+ for(const p of x.suggestions){assert(p.totalCost<=9000);assert(p.supplied.tart>=3);assert(p.supplied.nuggets>=6);assert(p.effectiveRequest.demand.tart>0);assert(p.effectiveRequest.demand.nuggets>0);assert(p.orders.every(o=>o.offerId!=='pizza'));}
+ assert(x.suggestions[0].adjustments.some(s=>s.includes('4 → 3')));
+ assert.deepEqual(x.suggestions[0].originalCoverage,[{id:'tart',need:4,got:3},{id:'nuggets',need:8,got:6}]);
+ assert.deepEqual(r.demand,{tart:4,nuggets:8});
+});
+test('explicit food replacement still preserves original membership and payment restrictions',()=>{
+ const r={demand:{paperChicken:2},people:2,budgetMinor:5000,brands:['KFC'],cross:false,channel:'takeaway',at,maxOrders:4,estimate:false,member:false,allowMealReplacement:true};
+ const burger=offer('burger',{burger:1},1000);burger.variants[0].individualMains=1;
+ const x=F.recommend({...demo,offers:[burger]},r,{timeLimitMs:10000});
+ assert(x.suggestions.some(p=>p.effectiveRequest.demand.burgerMain===2));
+});
+
+test('current coupon contents are searched dynamically, including paper chicken in a bounded search',()=>{
+ const P=require('../src/planner.js'),real=require('../data/offers.json');
+ const b=P.buildSimple({people:4,mains:['wrapped'],richness:'none',drinks:false});
+ const r={...b,budgetMinor:80000,brands:['KFC','PH'],cross:true,channel:'takeaway',at:'2026-10-18T19:30:00+08:00',estimate:true,orderMethod:'auto',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true};
+ const x=F.recommend(real,r,{maxStates:100,timeLimitMs:300,collectAlternatives:false});
+ assert(x.plans.length);assert(x.plans.every(p=>p.supplied.paperChicken>=4));
+ assert(x.plans.every(p=>p.coverage.every(c=>c.got>=c.need)));
+ assert.deepEqual(x.plans.map(p=>p.totalCost),x.plans.map(p=>p.totalCost).sort((a,b)=>a-b));
+ // Removing those live candidates changes the answer; no stored meal is reused.
+ const without={...real,offers:real.offers.filter(o=>!o.variants.some(v=>v.items.paperChicken))};
+ const absent=F.recommend(without,r,{timeLimitMs:300,collectAlternatives:false});
+ assert.equal(absent.plans.length,0);assert.equal(absent.suggestions.length,0);assert(absent.unpricedAlternative);
 });

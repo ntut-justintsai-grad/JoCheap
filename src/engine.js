@@ -359,9 +359,10 @@
       return utility(b)-utility(a)||a.id.localeCompare(b.id);
     });
     const maxStates=config.maxStates??1800000,timeLimit=config.timeLimitMs??1800;
-    let states=0,complete=true,minAny=null,minWithin=null,closest=null,bestSingle=null,bestFew=null;
-    const leaders=[],oneBrand=[],fewOrders=[];
+    let states=0,complete=true,minAny=null,minWithin=null,closest=null,bestSingle=null,bestFew=null,bestMixed=null;
+    const leaders=[],oneBrand=[],fewOrders=[],mixedBrand=[];
     const demandKeys=Object.keys(r.demand).filter(k=>r.demand[k]>0);
+    const mixedPossible=r.cross&&r.brands.length>1&&r.maxOrders>1&&new Set(cs.filter(c=>!demandKeys.every(k=>(c.items[k]||0)>=r.demand[k])).map(c=>c.offer.brand)).size>1;
     const singleBrandPossible=r.brands.filter(brand=>demandKeys.every(k=>cs.some(c=>c.offer.brand===brand&&(c.items[k]||0)>0))&&new Set(cs.filter(c=>c.offer.brand===brand).flatMap(c=>c.snackGroups)).size>=(r.snackGoal?.minTypes||0));
     const bounds=cs.map((_,i)=>{
       const remaining=cs.slice(i),weights={},maximum={};
@@ -426,9 +427,10 @@
           const p=makePlan(selected,counts);
           if(!minAny||compare(p,minAny)<0)minAny=p;
           if(p.brandCount===1&&(!bestSingle||compare(p,bestSingle)<0))bestSingle=p;
+          if(p.brandCount>1&&(!bestMixed||compare(p,bestMixed)<0))bestMixed=p;
           if(!bestFew||p.orders.length<bestFew.orders.length||p.orders.length===bestFew.orders.length&&compare(p,bestFew)<0)bestFew=p;
           if(r.budgetMinor===null||p.totalCost!==null&&p.totalCost<=r.budgetMinor){
-            keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);
+            keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);else keep(mixedBrand,p);
             keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
             if(!minWithin||compare(p,minWithin)<0)minWithin=p;
           }
@@ -450,7 +452,8 @@
         const canImproveSingle=brands.size<=1&&singleBrandPossible.some(b=>!brands.size||brands.has(b))&&(!bestSingle||lower<=(bestSingle.totalCost??Infinity)+.0001);
         const minOrders=selected.length+requiredOrders;
         const canImproveFew=!bestFew||minOrders<bestFew.orders.length||minOrders===bestFew.orders.length&&lower<=(bestFew.totalCost??Infinity)+.0001;
-        if(!canImproveMain&&!canImproveSingle&&!canImproveFew)return;
+        const canImproveMixed=mixedPossible&&(!bestMixed||lower<=(bestMixed.totalCost??Infinity)+.0001)&&minOrders<=r.maxOrders;
+        if(!canImproveMain&&!canImproveSingle&&!canImproveFew&&!canImproveMixed)return;
       }
       for(let i=from;i<cs.length;i++){
         const c=cs[i],o=c.offer;
@@ -465,9 +468,18 @@
       }
     }
     // Seed a few feasible plans before exhaustive enumeration of the larger catalogue.
-    if(r.snackGoal||r.drinkPreference){
-      for(const factor of [0.5,1,2]){
-        const selected=[],counts={},uses={},groups={};
+    {
+      // Start from current coupon candidates that cover each requested food.
+      // A rare main must get a feasible starting point before the timed search
+      // spends its budget enumerating many cheap side/drink combinations.
+      const seeds=[null],seedIds=new Set();
+      for(const k of demandKeys){
+        const ranked=cs.filter(c=>c.maxUses>=1&&(!c.group||c.groupLimit===null||c.groupLimit>=1)&&c.items[k]>0&&(!r.exact||demandKeys.every(id=>(c.items[id]||0)<=r.demand[id]))).sort((a,b)=>a.base/Math.min(r.demand[k],a.items[k])-b.base/Math.min(r.demand[k],b.items[k])||a.id.localeCompare(b.id));
+        for(const c of ranked.slice(0,2))if(!seedIds.has(c.id)){seedIds.add(c.id);seeds.push(c);}
+      }
+      for(const seed of seeds)for(const factor of [0.5,1,2]){
+        const selected=seed?[seed]:[],counts=seed?{...seed.items}:{},uses=seed?{[seed.offer.id]:1}:{},groups=seed?.group?{[seed.group]:1}:{};
+        if(seed&&demandKeys.every(k=>(counts[k]||0)>=r.demand[k])&&seed.snackGroups.length>=(r.snackGoal?.minTypes||0)&&assignFlavors(selected,r.pizzaPreference,dataset.pizzaFlavors).complete){visit(cs.length,selected,counts,uses,groups);continue;}
         while(selected.length<r.maxOrders){
           const currentGroups=new Set(selected.flatMap(c=>c.snackGroups));let best=null,score=0;
           for(const c of cs){if(!versionCompatible(selected,c)||(uses[c.offer.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit||!r.cross&&selected.length&&selected[0].offer.brand!==c.offer.brand)continue;
@@ -514,7 +526,7 @@
           const key=selected.map(a=>a.id).sort().join('|');
           const item={selected,counts,uses:{...s.uses,[o.id]:(s.uses[o.id]||0)+1},groups:{...s.groups,...(c.group?{[c.group]:(s.groups[c.group]||0)+1}:{})},from:i,knownSubtotal:s.knownSubtotal+c.base,totalCost,key,mainDeficit,deficit,missing,snackShortfall,flavorShortfall,coveragePercent:Math.floor((1-deficit/parts)*100)};
           if(!missing.length&&!snackShortfall&&!flavorShortfall&&flavors.complete){
-            const p=makePlan(selected,counts);keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
+            const p=makePlan(selected,counts);keep(leaders,p);if(p.brandCount===1)keep(oneBrand,p);else keep(mixedBrand,p);keep(fewOrders,p,(a,b)=>a.orders.length-b.orders.length||compare(a,b));
             if(!minAny||compare(p,minAny)<0)minAny=p;
           }else{
             retained.set(key,item);
@@ -538,8 +550,8 @@
     if(r.budgetMinor!==null&&minAny?.totalCost===null){keep(leaders,minAny);}
     const alternatives=[];
     const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')).sort().join('|');
-    function add(p,label){if(p&&!alternatives.some(x=>mealKey(x)===mealKey(p)))alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});}
-    add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(fewOrders[0],'訂單較少');
+    function add(p,label){if(p&&alternatives.length<3&&!alternatives.some(x=>mealKey(x)===mealKey(p))){alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});if(!minAny||compare(p,minAny)<0)minAny=p;}}
+    add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(mixedBrand[0],'兩家混搭');add(fewOrders[0],'訂單較少');
     for(const p of leaders)if(alternatives.length<3)add(p,'其他組合');
     // Minimum-price pruning may collapse equivalent or dominated coupons. Search
     // a few exclusions separately so real alternative coupons can still appear.
@@ -554,16 +566,20 @@
         if(other.plans[0])queue.push([...new Set([...banned,...other.plans[0].orders.map(sourceKey)])]);
       }
     }
+    alternatives.sort(compare);
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
     return {plans:alternatives,partials,more:leaders.slice(0,12),minimumIgnoringBudget:minAny?{...minAny,searchComplete:complete}:null,missing:partials[0]?.missing||missing,searchComplete:complete,states,elapsedMs:Date.now()-start,candidateCount:cs.length,excluded,orderLimit:r.maxOrders,mode:dataset.mode};
   }
   function recommend(dataset,request,config={}){
     const started=Date.now(),r=validateRequest(request),result=solve(dataset,r,config);
+    // Complete plans already satisfy the requested meal. Do not pad this list
+    // with a different meal merely to reach a recommendation count.
+    if(result.plans.length)return {...result,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
     const noSnackGoal={minTypes:0,servings:0};
-    const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=result.plans.length?2:3;
+    const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=3;
     const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')+'/'+o.variantId).sort().join('|');
     const seen=new Set(result.plans.map(mealKey));
     let attempts=0;
@@ -592,25 +608,36 @@
       // Rescue searches never change validity, membership, payment, channel,
       // excluded ingredients, or prices. Changed meal preferences are explicit.
       seen.add(mealKey(p));
-      suggestions.push({...p,label,substitution:true,effectiveRequest:q,adjustments:describe(q),originalCoverage:Object.entries(r.demand).filter(([,n])=>n>0).map(([id,need])=>({id,need,got:p.supplied[id]||0})),overBudget:r.budgetMinor!==null&&p.totalCost!==null&&p.totalCost>r.budgetMinor});
+      const originalCoverage=Object.entries(r.demand).filter(([,n])=>n>0).map(([id,need])=>({id,need,got:p.supplied[id]||0}));
+      const distance=sum(originalCoverage.map(c=>Math.max(0,c.need-c.got)/c.need*(mainSet.has(c.id)?2:1)));
+      suggestions.push({...p,label,substitution:true,effectiveRequest:q,adjustments:describe(q),originalCoverage,requestDistance:distance,overBudget:r.budgetMinor!==null&&p.totalCost!==null&&p.totalCost>r.budgetMinor});
     }
-    if(result.plans.length&&r.budgetMinor!==null){
-      const demand=Object.fromEntries(Object.entries(r.demand).map(([k,n])=>[k,n>0&&mainSet.has(k)?Math.min(60,Math.ceil(n*1.3)):n]));
-      if(Object.keys(demand).some(k=>demand[k]!==r.demand[k]))attempt({...r,demand},'預算內・主餐多一點');
+    // Relax one preference at a time, keeping every requested food and count.
+    if(r.pizzaPreference&&(r.pizzaPreference.tag!=='any'||r.pizzaPreference.minKinds>0)||r.pastaPreference&&r.pastaPreference!=='any')attempt({...r,pizzaPreference:null,pastaPreference:'any'},'餐點份量不變・口味不限');
+    if(r.drinkPreference&&r.drinkPreference!=='any')attempt({...r,drinkPreference:'any'},'餐點份量不變・飲料種類不限');
+    // Small quantity changes retain every selected food, at least 75% of each
+    // requested quantity, and the original snack variety and checkout rules.
+    for(const ratio of [.9,.8,.75]){
+      const demand=Object.fromEntries(Object.entries(r.demand).map(([id,n])=>[id,n>0?Math.max(1,Math.ceil(n*ratio)):0]));
+      attempt({...r,demand,snackGoal:r.snackGoal?{...r.snackGoal,servings:demand.snackPortions||0}:undefined},'原餐點・份量略減');
+    }
+    if(!(config.allowMealReplacement===true||r.allowMealReplacement===true)){
+      suggestions.sort((a,b)=>a.requestDistance-b.requestDistance||(a.totalCost??Infinity)-(b.totalCost??Infinity));
+      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
+      return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'原需求清單（未計價）',note:'保留你選的餐點，尚無可計價優惠；可至官方菜單確認單點價格。'}:null,elapsedMs:Date.now()-started};
     }
     const light={...r,demand:noSnacks,snackGoal:noSnackGoal};
     if(!result.plans.length){
       attempt(light,'主餐保留・減少點心');
       const flexible={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any'};
       attempt(flexible,'主餐保留・口味不限');
-      if(r.maxOrders<12)attempt({...flexible,maxOrders:12},'多分幾筆買・主餐保留');
     }
     // Different main families are complete alternative meals for the same
     // headcount; their serving assumptions are shown alongside the quantities.
     const units={burgerMain:1,paperChicken:1,pasta:1,chicken:2,pizza9:.5,pizza13:.25};
     const servingNotes={burgerMain:'替代主餐按每人 1 個一般漢堡估算',paperChicken:'替代主餐按每人 1 份紙包雞估算',pasta:'替代主餐按每人 1 份義大利麵估算',chicken:'替代主餐按每人 2 塊原塊炸雞估算',pizza9:'替代主餐按小披薩切 6 片、每人 3 片估算',pizza13:'替代主餐按大披薩切 8 片、每人 2 片估算'};
     const families=Object.keys(units);
-    const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:Math.max(r.maxOrders,Math.min(12,r.people))};
+    const base={...light,pizzaPreference:null,pastaPreference:'any',drinkPreference:'any',maxOrders:r.maxOrders};
     const probe=chooseCandidates(dataset,{...base,demand:Object.fromEntries(families.map(id=>[id,1]))},config.now??Date.now()).candidates;
     const cost=id=>Math.min(...probe.filter(c=>c.items[id]>0).map(c=>c.base/(c.items[id]/units[id])));
     for(const id of families.sort((a,b)=>cost(a)-cost(b))){
@@ -618,14 +645,6 @@
       const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));
       demand[id]=Math.ceil(r.people*units[id]);
       attempt({...base,demand,servingNote:servingNotes[id]},'換主餐・'+ITEMS[id].name);
-    }
-    if(!result.plans.length&&suggestions.length<maxSuggestions&&(r.brands.length<2||!r.cross)){
-      const expanded={...base,brands:['KFC','PH'],cross:true};
-      attempt(expanded,'跨品牌找替代餐');
-      for(const id of ['burgerMain','chicken','pizza9']){
-        const demand=Object.fromEntries(Object.entries(noSnacks).filter(([k])=>!mainSet.has(k)));demand[id]=Math.ceil(r.people*units[id]);
-        attempt({...expanded,demand,servingNote:servingNotes[id]},'跨品牌換餐・'+ITEMS[id].name);
-      }
     }
     if(!result.plans.length&&!suggestions.length){
       const flexible={...base,budgetMinor:null};

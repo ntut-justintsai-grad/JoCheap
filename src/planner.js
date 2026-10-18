@@ -39,7 +39,7 @@
     const personal=mains.some(k=>['burger','wrapped','pasta'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
     for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=Math.ceil(n*(F.SNACKS[id]?.perPerson??.5));}
-    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):Math.max(rich.types,personal?1:0),servings:Math.max(Math.ceil(n*rich.ratio),personal?n:0)};
+    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
     if(snackGoal.servings)demand.snackPortions=snackGoal.servings;
     if(Object.values(demand).some(n=>!Number.isInteger(n)||n<0||n>60))throw Error('建議份量超過目前每項 60 的上限，請減少人數或調整食量。');
     const kinds=pizza?Number(p.flavorKinds??0):0;if(!Number.isInteger(kinds)||kinds<0||kinds>3)throw Error('披薩口味請選不指定或至少 1～3 種。');
