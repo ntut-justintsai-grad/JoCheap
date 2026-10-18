@@ -45,6 +45,8 @@
 .tea-snack-choices{display:flex;flex-wrap:wrap;gap:9px}.tea-snack-choices button{border:1px solid #ddded4;background:#fff;color:#44483c;border-radius:100px;padding:11px 16px;font:inherit;font-size:.95rem}.tea-snack-choices button[aria-pressed=true]{background:#faeee6;border-color:#b9412b;color:#9f3827}.drink-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 24px}.drink-row select{max-width:180px}.drink-row .check-label{margin:0;flex:1}.simple-planner .main-choices{margin-top:8px}.simple-planner .richness-section{margin-top:24px}.simple-summary{padding:16px 18px;margin:24px 0 18px}.simple-summary strong{font-size:.83rem;color:#6b705f}.simple-summary .main-summary{font-size:.98rem;line-height:1.8;margin:7px 0 0}.simple-planner .advanced{margin-top:10px}.simple-planner .form-footnote{font-size:.8rem;margin-top:12px}.results-region .recommendation-note{margin:12px 0;font-size:.9rem}.recommendation-option{padding:16px 12px;min-width:0}.recommendation-option small{font-size:.75rem}.recommendation-option strong{font-size:.9rem}.plan-card .plan-body{padding:26px}.plan-card .order-row{padding:24px 0}.plan-card .order-items{font-size:1.05rem;line-height:1.85;margin:14px 0}.plan-card .minor-details{margin-top:14px}.checkout-guide{padding:16px;background:#f3f3eb;border-radius:13px;margin:16px 0 8px}.checkout-guide p{margin:7px 0 12px;font-size:.93rem}.checkout-guide .order-actions{margin:0}.checkout-guide .step-label{font-size:.83rem;letter-spacing:.03em}.checkout-guide .outline-button{font-size:.86rem;padding:9px 14px}.availability-note{font-size:.82rem;line-height:1.6;color:#936342}.calculation-details{margin-top:18px;font-size:.8rem;color:#777a70}.calculation-details>summary{cursor:pointer}.results-region .empty-card{padding:40px 24px}.coupon-card{gap:12px}.coupon-card .coupon-contents{font-size:1rem;line-height:1.9}.coupon-card .order-actions{margin-top:auto;gap:10px}.coupon-card>.coupon-options{margin-top:8px}.site-header .header-inner{justify-content:space-between}.site-header nav{margin-left:auto}footer{align-items:center;gap:18px}footer>p{font-size:.78rem;flex-basis:100%;margin-top:0}
 @media(max-width:760px){.compact-hero{padding:26px 0 28px}.compact-hero h1{font-size:2.2rem}.compact-hero .hero-art{display:none}.compact-hero p{font-size:1rem}.compact-hero .brand-strip{font-size:.8rem;margin-top:18px}.planner-card.simple-planner{padding:22px 18px}.simple-planner .card-heading{margin-bottom:20px}.simple-planner .card-heading h2{font-size:1.65rem}.language-open{padding:14px}.language-actions .link-button{display:none}.meal-mode-tabs{margin-bottom:22px}.main-choices{gap:8px}.main-choices button{padding:15px 6px;min-height:116px}.main-choices button>span{font-size:1.7rem}.main-choices button strong{font-size:.95rem}.main-choices button small{font-size:.77rem}.richness-choices button{padding:13px 6px}.richness-choices strong{font-size:.92rem}.richness-choices small{font-size:.72rem}.plan-card .plan-body{padding:21px 18px}.plan-card .price{font-size:2.6rem}.checkout-guide{padding:14px}.recommendation-picker{gap:8px}.recommendation-option{padding:14px 9px}.recommendation-option .recommendation-price{font-size:1.15rem}.simple-first-row{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:12px}.budget-input{display:flex;gap:6px}.budget-input input{width:0;min-width:0;flex:1 1 58%;padding:12px 8px}.budget-input select{flex:0 0 84px;width:84px;max-width:84px;font-size:.8rem;padding:10px 5px}.people-step{gap:1px}.people-step button{padding:10px 5px;min-width:30px}.people-step input{width:35px;padding:10px 1px}.people-step>span{font-size:.85rem}.browse-filters{display:grid;grid-template-columns:1fr 1fr}.browse-filters>label:first-child{grid-column:1/-1}footer{padding-bottom:115px}footer>.muted{font-size:.75rem}.header-inner .logo small{display:none}.site-header .nav-tab{padding:12px 10px}.language-actions .outline-button{white-space:nowrap}}
 @media(max-width:380px){.simple-first-row{grid-template-columns:1fr}.budget-input input{flex-basis:70%}.budget-input select{width:94px;max-width:94px;flex-basis:94px}.people-step input{flex:1;width:auto}.tea-snack-choices button{padding:10px 13px}.drink-row select{max-width:145px}}
+
+.full-quote-summary{padding:22px 24px;border:1px solid #9da98b;border-left:4px solid #899b74;border-radius:18px;background:#f1f4ec;margin:0 0 18px;color:#303b28}.full-quote-summary strong{font-size:18px}.full-quote-summary .quote-total{font-size:32px;font-weight:750;line-height:1.4;margin:5px 0}.full-quote-summary p{margin:5px 0;font-size:15px}.full-quote-summary small{display:block;margin-top:8px;color:#666e60}
 </style>
 </head>
 <body>
@@ -540,7 +542,7 @@
         const minOrders=selected.length+requiredOrders;
         const canImproveFew=!bestFew||minOrders<bestFew.orders.length||minOrders===bestFew.orders.length&&lower<=(bestFew.totalCost??Infinity)+.0001;
         const canImproveMixed=mixedPossible&&(!bestMixed||lower<=(bestMixed.totalCost??Infinity)+.0001)&&minOrders<=r.maxOrders;
-        if(!canImproveMain&&!canImproveSingle&&!canImproveFew&&!canImproveMixed)return;
+        if(!canImproveMain&&(config.priceReferenceOnly||!canImproveSingle&&!canImproveFew&&!canImproveMixed))return;
       }
       for(let i=from;i<cs.length;i++){
         const c=cs[i],o=c.offer;
@@ -583,7 +585,7 @@
     // A bounded fallback explores affordable partial meals even when a missing
     // item makes the complete-cover lower bound reject the entire search tree.
     const partials=[];
-    if(!leaders.length&&config.collectAlternatives!==false){
+    if(!leaders.length&&config.collectPartials!==false&&config.collectAlternatives!==false){
       const partialStart=Date.now(),limit=config.partialTimeLimitMs??350;
       const mains=new Set(['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13']);
       const rank=(a,b)=>a.mainDeficit-b.mainDeficit||a.deficit-b.deficit||(a.totalCost??Infinity)-(b.totalCost??Infinity)||a.knownSubtotal-b.knownSubtotal||a.selected.length-b.selected.length||a.key.localeCompare(b.key);
@@ -662,6 +664,37 @@
     // Complete plans already satisfy the requested meal. Do not pad this list
     // with a different meal merely to reach a recommendation count.
     if(result.plans.length)return {...result,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
+    // Reserve an independent search for the exact original meal with only the
+    // budget removed. Near matches must never become its required-price quote.
+    if(result.candidateCount&&(!result.minimumIgnoringBudget||!result.searchComplete)){
+      const reference=solve(dataset,{...r,budgetMinor:null},{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+      result.states+=reference.states;
+      const p=reference.minimumIgnoringBudget;
+      if(p&&(!result.minimumIgnoringBudget||p.totalCost!==null&&(result.minimumIgnoringBudget.totalCost===null||p.totalCost<result.minimumIgnoringBudget.totalCost)))result.minimumIgnoringBudget=p;
+    }
+    let fullQuote=result.minimumIgnoringBudget;
+    // A quote requiring more orders is a separately labelled proposal. Do not
+    // silently change the user's order cap, meal, eligibility or payment rules.
+    if(!fullQuote&&result.candidateCount&&r.maxOrders<12){
+      const expanded={...r,budgetMinor:null,maxOrders:12};
+      const reference=solve(dataset,expanded,{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+      result.states+=reference.states;
+      if(reference.minimumIgnoringBudget){
+        const p=reference.minimumIgnoringBudget;
+        if(p.orders.length<=r.maxOrders){result.minimumIgnoringBudget=p;fullQuote=p;}
+        else fullQuote={...p,effectiveRequest:{...r,maxOrders:p.orders.length},requiredMaxOrders:p.orders.length};
+      }
+    }
+    if(fullQuote)fullQuote={...fullQuote,priceReference:true,overBudget:r.budgetMinor!==null&&fullQuote.totalCost!==null&&fullQuote.totalCost>r.budgetMinor,budgetGapMinor:r.budgetMinor===null||fullQuote.totalCost===null?null:Math.max(0,fullQuote.totalCost-r.budgetMinor)};
+    if(fullQuote&&!fullQuote.requiredMaxOrders&&(r.budgetMinor===null||fullQuote.totalCost!==null&&fullQuote.totalCost<=r.budgetMinor)){
+      return {...result,plans:[fullQuote],fullQuote,suggestions:[],unpricedAlternative:null,elapsedMs:Date.now()-started};
+    }
+    result.fullQuote=fullQuote||null;
+    if(!fullQuote){
+      const candidates=chooseCandidates(dataset,r,config.now??Date.now()).candidates;
+      const missingItems=Object.entries(r.demand).filter(([id,n])=>n>0&&!candidates.some(c=>c.items[id]>0)).map(([id,quantity])=>({id,quantity}));
+      result.quoteUnavailable={reason:missingItems.length?'missing_items':!result.searchComplete?'search_limit':'conditions',missingItems};
+    }
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
@@ -710,7 +743,7 @@
     }
     if(!(config.allowMealReplacement===true||r.allowMealReplacement===true)){
       suggestions.sort((a,b)=>a.requestDistance-b.requestDistance||(a.totalCost??Infinity)-(b.totalCost??Infinity));
-      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget;
+      const unpriced=!suggestions.length&&!result.partials.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
       return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'原需求清單（未計價）',note:'保留你選的餐點，尚無可計價優惠；可至官方菜單確認單點價格。'}:null,elapsedMs:Date.now()-started};
     }
     const light={...r,demand:noSnacks,snackGoal:noSnackGoal};
@@ -741,7 +774,7 @@
         attempt({...flexible,demand,servingNote:servingNotes[id]},'替代主餐・預算參考');
       }
     }
-    const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget;
+    const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
   const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
@@ -1157,6 +1190,7 @@
     if(state.mode!=='demo'&&p.orders.some(o=>!orderUsable(o,r)))return '餐點資料已變更，請重新試算。';
     const lines=['【揪省購買清單】',`${r.people} 人・${({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])}`,p.totalCost===null?'餐點小計 '+money(p.knownSubtotal)+'（外送等費用另計）':'合計 '+money(p.totalCost),''];
     if(p.substitution)lines.push('替代方案：',...(p.adjustments||[]),'');
+    if(p.requiredMaxOrders)lines.push('完整滿足原需求需分 '+p.requiredMaxOrders+' 筆購買（原上限 '+state.lastRequest.maxOrders+' 筆）','');
     if(p.partial)lines.push('還缺：'+shortageText(p),'');
     if(p.overBudget)lines.push('超出原預算 '+money(p.totalCost-state.lastRequest.budgetMinor),'');
     for(const [i,o] of p.orders.entries()){
@@ -1190,11 +1224,12 @@
   function planCard(p,index){
     const r=p.effectiveRequest||state.lastRequest,isDemo=state.mode==='demo';
     const card=h('article',{class:'plan-card'+(index===0?' best':'')});
-    const body=h('div',{class:'plan-body'}),title=p.substitution?'接近原需求的搭配':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
+    const body=h('div',{class:'plan-body'}),title=p.priceReference?'完整滿足原需求':p.substitution?'接近原需求的搭配':p.partial?'先配到這些':p.overBudget?'多一點預算就能湊齊':'這份，可以這樣買';
     body.append(h('div',{class:'plan-price-row'},h('div',{},h('h3',{},title),h('div',{class:'price'},h('small',{},p.totalCost===null?'餐點 NT$':'NT$'),((p.totalCost??p.knownSubtotal)/100).toLocaleString('zh-TW')),h('p',{class:'per-person'},p.totalCost===null?'外送等額外費用另計':`每人約 ${money(Math.ceil(p.totalCost/r.people))}`)),h('span',{class:'chip'},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買')));
     if(p.partial)body.append(h('p',{class:'shortfall-notice'},'還缺：'+shortageText(p)));
     if(p.substitution)body.append(h('div',{class:'shortfall-notice'},h('strong',{},'這份有調整'),h('ul',{},(p.adjustments||[]).map(x=>h('li',{},x)))));
     if(p.overBudget)body.append(h('p',{class:'shortfall-notice'},'超出預算 '+money(p.totalCost-state.lastRequest.budgetMinor)));
+    if(p.requiredMaxOrders)body.append(h('p',{class:'shortfall-notice'},'需分 '+p.requiredMaxOrders+' 筆購買；你目前設定最多 '+state.lastRequest.maxOrders+' 筆。'));
     for(const [i,o] of p.orders.entries()){
       const row=h('div',{class:'order-row'},h('div',{class:'order-title'},h('span',{class:'brand-dot'+(o.brand==='PH'?' ph':'')},o.brand==='KFC'?'KFC':'PH'),h('strong',{},brandName(o.brand)),h('span',{},money(o.base))),h('p',{class:'order-items'},formatItems(o.items)));
       if(o.beverages?.length)row.append(h('p',{class:'order-choice'},o.beverages.map(d=>d.name+' × '+d.quantity).join('、')));
@@ -1225,14 +1260,22 @@
       if(state.showMore)choices.push(...extra.map(p=>({...p,label:'更多餐點配置',searchComplete:x.searchComplete})));
       if(choices.length===1)box.append(h('p',{class:'recommendation-note'},'目前找到 1 份符合的組合。'));
     }else{
-      const best=x.minimumIgnoringBudget;
-      const over=best&&best.totalCost!==null&&r.budgetMinor!==null&&best.totalCost>r.budgetMinor?{...best,overBudget:true,label:'保留原餐點'}:null;
-      const near=(x.suggestions||[]).filter(p=>!over||p.id!==over.id);
-      const partials=(x.partials||[]).filter(p=>!near.some(q=>q.id===p.id)&&(!over||p.id!==over.id)).slice(0,2);
-      const modest=over&&over.totalCost<=r.budgetMinor*1.2;
-      choices=[...(modest?[over]:[]),...near,...(!modest&&over?[over]:[]),...partials];
-      box.append(h('div',{class:'state-card'},h('h3',{},choices.length?'優先保留你想吃的':'目前沒有符合需求的完整計價組合'),h('p',{},choices.length?'比較原餐點的預算差額，或少量調整份量。':'可照原需求清單，至官方菜單確認。')));
-      if(!r.allowMealReplacement)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('meal-replacement').checked=true;search();}},'也看看更換餐點的方案'));
+      const full=x.fullQuote;
+      const near=(x.suggestions||[]).filter(p=>!full||p.id!==full.id);
+      const partials=(x.partials||[]).filter(p=>!near.some(q=>q.id===p.id)&&(!full||p.id!==full.id)).slice(0,2);
+      choices=[...(full?[full]:[]),...near,...partials];
+      if(full){
+        const summary=h('div',{class:'full-quote-summary'},h('strong',{},'照原需求湊齊'),h('div',{class:'quote-total'},full.totalCost===null?'餐點小計 '+money(full.knownSubtotal):money(full.totalCost)));
+        if(r.budgetMinor!==null&&full.totalCost!==null)summary.append(h('p',{},'目前預算 '+money(r.budgetMinor)+'・'+(full.budgetGapMinor?'還差 '+money(full.budgetGapMinor):'預算足夠')));
+        if(full.requiredMaxOrders)summary.append(h('p',{},'需分 '+full.requiredMaxOrders+' 筆購買（目前上限 '+r.maxOrders+' 筆）'));
+        if(full.totalCost===null)summary.append(h('p',{},'外送等額外費用尚未填齊，還不能確認完整總額。'));
+        else if(!full.searchComplete)summary.append(h('small',{},'這是目前找到的完整報價，還未確認最低價。'));
+        box.append(summary);
+      }else{
+        const reason=x.quoteUnavailable;
+        const detail=reason?.reason==='missing_items'?'目前條件下沒有可用優惠提供：'+reason.missingItems.map(m=>I[m.id].name).join('、')+'，暫時無法報出完整總價。':reason?.reason==='search_limit'?'完整組合尚未搜尋完成，暫時無法確認湊齊的總價。':'目前優惠的限購、口味或下單條件尚無法滿足全部需求，增加預算也未必能解決。';
+        box.append(h('div',{class:'state-card'},h('h3',{},'完整需求尚未湊齊'),h('p',{},detail)));
+      }
     }
     $('result-count').textContent=choices.length?`${choices.length} 個可比較配置`:'';
     if(x.unpricedAlternative){
@@ -1245,13 +1288,14 @@
       const picker=h('div',{class:'recommendation-picker','aria-label':'比較餐點配置'});
       choices.forEach((p,i)=>{
         const price=p.totalCost===null?'餐點小計 '+money(p.knownSubtotal):money(p.totalCost);
-        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.partial?'原餐點・未湊齊':p.overBudget?(p.substitution?'換餐點・超出預算':'原餐點・超出預算'):p.substitution?p.label:'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買'),p.overBudget?h('small',{},'多 '+money(p.totalCost-r.budgetMinor)):p.partial?h('small',{},'缺 '+shortageText(p)):null));
+        picker.append(h('button',{type:'button',class:'recommendation-option','aria-pressed':String(i===state.activePlan),'data-plan-choice':i,onclick:()=>{state.activePlan=i;renderResults();document.querySelector(`[data-plan-choice="${i}"]`).focus({preventScroll:true});}},h('strong',{},p.priceReference?'原需求・完整報價':p.partial?'原餐點・未湊齊':p.overBudget?(p.substitution?'換餐點・超出預算':'原餐點・超出預算'):p.substitution?p.label:'方案 '+(i+1)),h('span',{class:'recommendation-price'},price),h('small',{},(p.brandCount>1?'兩家混搭':'只買'+brandName(p.orders[0].brand))+'・'+p.orders.length+' 筆購買'),p.overBudget?h('small',{},'多 '+money(p.totalCost-r.budgetMinor)):p.partial?h('small',{},'缺 '+shortageText(p)):null));
       });
       box.append(picker,planCard(choices[state.activePlan],state.activePlan));
       const selected=choices[state.activePlan];
-      if(selected.overBudget)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('budget-type').value='total';$('budget').value=selected.totalCost/100;markDirty();search();}},'將整團預算調為 '+money(selected.totalCost)+' 再試算'));
+      if(selected.overBudget||selected.requiredMaxOrders)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{if(selected.totalCost!==null){$('budget-type').value='total';$('budget').value=selected.totalCost/100;}if(selected.requiredMaxOrders)$('max-orders').value=String(selected.requiredMaxOrders);feeUI();markDirty();search();}},selected.requiredMaxOrders?'改為最多 '+selected.requiredMaxOrders+' 筆'+(selected.totalCost!==null?'、預算 '+money(selected.totalCost):'')+' 再試算':'將整團預算調為 '+money(selected.totalCost)+' 再試算'));
       if(extra.length&&!state.showMore)box.append(h('button',{type:'button',class:'outline-button more-button',onclick:()=>{state.showMore=true;renderResults();}},'再看其他搭配'));
     }
+    if(!x.plans.length&&!r.allowMealReplacement)box.append(h('button',{type:'button',class:'outline-button full',onclick:()=>{$('meal-replacement').checked=true;search();}},'也看看更換餐點的方案'));
     $('search-meta').textContent=`從 ${x.candidateCount} 個可用優惠選項重新計算・探索 ${x.states.toLocaleString()} 個狀態・${x.elapsedMs} ms・${x.searchComplete?'完整組合搜尋完成':'搜尋未完成'}。${x.excluded.length} 筆因條件或資料不足未參與。${state.mode==='real'?'依本次資料範圍及各來源版本估算；門市供應與結帳接受情況仍需確認。':''}`;
   }
   function browse(){globalThis.CatalogUI.render({data:snapshots[state.mode],F,I,h,$,money,brandName,safeLink,onCopy:copy,onAdd:items=>{for(const [id,n] of Object.entries(items))state.demand[id]=(state.demand[id]||0)+n;state.manual=true;renderDemand();renderSummary();$('advanced').open=true;setPage('planner');markDirty();toast('已加入目前選項的餐點數量；可再修改。');}});}
