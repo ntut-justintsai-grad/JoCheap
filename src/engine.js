@@ -605,6 +605,18 @@
       const candidates=chooseCandidates(dataset,r,config.now??Date.now()).candidates;
       const missingItems=Object.entries(r.demand).filter(([id,n])=>n>0&&!candidates.some(c=>c.items[id]>0)).map(([id,quantity])=>({id,quantity}));
       result.quoteUnavailable={reason:missingItems.length?'missing_items':!result.searchComplete?'search_limit':'conditions',missingItems};
+      if(missingItems.length&&r.channel!=='takeaway'&&(!r.orderMethod||r.orderMethod==='auto'||ORDER_METHODS[r.orderMethod]?.channels.includes('takeaway'))){
+        const takeaway={...r,channel:'takeaway',budgetMinor:null};
+        const available=chooseCandidates(dataset,takeaway,config.now??Date.now()).candidates;
+        const channelMismatchItems=missingItems.filter(m=>available.some(c=>c.items[m.id]>0));
+        if(channelMismatchItems.length){
+          result.quoteUnavailable.channelMismatchItems=channelMismatchItems;
+          const reference=solve(dataset,takeaway,{...config,priceReferenceOnly:true,collectAlternatives:false,collectPartials:false,maxStates:config.referenceMaxStates??600000,timeLimitMs:config.referenceTimeLimitMs??1200});
+          result.states+=reference.states;
+          const p=reference.minimumIgnoringBudget;
+          if(p)result.channelReference={channel:'takeaway',originalChannel:r.channel,plan:{...p,effectiveRequest:{...r,channel:'takeaway'},budgetGapMinor:r.budgetMinor===null||p.totalCost===null?null:Math.max(0,p.totalCost-r.budgetMinor)}};
+        }
+      }
     }
     const suggestions=[],tried=new Set(),mainIds=['individual','burgerMain','burger','paperChicken','pasta','chicken','pizza6','pizza9','pizza13'];
     const mainSet=new Set(mainIds),meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};

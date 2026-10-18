@@ -192,3 +192,32 @@ test('unknown delivery charges never become a numeric total or budget gap',()=>{
  const x=quoted([offer('meal',{chicken:2,tart:1},1000)],{maxOrders:1,channel:'delivery',fees:{KFC:[100],PH:[]}});
  assert(x.fullQuote);assert.equal(x.fullQuote.totalCost,null);assert.equal(x.fullQuote.budgetGapMinor,null);assert.equal(x.fullQuote.knownSubtotal,2000);
 });
+
+test('delivery-only failure offers a separate takeaway quote without changing the request',()=>{
+ const paper=offer('paper',{paperChicken:1},1000);paper.variants[0].channels=['takeaway'];
+ const pizza=offer('pizza',{pizza9:1},2000,'PH');
+ const patch={demand:{paperChicken:2,pizza9:1},budgetMinor:5000,channel:'delivery',fees:{KFC:[],PH:[]}};
+ const x=quoted([paper,pizza],patch);
+ assert.equal(x.plans.length,0);assert.equal(x.fullQuote,null);
+ assert.deepEqual(x.quoteUnavailable.channelMismatchItems,[{id:'paperChicken',quantity:2}]);
+ assert.equal(x.channelReference.channel,'takeaway');assert.equal(x.channelReference.originalChannel,'delivery');
+ assert.equal(x.channelReference.plan.totalCost,4000);assert(x.channelReference.plan.coverage.every(c=>c.got>=c.need));
+ assert.equal(x.channelReference.plan.effectiveRequest.channel,'takeaway');assert.equal(patch.channel,'delivery');
+});
+test('takeaway references still obey membership, avoided food and selected brands',()=>{
+ const paper=offer('paper',{paperChicken:1},1000);paper.variants[0].channels=['takeaway'];paper.eligibility.memberRequired=true;
+ const patch={demand:{paperChicken:2},budgetMinor:5000,channel:'delivery',member:false};
+ assert.equal(quoted([paper],patch).channelReference,undefined);
+ const eligible=quoted([paper],{...patch,member:true});assert(eligible.channelReference);
+ assert.equal(quoted([paper],{...patch,member:true,avoid:['paperChicken']}).channelReference,undefined);
+ assert.equal(quoted([paper],{...patch,member:true,brands:['PH']}).channelReference,undefined);
+});
+test('the seven-person screenshot is diagnosed as a channel mismatch and keeps all food in the takeaway quote',()=>{
+ const real=require('../data/offers.json');
+ const r={demand:{pizza9:2,chicken:4,paperChicken:2,snackPortions:6},people:7,budgetMinor:126000,brands:['KFC','PH'],cross:true,channel:'delivery',at:'2026-10-18T20:25:00+08:00',maxOrders:12,estimate:true,orderMethod:'auto',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true,snackGoal:{minTypes:2,servings:6},pizzaPreference:{tag:'any',minKinds:0},drinkPreference:'any',fees:{KFC:[],PH:[]}};
+ const x=F.recommend(real,r,{maxStates:10000,timeLimitMs:100,referenceMaxStates:10000,referenceTimeLimitMs:100});
+ assert.equal(x.plans.length,0);assert.equal(x.fullQuote,null);
+ assert(x.quoteUnavailable.channelMismatchItems.some(m=>m.id==='paperChicken'));
+ assert(x.channelReference);assert(x.channelReference.plan.coverage.every(c=>c.got>=c.need));
+ assert(x.channelReference.plan.snackTypes.length>=2);assert.equal(r.channel,'delivery');
+});
