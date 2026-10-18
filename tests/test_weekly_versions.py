@@ -12,6 +12,11 @@ class WeeklyVersionTests(unittest.TestCase):
             self.assertEqual(atomic(text,1)[0],{key:1},text)
         self.assertEqual(atomic('0.33L百事可樂',1)[1][0]['size'],'bottle')
 
+    def test_text_ball_counts_do_not_become_source_packs(self):
+        for text,n in [('雙色轉轉QQ球 × 10',10),('1顆雙色轉轉QQ球',1)]:
+            configs,_=c.parse_meal(text,'KFC');self.assertEqual(configs[0]['items'],{'qq':n})
+        self.assertEqual(atomic('雙色轉轉QQ球',2)[0],{'qqPack':2})
+
     def test_merge_preserves_each_recipe_price_and_source_as_one_version(self):
         a=c.make_offer(dict(code='12345',text='咔啦脆雞 × 2',priceMinor=9900,priceType='fixed',windows=[]),c.FEEDS[2],'2026-10-18T00:00:00Z')
         b=c.make_offer(dict(code='12345',text='香草紙包雞 × 1',priceMinor=13900,priceType='fixed',windows=[]),c.FEEDS[0],'2026-10-18T00:00:00Z')
@@ -23,7 +28,7 @@ class WeeklyVersionTests(unittest.TestCase):
 
     def test_push_rebuild_reuses_current_week_snapshot_without_fetching(self):
         with tempfile.TemporaryDirectory() as directory:
-            path=Path(directory)/'offers.json';snapshot={'parserVersion':3,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
+            path=Path(directory)/'offers.json';snapshot={'parserVersion':4,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
             p=subprocess.run([sys.executable,str(ROOT/'tools/crawl_catalog.py'),'--if-due','--snapshot',str(path)],capture_output=True,text=True,timeout=5)
             self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(json.loads(path.read_text()),snapshot)
             self.assertFalse((path.parent/'source_records.json').exists())

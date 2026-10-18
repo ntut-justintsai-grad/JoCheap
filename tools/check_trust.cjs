@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),F=require('../src/engine.js'),data=require('../data/offers.json');
 assert.equal(data.recommendationPolicy?.allowAllSources,true);
 assert.equal(data.recommendationPolicy?.requireOfficial,false);
-assert.equal(data.parserVersion,3);
+assert.equal(data.parserVersion,4);
 assert.equal(data.qualityReport?.total,data.offers.length);
 const now=Date.parse(data.generatedAt),checked=data.offers.filter(o=>F.verificationCheck(o,now).allowed);
 assert.equal(checked.length,data.officialRefresh.checked||0);

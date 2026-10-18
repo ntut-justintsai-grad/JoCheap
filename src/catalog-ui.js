@@ -43,7 +43,7 @@
         priceBox.textContent=identityIssue?'來源記載 '+money(price(o))+'・內容待確認':total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
         contents.textContent=identityIssue?'優惠標題與來源預設餐點不一致，暫不提供可計價配置。':selected?format(selected.items):o.rawText||'內容待確認';
         if(selected?.mainDescription)contents.textContent+='；券面餐點：'+selected.mainDescription;
-        costs.textContent=selected?`基本餐 ${money(selected.priceMinor||0)}＋本次替換 ${money(selected.surchargeMinor||0)}`+(selected.optionChoices?.filter(c=>c.from!==c.name).length?'；已選：'+selected.optionChoices.filter(c=>c.from!==c.name).map(c=>c.from+' → '+c.name).join('、'):''):'';
+        costs.textContent=selected&&Number.isFinite(selected.priceMinor)?`基本餐 ${money(selected.priceMinor)}＋本次替換 ${money(selected.surchargeMinor||0)}`+(selected.optionChoices?.filter(c=>c.from!==c.name).length?'；已選：'+selected.optionChoices.filter(c=>c.from!==c.name).map(c=>c.from+' → '+c.name).join('、'):''):'';
         drinks.textContent=selected?.beverages?.length?'本次飲料／湯：'+drinkText(selected.beverages):'';drinks.hidden=!drinks.textContent;
       };
       const renderOptions=()=>{
@@ -66,7 +66,7 @@
       card.append(contents,drinks,costs,options);
       if(identityIssue||o.reviewReason)card.append(h('p',{class:'warning-text'},identityIssue||o.reviewReason));
       if(verification){
-        const proof=h('div',{class:'verification-proof'},h('strong',{},checked(o)?'核對範圍：'+verification.scope.join('、'):'推薦資格：'+F.verificationCheck(o).reason));
+        const proof=h('div',{class:'verification-proof'},h('strong',{},checked(o)?'核對範圍：'+verification.scope.join('、'):'計算狀態：'+(eligible?'可依此來源版本估算；未完成官方逐配置核對':F.recommendationCheck(data,o).reason)));
         if(verification.checkedAt)proof.append(h('p',{class:'helper'},'查核者：'+(verification.reviewedBy||'未載明')+'；官方讀取 '+new Date(verification.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})+'；本次適用至 '+new Date(verification.validUntil).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})));
         if(verification.sourceUrl)proof.append(safeLink(verification.sourceUrl,'官方優惠頁'));
         if(verification.imageUrl)proof.append(safeLink(verification.imageUrl,'核對的官方券面'));

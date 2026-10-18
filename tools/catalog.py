@@ -91,18 +91,23 @@ def menu_component(text,brand):
     s=re.sub(r'\((?:口味[^)]*)\)','',s)
     # Expanded platters include both a named bundle and its contents: count the bundle once.
     s=re.sub(r'(拼盤\s*[x×]\s*\d+)\s*\([\s\S]*\)$',r'\1',s)
+    literal_balls=False
     m=re.fullmatch(r'(.+?)\s*[x×]\s*(\d+)',s,re.I)
-    if m:name,qty=m[1],int(m[2])
+    if m:
+        name,qty=m[1],int(m[2]);literal_balls=qty>1
     else:
-        m=re.fullmatch(r'(\d+)\s*(?:塊|顆|個|份|杯|瓶|條)\s*(.+)',s)
-        if m:qty,name=int(m[1]),m[2]
+        m=re.fullmatch(r'(\d+)\s*(塊|顆|個|份|杯|瓶|條)\s*(.+)',s)
+        if m:qty,name=int(m[1]),m[3];literal_balls=m[2]=='顆'
         elif re.fullmatch(r'1\.25L可樂乙瓶',norm(s)):name,qty='1.25L可樂',1
         elif re.search(r'(?:\d+元?|NT\$?\d+|優惠價|只要|買.+送)',s):raise ValueError('套餐敘述尚待分解：'+s[:60])
         else:name,qty=s,1
     name=re.sub(r'^\s*5\s*塊雞\(桶\)$','5塊咔啦脆雞',name)
     name=re.sub(r'^\s*6\s*塊雞\(桶\)$','6塊咔啦脆雞',name)
     name=name.replace('13 吋','13吋').replace('9 吋','9吋').replace('6 吋','6吋')
-    items,drinks=atomic(name,qty)
+    # Text feeds enumerate QQ balls; the structured API branch keeps pack counts.
+    if norm(name)=='雙色轉轉QQ球' and literal_balls:
+        items,drinks=({'qq':qty},[])
+    else:items,drinks=atomic(name,qty)
     slots=[]
     pizza=next((k for k in items if k in {'pizza6','pizza9','pizza13'}),None)
     if pizza:
