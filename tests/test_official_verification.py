@@ -31,7 +31,8 @@ class OfficialVerificationTests(unittest.TestCase):
     def test_exact_official_base_is_bound_to_time_food_price_and_conditions(self):
         data,reviews,fetch=fixture();refresh_official(data,reviews,fetch,STAMP)
         self.assertEqual(data['officialRefresh']['checked'],5)
-        self.assertTrue(data['recommendationPolicy']['requireOfficial'])
+        self.assertFalse(data['recommendationPolicy']['requireOfficial'])
+        self.assertTrue(data['recommendationPolicy']['allowAllSources'])
         expected={'50529':({'chicken':6,'tart':6},33300),'50551':({'chicken':4,'drinkSmall':2},17500),'50512':({'burger':1,'drinkSmall':1},10500),'50514':({'burger':1,'nuggets':4,'drinkSmall':1},12900),'50516':({'tart':1,'hashBrown':1,'milkTeaCup':1},9900)}
         for o in data['offers']:
             self.assertEqual(o['verification']['status'],'checked')

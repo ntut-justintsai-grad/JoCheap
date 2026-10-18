@@ -10,13 +10,14 @@ class MealIdentityTests(unittest.TestCase):
         self.assertEqual(atomic('麻油紙包雞',1)[0],{'paperChicken':1})
         self.assertEqual(atomic('2塊咔啦脆雞(辣)',1)[0],{'chicken':2})
 
-    def test_real_26900_title_conflict_is_quarantined_without_guessing_a_correct_meal(self):
+    def test_real_26900_uses_structured_contents_without_guessing_from_legacy_title(self):
         snapshot=json.loads((Path(__file__).parent/'fixtures/paper_chicken_20261017.json').read_text())
         row=snapshot['rawRecords'][0]
         feed=next(f for f in c.FEEDS if f['id']==row['sourceId'])
         offer=c.make_offer(row['record'],feed,'2026-10-17T00:00:00+00:00')
-        self.assertEqual(offer['dataStatus'],'pending')
-        self.assertIn('身分不一致',offer['reviewReason'])
+        self.assertEqual(offer['dataStatus'],'estimate')
+        self.assertEqual(offer['sourceMetadata']['compositionBasis'],'structured_items')
+        self.assertTrue(any('不用品名' in note or '不用名稱' in note for note in offer['conditions']))
         self.assertEqual(offer['variants'][0]['items']['chicken'],2)
         self.assertNotIn('paperChicken',offer['variants'][0]['items'])
         self.assertEqual(offer['rawText'],row['record']['text'])

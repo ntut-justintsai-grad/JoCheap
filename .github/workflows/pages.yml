@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: '17 0,6,12,18 * * *'
+    - cron: '17 0 * * 0'
 permissions:
   contents: write
   pages: write
@@ -28,7 +28,14 @@ jobs:
           npm test
           python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Crawl all five public feeds and ingest new coupon codes
-        run: python tools/crawl_catalog.py
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            python tools/crawl_catalog.py --if-due
+          else
+            python tools/crawl_catalog.py
+          fi
       - name: Validate refreshed catalogue
         run: |
           npm test

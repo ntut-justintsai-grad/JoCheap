@@ -40,6 +40,7 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
     if not observations:return previous,all_records,dict(status='all_failed',sources=source_status)
     data=copy.deepcopy(previous)
     data.update(schemaVersion=2,datasetVersion=stamp,generatedAt=stamp,updateStatus='crawled',coverage='public_feeds_with_review_queue',sources=source_status)
+    data['parserVersion']=3
     data['offers']=merge(observations,previous,stamp)
     reviews=ROOT/'data/ordering_reviews.json'
     if reviews.exists():apply_reviewed_ordering(data,json.loads(reviews.read_text(encoding='utf-8')),stamp)
@@ -61,8 +62,14 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
     return data,all_records,report
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--cache-dir');parser.add_argument('--snapshot',default=str(ROOT/'data/offers.json'));args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--cache-dir');parser.add_argument('--if-due',action='store_true');parser.add_argument('--snapshot',default=str(ROOT/'data/offers.json'));args=parser.parse_args()
     target=Path(args.snapshot);old=json.loads(target.read_text(encoding='utf-8'))
+    if args.if_due and old.get('parserVersion')==3:
+        try:
+            age=(datetime.now(timezone.utc)-datetime.fromisoformat(old['generatedAt'].replace('Z','+00:00'))).total_seconds()
+            if 0<=age<7*86400:
+                print('Weekly parsing is not due; rebuilding with the existing snapshot.');return
+        except (KeyError,ValueError):pass
     cache=target.parent/'source_records.json'
     old_records=json.loads(cache.read_text(encoding='utf-8')) if cache.exists() else []
     if args.cache_dir:

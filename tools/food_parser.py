@@ -77,6 +77,24 @@ def atomic(name,quantity=1,allow_generic=True):
       (r'厚燒醬烤(?:腿排|雞腿)$','roast',1),
       (r'樂事mini$','chipsMini',1),
       (r'超蝦點心拼盤$','seafoodPlatter',1),
+      (r'蜂蜜風味紅茶$','honeyTeaCup',1),
+      (r'熱紅茶$','hotTeaCup',1),
+      (r'青花椒醬飯$','pepperRice',1),
+      (r'蒜香白醬飯$','creamRice',1),
+      (r'青花椒醬脆雞飯$','pepperChickenRice',1),
+      (r'蒜香白醬脆雞飯$','creamChickenRice',1),
+      (r'紅豆奶皇蛋撻$','redBeanTart',1),
+      (r'愛心蝦球$','shrimpBalls',1),
+      (r'(?:黃金)?雞柳條$','chickenStrips',1),
+      (r'酥炸嫩雞球$','chickenBalls',1),
+      (r'酥炸杏鮑菇$','friedMushrooms',1),
+      (r'0\.33L(?:百事)?(?:可樂|七喜)$','soda330',1),
+      (r'0\.3L茉香柚茶$','yuzu300',1),
+      (r'Flatzz手工個人薄披薩$','flatzzPersonal',1),
+      (r'Flatzz手工義式薄披薩$','flatzzThin',1),
+      (r'紅藜燕麥脆雞粥$','chickenPorridge',1),
+      (r'總匯歐姆蛋燒餅$','omeletFlatbread',1),
+      (r'吮指脆雞燒餅$','chickenFlatbread',1),
     ]
     # Calling Taiwan spells the literal ball count; the KCouper feed spells a pack.
     if '雙色轉轉QQ球'==s and count!=1:key='qq';factor=1
@@ -107,3 +125,13 @@ EXTENDED={
  'pizza6':dict(name='6 吋個人披薩',unit='個',emoji='🍕'),
 }
 CATALOG.update(EXTENDED)
+for key,name,unit in [
+ ('honeyTeaCup','蜂蜜風味紅茶（容量未標）','杯'),('hotTeaCup','熱紅茶（容量未標）','杯'),
+ ('pepperRice','青花椒醬飯','份'),('creamRice','蒜香白醬飯','份'),
+ ('pepperChickenRice','青花椒醬脆雞飯','份'),('creamChickenRice','蒜香白醬脆雞飯','份'),
+ ('redBeanTart','紅豆奶皇蛋撻','顆'),('shrimpBalls','愛心蝦球','顆'),('chickenStrips','雞柳條','條'),
+ ('chickenBalls','酥炸嫩雞球','份'),('friedMushrooms','酥炸杏鮑菇','份'),('soda330','330ml 瓶裝汽水','瓶'),
+ ('yuzu300','300ml 茉香柚茶','瓶'),('flatzzPersonal','Flatzz 手工個人薄披薩（尺寸未標）','個'),
+ ('flatzzThin','Flatzz 手工義式薄披薩（尺寸未標）','個'),('chickenPorridge','紅藜燕麥脆雞粥','份'),
+ ('omeletFlatbread','總匯歐姆蛋燒餅','份'),('chickenFlatbread','吮指脆雞燒餅','份')]:
+    CATALOG[key]=dict(name=name,unit=unit,emoji='🍽️')

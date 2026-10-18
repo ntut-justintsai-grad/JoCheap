@@ -117,6 +117,7 @@
     if(r.drinkPreference&&!['any','cola','soda','unsweetened','milkTea','coldMilkTea','hotMilkTea','soup','other'].includes(r.drinkPreference))throw Error('請選擇有效的飲料偏好。');
     if(!['takeaway','delivery','dinein'].includes(r.channel))throw Error('請選擇取餐方式。');
     if(r.orderMethod&&(!ORDER_METHODS[r.orderMethod]||!ORDER_METHODS[r.orderMethod].channels.includes(r.channel)))throw Error('目前下單方式不支援所選取餐方式。');
+    if(r.dataScope&&!['all','consistent','official'].includes(r.dataScope))throw Error('請選擇有效的資料範圍。');
     if(r.paymentMethod&&!['any','online','in_store'].includes(r.paymentMethod))throw Error('請選擇有效的付款方式。');
     if(!Array.isArray(r.brands)||!r.brands.length||r.brands.some(b=>!['KFC','PH'].includes(b)))throw Error('至少選一個品牌。');
     if(r.budgetMinor!==null&&(!validInt(r.budgetMinor,0,30000000)))throw Error('預算需為有效的非負金額。');
@@ -154,6 +155,7 @@
     return windows.some(w=> (!w.from||date>=w.from)&&(!w.toExclusive||date<w.toExclusive)&&(!w.days||w.days.includes(day))&&(!w.startMinute||minute>=w.startMinute)&&(w.endMinute===undefined||minute<w.endMinute));
   }
   function mealIdentityIssue(o){
+    if(o.sourceMetadata?.compositionBasis==='structured_items')return null;
     const title=[o.title,o.rawText].filter(Boolean).join(' '),variants=o.variants||[];
     return title.includes('紙包雞')&&!/替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]/.test(title)&&variants.length&&variants.every(v=>!v.items.paperChicken)&&variants.some(v=>v.items.chicken>0)
       ?'餐點身分不一致：標題記載紙包雞，但來源預設內容是炸雞；需核對來源':null;
@@ -176,10 +178,60 @@
     if(!v.imageHash||!v.evidencePath||!v.scope?.length)return {allowed:false,reason:'官方查核證據不完整'};
     return {allowed:true,reason:'官方基本配置已核對'};
   }
-  function recommendationCheck(dataset,o,now=Date.now()){
+  function sourceConfidence(o,now=Date.now()){
+    if(verificationCheck(o,now).allowed)return {level:'official',label:'官方基本配置已核對'};
+    if(o.sourceConflict)return {level:'conflict',label:'來源版本有差異・需核對'};
+    const signatures=new Map();
+    for(const obs of o.observations||[]){
+      if(obs.parseIssues?.length||!obs.parsedConfigurations?.length)continue;
+      const sig=stableJson(obs.parsedConfigurations.map(v=>({items:v.items,priceMinor:v.priceMinor})).sort((a,b)=>stableJson(a).localeCompare(stableJson(b))));
+      if(!signatures.has(sig))signatures.set(sig,new Set());signatures.get(sig).add(obs.sourcePublisher||obs.sourceId);
+    }
+    const own=stableJson((o.variants||[]).map(v=>({items:v.items,priceMinor:v.priceMinor})).sort((a,b)=>stableJson(a).localeCompare(stableJson(b))));
+    if((signatures.get(own)?.size||0)>1)return {level:'corroborated',label:'多來源基本餐點與價格一致・估算'};
+    return {level:'source',label:o.provenance?.sourcePublisher==='KCouper 公開資料'?'KCouper 官網 API 整理・估算':'來源記載・估算'};
+  }
+  function recommendationCheck(dataset,o,now=Date.now(),r={}){
     if(dataset.mode==='demo')return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'合成示範，不能兌換'};
-    if(dataset.recommendationPolicy?.requireOfficial)return verificationCheck(o,now);
+    if(dataset.recommendationPolicy?.requireOfficial||r.dataScope==='official')return verificationCheck(o,now);
+    if(dataset.recommendationPolicy?.allowAllSources){
+      if(o.dataStatus==='official')return verificationCheck(o,now);
+      if(o.dataStatus==='pending'||o.priceType!=='fixed'||!o.variants?.length||mealIdentityIssue(o))return {allowed:false,reason:o.reviewReason||'缺少可計價的完整配置'};
+      if(o.dataStatus==='conflict'&&!o.sourceVersionKey)return {allowed:false,reason:'請分開使用各來源版本，不能混合矛盾內容'};
+      if(r.dataScope==='consistent'&&o.sourceConflict)return {allowed:false,reason:'已排除來源版本有差異的券'};
+      if(o.variants.some(v=>Object.keys(v.items||{}).some(k=>k.startsWith('food_'))))return {allowed:false,reason:'餐點仍未完整辨識'};
+      return {allowed:true,reason:sourceConfidence(o,now).label};
+    }
     return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'來源估算，尚未官方核對'};
+  }
+  function catalogOffer(root,key,now=Date.now()){
+    if((!key||key==='official')&&verificationCheck(root,now).allowed)return root;
+    const versions=root.sourceVersions||[];
+    const version=versions.find(v=>v.sourceVersionKey===key)||versions.find(v=>v.dataStatus==='estimate')||versions[0];
+    if(!version)return root;
+    return {...version,observations:root.observations,sourceVersions:versions,sourceConflict:root.dataStatus==='conflict',conflictReason:root.dataStatus==='conflict'?root.reviewReason:null,verification:{status:'unverified',reason:'此來源版本未完成官方逐配置核對'}};
+  }
+  function planningOffers(dataset,r,now){
+    if(!dataset.recommendationPolicy?.allowAllSources)return dataset.offers;
+    const out=[];
+    for(const root of dataset.offers){
+      const checked=verificationCheck(root,now).allowed;
+      if(checked)out.push({...root,sourceVersionKey:'official',versionExclusive:true});
+      if(r.dataScope==='official')continue;
+      const versions=root.sourceVersions||[root],seen=new Set();
+      for(const v of versions){
+        if(v.dataStatus==='official')continue;
+        const sig=stableJson([v.variants,v.validity,v.ordering,v.eligibility,v.limits,v.priceType]);if(seen.has(sig))continue;seen.add(sig);
+        const o={...v,id:root.id,sourceVersionKey:v.sourceVersionKey||'source',sourceConflict:root.dataStatus==='conflict',conflictReason:root.dataStatus==='conflict'?root.reviewReason:null,versionExclusive:checked||versions.length>1,observations:root.observations,verification:{status:'unverified',reason:'此來源版本未完成官方逐配置核對'}};
+        const restrictions=root.ordering?.officialRestrictionEvidence||[];
+        if(restrictions.length){
+          const excluded=new Set(restrictions.flatMap(x=>x.excludedFulfilments||[]));
+          o.ordering={...o.ordering,fulfilments:(o.ordering?.fulfilments||['takeaway','delivery','dinein']).filter(c=>!excluded.has(c)),officialRestrictionEvidence:restrictions};
+        }
+        out.push(o);
+      }
+    }
+    return out;
   }
   function catalogChoice(o,category='all',at=new Date().toISOString()){
     let best=null;
@@ -193,11 +245,12 @@
     }
     return best;
   }
-  function chooseCandidates(dataset,r,now){
+  function chooseCandidates(dataset,r,now,bannedSources=[]){
     extendItems(dataset);const candidates=[],excluded=[];let optionsComplete=true;
-    for(const o of dataset.offers){
+    for(const o of planningOffers(dataset,r,now)){
+      if(bannedSources.includes(o.id+'/'+(o.sourceVersionKey||'')))continue;
       const reasons=[];
-      const verification=recommendationCheck(dataset,o,now);if(!verification.allowed)reasons.push(verification.reason);
+      const verification=recommendationCheck(dataset,o,now,r);if(!verification.allowed)reasons.push(verification.reason);
       const ordering=orderingCheck(o,r);if(!ordering.allowed)reasons.push(ordering.reason);
       if(!r.brands.includes(o.brand))reasons.push('未選品牌');
       if(o.dataStatus==='conflict')reasons.push('同碼內容衝突');
@@ -240,14 +293,14 @@
         if(r.exact&&Object.entries(r.demand).some(([k,n])=>n>0&&(items[k]||0)>n))continue;
         if(r.allowExtras===false&&physicalIds.some(k=>items[k]>0&&!r.demand[k]&&!(k==='burger'&&r.demand.burgerMain&&items.burgerMain)&&!(r.demand.individual&&(v.individualMainItems?.[k]||(k==='burger'&&v.individualMains)))))continue;
         if(o.minimumSubtotalMinor&&v.priceMinor<o.minimumSubtotalMinor)continue;
-        candidates.push({id:o.id+'/'+v.id,offer:o,variant:v,items,snackGroups,ordering,base:v.priceMinor+(v.surchargeMinor||0),maxUses:o.limits?.maxUsesPerUserPerDay??(r.estimate?r.maxOrders:1),group:o.limits?.sharedLimitGroup||null,groupLimit:o.limits?.sharedGroupMax??null});
+        candidates.push({id:o.id+'/'+(o.sourceVersionKey?o.sourceVersionKey+'/':'')+v.id,offer:o,variant:v,items,snackGroups,ordering,base:v.priceMinor+(v.surchargeMinor||0),maxUses:o.limits?.maxUsesPerUserPerDay??(r.estimate?r.maxOrders:1),group:o.limits?.sharedLimitGroup||null,groupLimit:o.limits?.sharedGroupMax??null});
        }
       }
     }
     candidates.sort((a,b)=>a.base-b.base||a.id.localeCompare(b.id));
     // Equivalent unrestricted coupons can be represented by their cheapest code.
     const unique=new Map(),limited=[];
-    for(const c of candidates){if(c.maxUses<r.maxOrders||c.group){limited.push(c);continue;}const key=JSON.stringify([c.offer.brand,c.items,c.snackGroups,c.variant.pizzaSlots,c.variant.distinctPizzaSlots,drinkCount(c.variant.beverages,r.drinkPreference),c.ordering.status]);if(!unique.has(key))unique.set(key,c);}
+    for(const c of candidates){if(c.maxUses<r.maxOrders||c.group||c.offer.versionExclusive){limited.push(c);continue;}const key=JSON.stringify([c.offer.brand,c.items,c.snackGroups,c.variant.pizzaSlots,c.variant.distinctPizzaSlots,drinkCount(c.variant.beverages,r.drinkPreference),c.ordering.status]);if(!unique.has(key))unique.set(key,c);}
     let reduced=[...unique.values(),...limited].sort((a,b)=>a.base-b.base||a.id.localeCompare(b.id));
     if(!r.exact&&r.allowExtras!==false){
       const requested=Object.keys(r.demand).filter(k=>r.demand[k]>0),kept=[];
@@ -255,7 +308,7 @@
       for(const b of reduced){
         // A strictly cheaper unrestricted order with at least the same requested
         // contents replaces B in any plan without changing order count or fees.
-        const dominated=kept.some(a=>a.base<b.base&&a.offer.brand===b.offer.brand&&a.maxUses>=r.maxOrders&&!a.group&&a.ordering.status===b.ordering.status&&flavorKey(a)===flavorKey(b)&&requested.every(k=>(a.items[k]||0)>=Math.min(r.demand[k],b.items[k]||0))&&(!(r.snackGoal?.minTypes>0)||b.snackGroups.every(g=>a.snackGroups.includes(g))));
+        const dominated=!b.offer.versionExclusive&&kept.some(a=>!a.offer.versionExclusive&&a.base<b.base&&a.offer.brand===b.offer.brand&&a.maxUses>=r.maxOrders&&!a.group&&a.ordering.status===b.ordering.status&&flavorKey(a)===flavorKey(b)&&requested.every(k=>(a.items[k]||0)>=Math.min(r.demand[k],b.items[k]||0))&&(!(r.snackGoal?.minTypes>0)||b.snackGroups.every(g=>a.snackGroups.includes(g))));
         if(!dominated)kept.push(b);
       }
       reduced=kept;
@@ -278,7 +331,8 @@
   }
   function solve(dataset,request,config={}){
     extendItems(dataset);const r=validateRequest(request), now=config.now??Date.now(),start=Date.now();
-    const {candidates:cs,excluded,optionsComplete}=chooseCandidates(dataset,r,now);
+    const {candidates:cs,excluded,optionsComplete}=chooseCandidates(dataset,r,now,config.bannedSources||[]);
+    const sourceKey=o=>(o.offerId||o.id)+'/'+(o.sourceVersionKey||'');
     if(r.snackGoal||r.pizzaPreference)cs.sort((a,b)=>{
       const utility=c=>sum(Object.entries(r.demand).filter(([,n])=>n>0).map(([k,n])=>Math.min(n,c.items[k]||0)/n*(k==='snackPortions'?.35:1)))/(c.base||1);
       return utility(b)-utility(a)||a.id.localeCompare(b.id);
@@ -303,6 +357,7 @@
       if(b.totalCost===null&&a.totalCost!==null)return -1;
       return (a.totalCost??a.knownSubtotal)-(b.totalCost??b.knownSubtotal)||a.brandCount-b.brandCount||a.orders.length-b.orders.length||a.extraCount-b.extraCount||a.id.localeCompare(b.id);
     }
+    function versionCompatible(selected,c){return selected.every(a=>a.offer.id!==c.offer.id||a.offer.sourceVersionKey===c.offer.sourceVersionKey);}
     function keep(arr,p,cmp=compare){if(arr.some(x=>x.id===p.id))return;arr.push(p);arr.sort(cmp);if(arr.length>12)arr.length=12;}
     function makePlan(selected,counts){
       const flavorPlan=assignFlavors(selected,r.pizzaPreference,dataset.pizzaFlavors);
@@ -311,7 +366,7 @@
         const slot=brandSlots[c.offer.brand]||0;brandSlots[c.offer.brand]=slot+1;
         const fee=r.channel==='delivery'?(r.fees?.[c.offer.brand]?.[slot]??null):0;
         const service=r.channel==='delivery'?(r.serviceFees?.[c.offer.brand]?.[slot]??0):0;
-        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
+        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,confidence:sourceConfidence(c.offer,now),sourceVersionKey:c.offer.sourceVersionKey||null,sourceConflict:!!c.offer.sourceConflict,conflictReason:c.offer.conflictReason||null,sourceFetchedAt:c.offer.provenance?.fetchedAt,sourcePublisher:c.offer.provenance?.sourcePublisher,sourceText:c.offer.rawText,sourceUpdatedAt:c.offer.sourceMetadata?.sourceUpdatedAt,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
       });
       const unknown=orders.some(o=>o.total===null),knownSubtotal=sum(orders.map(o=>o.base));
       const total=unknown?null:sum(orders.map(o=>o.total));
@@ -335,7 +390,7 @@
       const extras=Object.fromEntries(physicalIds.map(k=>[k,Math.max(0,(counts[k]||0)-(consumed[k]||0))]).filter(([,n])=>n>0));
       const coverage=Object.entries(r.demand).filter(([,n])=>n>0).map(([k,n])=>({id:k,need:n,got:counts[k]||0}));
       const snackTypes=[...new Set(selected.flatMap(c=>c.snackGroups))];
-      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,supplied:{...counts},extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':dataset.recommendationPolicy?.requireOfficial?'official_configuration_checked':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
+      return {id:selected.map(c=>c.id).sort().join('|'),orders,coverage,supplied:{...counts},extras,extraCount:sum(Object.values(extras)),snackTypes,pizzaFlavors:flavorPlan.distinct,brandCount:new Set(orders.map(o=>o.brand)).size,knownSubtotal,totalCost:total,unknownCosts:unknown,eligibilityStatus:dataset.mode==='demo'?'demo':orders.every(o=>o.confidence.level==='official')?'official_configuration_checked':(r.estimate?'needs_confirmation':'eligible_in_scope'),searchComplete:complete};
     }
     function visit(from,selected,counts,uses,groups){
       if(!complete)return;
@@ -378,7 +433,7 @@
       }
       for(let i=from;i<cs.length;i++){
         const c=cs[i],o=c.offer;
-        if((uses[o.id]||0)>=c.maxUses)continue;
+        if((uses[o.id]||0)>=c.maxUses||!versionCompatible(selected,c))continue;
         if(c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit)continue;
         if(!r.cross&&selected.length&&selected[0].offer.brand!==o.brand)continue;
         const next={...counts};for(const [k,n] of Object.entries(c.items))next[k]=(next[k]||0)+n;
@@ -394,7 +449,7 @@
         const selected=[],counts={},uses={},groups={};
         while(selected.length<r.maxOrders){
           const currentGroups=new Set(selected.flatMap(c=>c.snackGroups));let best=null,score=0;
-          for(const c of cs){if((uses[c.offer.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit||!r.cross&&selected.length&&selected[0].offer.brand!==c.offer.brand)continue;
+          for(const c of cs){if(!versionCompatible(selected,c)||(uses[c.offer.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(groups[c.group]||0)>=c.groupLimit||!r.cross&&selected.length&&selected[0].offer.brand!==c.offer.brand)continue;
             if(r.exact&&demandKeys.some(k=>(counts[k]||0)+(c.items[k]||0)>r.demand[k]))continue;
             const gain=sum(demandKeys.map(k=>Math.min(Math.max(0,r.demand[k]-(counts[k]||0)),c.items[k]||0)/r.demand[k]*(['paperChicken','pasta','burgerMain','chicken','pizza6','pizza9','pizza13'].includes(k)?8:1)))+Math.max(0,(r.snackGoal?.minTypes||0)-currentGroups.size)*c.snackGroups.filter(g=>!currentGroups.has(g)).length*.2;
             const value=gain/Math.pow(Math.max(c.base,1),factor);if(value>score){score=value;best=c;}
@@ -419,7 +474,7 @@
         for(const s of beam)for(let i=s.from;i<cs.length;i++){
           if(++examined>30000||Date.now()-partialStart>limit)break searchPartial;
           const c=cs[i],o=c.offer;
-          if((s.uses[o.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(s.groups[c.group]||0)>=c.groupLimit||!r.cross&&s.selected.length&&s.selected[0].offer.brand!==o.brand)continue;
+          if(!versionCompatible(s.selected,c)||(s.uses[o.id]||0)>=c.maxUses||c.group&&c.groupLimit!==null&&(s.groups[c.group]||0)>=c.groupLimit||!r.cross&&s.selected.length&&s.selected[0].offer.brand!==o.brand)continue;
           const counts={...s.counts};for(const [k,n] of Object.entries(c.items))counts[k]=(counts[k]||0)+n;
           if(r.exact&&demandKeys.some(k=>counts[k]>r.demand[k]))continue;
           const slot=s.selected.filter(a=>a.offer.brand===o.brand).length;
@@ -453,7 +508,7 @@
       if(!leaders.length){
         const seen=new Set();
         for(const s of [...retained.values()].sort(rank)){
-          const key=s.selected.map(c=>c.offer.id).sort().join('|');if(seen.has(key))continue;seen.add(key);
+          const key=s.selected.map(c=>sourceKey(c.offer)).sort().join('|');if(seen.has(key))continue;seen.add(key);
           partials.push({...makePlan(s.selected,s.counts),partial:true,label:'目前最接近的配置',missing:s.missing,snackShortfall:s.snackShortfall,flavorShortfall:s.flavorShortfall,coveragePercent:s.coveragePercent,searchComplete:false});
           if(partials.length===3)break;
         }
@@ -461,21 +516,21 @@
     }
     if(r.budgetMinor!==null&&minAny?.totalCost===null){keep(leaders,minAny);}
     const alternatives=[];
-    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId).sort().join('|');
+    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')).sort().join('|');
     function add(p,label){if(p&&!alternatives.some(x=>mealKey(x)===mealKey(p)))alternatives.push({...p,label,searchComplete:p.searchComplete&&complete});}
     add(leaders[0],complete?'金額最低':'目前較低金額');add(oneBrand[0],'只買一家');add(fewOrders[0],'訂單較少');
     for(const p of leaders)if(alternatives.length<3)add(p,'其他組合');
     // Minimum-price pruning may collapse equivalent or dominated coupons. Search
     // a few exclusions separately so real alternative coupons can still appear.
     if(alternatives.length&&alternatives.length<3&&config.collectAlternatives!==false){
-      const queue=[...new Set(alternatives[0].orders.map(o=>o.offerId))].map(id=>[id]);
+      const queue=[...new Set(alternatives[0].orders.map(sourceKey))].map(id=>[id]);
       for(let attempt=0;attempt<3&&queue.length;attempt++){
         const banned=queue.shift();
-        const other=solve({...dataset,offers:dataset.offers.filter(o=>!banned.includes(o.id))},r,{...config,collectAlternatives:false,timeLimitMs:Math.min(timeLimit,600),maxStates:Math.min(maxStates,150000)});
+        const other=solve(dataset,r,{...config,bannedSources:[...(config.bannedSources||[]),...banned],collectAlternatives:false,timeLimitMs:Math.min(timeLimit,600),maxStates:Math.min(maxStates,150000)});
         states+=other.states;
         for(const p of other.plans)if(alternatives.length<3)add(p,'不同優惠組合');
         if(alternatives.length>=3)break;
-        if(other.plans[0])queue.push([...new Set([...banned,...other.plans[0].orders.map(o=>o.offerId)])]);
+        if(other.plans[0])queue.push([...new Set([...banned,...other.plans[0].orders.map(sourceKey)])]);
       }
     }
     const missing=closest?Object.entries(r.demand).filter(([k,n])=>(closest.counts[k]||0)<n).map(([k,n])=>({id:k,quantity:n-(closest.counts[k]||0)})):Object.entries(r.demand).filter(([,n])=>n>0).map(([id,quantity])=>({id,quantity}));
@@ -488,7 +543,7 @@
     const noSnacks=Object.fromEntries(Object.entries(r.demand).filter(([k])=>k!=='snackPortions'&&!meta[k]));
     const noSnackGoal={minTypes:0,servings:0};
     const deadline=Date.now()+(config.suggestionTimeLimitMs??2200),maxSuggestions=result.plans.length?2:3;
-    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+o.variantId).sort().join('|');
+    const mealKey=p=>p.orders.map(o=>o.brand+'/'+o.offerId+'/'+(o.sourceVersionKey||'')+'/'+o.variantId).sort().join('|');
     const seen=new Set(result.plans.map(mealKey));
     let attempts=0;
     function describe(q){
@@ -562,6 +617,6 @@
     const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

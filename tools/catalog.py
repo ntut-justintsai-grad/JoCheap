@@ -171,7 +171,7 @@ def make_offer(rec,feed,stamp):
             configs,choice_groups=parse_meal(rec['text'],feed['brand'])
             for i,c in enumerate(configs):
                 variants.append(dict(id='v'+str(i+1),priceMinor=rec['priceMinor'],surchargeMinor=0,items=c['items'],beverages=c['beverages'],pizzaSlotNames=c['pizzaSlots'],individualMains=sum(c['items'].get(k,0) for k in ['burger','paperChicken','pasta']),individualMainItems={k:c['items'][k] for k in ['burger','paperChicken','pasta'] if c['items'].get(k)},channels=['unknown'],choice='；'.join(c['choices']) or None))
-        if ('紙包雞' in rec['text'] and not re.search(r'替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]',rec['text'])
+        if (not rec.get('structured') and '紙包雞' in rec['text'] and not re.search(r'替換|換購|換成|可換|[0-9一二三]選|加價|升級|或|[/／]',rec['text'])
             and variants and all(not v['items'].get('paperChicken') for v in variants)
             and any(v['items'].get('chicken') for v in variants)):
             issue='餐點身分不一致：標題記載紙包雞，但來源預設內容是炸雞；不可直接當作同一品項'
@@ -203,6 +203,13 @@ def make_offer(rec,feed,stamp):
     observation['parseIssues']=list(dict.fromkeys(quality_issues+([issue] if issue else [])))
     if structured:observation['sourceItems']=copy.deepcopy(structured['items'])
     offer['qualityIssues']=list(dict.fromkeys(quality_issues+([issue] if issue else [])))
+    if structured:
+        offer['sourceMetadata']['compositionBasis']='structured_items'
+        offer['sourceMetadata']['upstream']='KFC 官方點餐 API，經 KCouper 轉換'
+        if len(structured.get('order_types',[]))>1 and len(structured.get('meal_periods',[]))>1:
+            offer['conditions'].append('KCouper 將可用餐期與取餐方式各自彙整，未保留每一組配對；本次組合僅供估算，需向官方確認。')
+        if '紙包雞' in rec['text'] and variants and not variants[0]['items'].get('paperChicken'):
+            offer['conditions'].append('活動名稱提及紙包雞；來源預設為炸雞，依實際選項與替換差額計算，不用名稱推測餐點。')
     return offer
 
 def signature(offer):
@@ -252,11 +259,22 @@ def merge(observations,previous,stamp):
             for v in best['variants']:
                 old_v=next((a for a in old['variants'] if a['priceMinor']==v['priceMinor'] and a['items']==v['items'] and a.get('pizzaSlots')),None)
                 if old_v:v['pizzaSlots']=old_v['pizzaSlots'];v['distinctPizzaSlots']=old_v.get('distinctPizzaSlots',False)
+        # Keep each complete source version intact, including its own price,
+        # dates and ordering conditions; a conflict is not an invented hybrid.
+        fields=['brand','code','title','rawText','priceType','displayPriceMinor','dataStatus','reviewReason','qualityIssues','variants','choiceGroups','ordering','validity','eligibility','limits','combinationPolicy','conditions','provenance','sourceMetadata','officialUrl']
+        best['sourceVersions']=[]
+        for i,row in enumerate(rows):
+            version={k:copy.deepcopy(row.get(k)) for k in fields}
+            version['id']=best['id'];version['sourceVersionKey']=row['observations'][0]['sourceId']+'-'+str(i)
+            version['sourceConflict']=best['dataStatus']=='conflict'
+            version['conflictReason']=best.get('reviewReason') if version['sourceConflict'] else None
+            best['sourceVersions'].append(version)
         result.append(best)
     return result
 
 def assign_flavor_ids(offers,catalog):
     for o in offers:
+        if o.get('sourceVersions'):assign_flavor_ids(o['sourceVersions'],catalog)
         for v in o['variants']:
             if v.get('pizzaSlotNames'):
                 slots=[]

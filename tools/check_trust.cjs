@@ -1,15 +1,17 @@
-// Validate the refreshed production snapshot, separately from historical fixtures.
+// Validate refreshed production data independently of historical fixtures.
 const assert=require('node:assert/strict'),F=require('../src/engine.js'),data=require('../data/offers.json');
-assert.equal(data.recommendationPolicy?.requireOfficial,true,'Production must require official checks');
+assert.equal(data.recommendationPolicy?.allowAllSources,true);
+assert.equal(data.recommendationPolicy?.requireOfficial,false);
+assert.equal(data.parserVersion,3);
 assert.equal(data.qualityReport?.total,data.offers.length);
 const now=Date.parse(data.generatedAt),checked=data.offers.filter(o=>F.verificationCheck(o,now).allowed);
 assert.equal(checked.length,data.officialRefresh.checked||0);
-for(const o of checked){
- assert.equal(o.dataStatus,'official');
- assert(o.variants.every(v=>!v.optionGroups?.length));
- assert.equal(o.limits.maxUsesPerUserPerDay,1);
-}
-const req={demand:Object.fromEntries(['chicken','burgerMain','paperChicken','pasta','pizza9','pizza13','tart','drinkServing'].map(k=>[k,1])),people:6,budgetMinor:null,brands:['KFC','PH'],cross:true,channel:'takeaway',orderMethod:'official_web',paymentMethod:'any',allowUnknownOrdering:true,at:data.generatedAt,maxOrders:12,estimate:true,avoid:[],allowExtras:true};
+for(const o of checked){assert.equal(o.dataStatus,'official');assert(o.variants.every(v=>!v.optionGroups?.length));assert.equal(o.limits.maxUsesPerUserPerDay,1);}
+for(const o of data.offers){assert(o.sourceVersions?.length,'Missing versions: '+o.id);assert.equal(o.sourceVersions.length,o.observations.length);}
+const req={demand:Object.fromEntries(['chicken','burgerMain','paperChicken','pasta','pizza9','pizza13','tart','drinkServing'].map(k=>[k,1])),people:6,budgetMinor:null,brands:['KFC','PH'],cross:true,channel:'takeaway',orderMethod:'official_web',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true,at:data.generatedAt,maxOrders:12,estimate:true,avoid:[],allowExtras:true};
 const {candidates}=F.chooseCandidates(data,req,now);
-assert(candidates.every(c=>F.verificationCheck(c.offer,now).allowed));
-console.log(JSON.stringify({total:data.offers.length,officialConfigurations:checked.length,officialRefresh:data.officialRefresh.status,qualityIssues:data.qualityReport.withQualityIssues}));
+assert(candidates.length>5);
+assert.deepEqual([...new Set(candidates.map(c=>c.offer.brand))].sort(),['KFC','PH']);
+for(const c of candidates){assert(F.recommendationCheck(data,c.offer,now,req).allowed);assert(Number.isSafeInteger(c.base)&&c.base>=0);assert(c.offer.sourceVersionKey);assert(!Object.keys(c.variant.items).some(k=>k.startsWith('food_')));if(c.offer.sourceConflict)assert.notEqual(c.offer.sourceVersionKey,'official');}
+const priced=new Set(F.planningOffers(data,req,now).filter(o=>F.recommendationCheck(data,o,now,req).allowed).map(o=>o.id));
+console.log(JSON.stringify({total:data.offers.length,priceableCodes:priced.size,sourceVersions:data.offers.reduce((n,o)=>n+o.sourceVersions.length,0),candidates:candidates.length,officialConfigurations:checked.length,officialRefresh:data.officialRefresh.status}));

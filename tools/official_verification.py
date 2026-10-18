@@ -28,7 +28,7 @@ def fetch_official(url,payload=None):
 
 def refresh_official(data,reviews,fetcher,stamp):
     now=datetime.fromisoformat(stamp.replace('Z','+00:00'));local=now.astimezone(TZ)
-    data['recommendationPolicy']=dict(requireOfficial=True,version=1,label='僅使用官方核對的基本配置')
+    data['recommendationPolicy']=dict(requireOfficial=False,allowAllSources=True,refreshDays=7,version=2,label='全來源逐版本估算，官方核對另標示')
     for offer in data['offers']:
         offer['verification']=dict(status='unverified',reason='尚未完成官方餐點、價格及適用範圍核對')
     audit=dict(attemptedAt=stamp,status='not_checked',checked=0,reason='沒有可用的官方查核程序')
