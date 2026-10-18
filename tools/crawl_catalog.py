@@ -11,6 +11,7 @@ from ordering_rules import apply_reviewed_ordering
 from data_quality import audit_report
 from official_verification import refresh_official,fetch_official
 from pizzahut_lookup import refresh as refresh_pizzahut,fetch_coupon,save_cache
+from kfc_description import refresh as refresh_kfc,fetch_detail
 
 ROOT=Path(__file__).resolve().parent.parent
 def fetch(url):
@@ -26,7 +27,7 @@ def active_previous(previous,feeds,stamp):
     urls={f['url'] for f in feeds};ids={f['id'] for f in feeds};out=copy.deepcopy(previous);kept=[]
     for root in previous.get('offers',[]):
         observations=root.get('observations',[])
-        if root.get('provenance',{}).get('sourceUrl') in urls and all(o.get('sourceUrl') in urls for o in observations):
+        if (root.get('provenance',{}).get('sourceUrl') in urls or root.get('sourceMetadata',{}).get('compositionBasis')=='official_intro') and all(o.get('sourceUrl') in urls for o in observations):
             kept.append(copy.deepcopy(root));continue
         rows=[]
         for version in root.get('sourceVersions',[]):
@@ -60,7 +61,7 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None,feeds=No
     if not observations:return previous,all_records,dict(status='all_failed',sources=source_status)
     data=copy.deepcopy(previous)
     data.update(schemaVersion=2,datasetVersion=stamp,generatedAt=stamp,updateStatus='crawled',coverage='public_feeds_with_review_queue',sources=source_status)
-    data['parserVersion']=6
+    data['parserVersion']=7
     data['sourcePolicy']=dict(KFC=dict(sourceIds=['kcouper'],upstream='KFC official ordering API',transport='kcouper_published_snapshot'),PH=dict(sourceIds=[f['id'] for f in feeds if f['brand']=='PH'],apiIntegration='code_lookup'))
     data['offers']=merge(observations,previous,stamp)
     reviews=ROOT/'data/ordering_reviews.json'
@@ -85,7 +86,7 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None,feeds=No
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--cache-dir');parser.add_argument('--if-due',action='store_true');parser.add_argument('--snapshot',default=str(ROOT/'data/offers.json'));args=parser.parse_args()
     target=Path(args.snapshot);old=json.loads(target.read_text(encoding='utf-8'))
-    if args.if_due and old.get('parserVersion')==6:
+    if args.if_due and old.get('parserVersion')==7:
         try:
             age=(datetime.now(timezone.utc)-datetime.fromisoformat(old['generatedAt'].replace('Z','+00:00'))).total_seconds()
             if 0<=age<7*86400:
@@ -102,10 +103,19 @@ def main():
     stamp=datetime.now(timezone.utc).isoformat(timespec='seconds')
     if args.cache_dir:
         stamp=datetime.fromtimestamp(min(p.stat().st_mtime for p in directory.iterdir() if p.name in {'talk-kfc.html','talk-ph.html','calling-kfc.html','calling-ph.html','kcouper-coupons.js'}),timezone.utc).isoformat(timespec='seconds')
-    data,records,report=crawl(old,old_records,fetcher,stamp,official_fetcher=None if args.cache_dir else fetch_official)
+    data,records,report=crawl(old,old_records,fetcher,stamp)
     if report['status']=='all_failed':
         (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         raise SystemExit('All sources failed; previous snapshot retained.')
+    kfc_cache=target.parent/'kfc_descriptions.json'
+    kfc_previous=json.loads(kfc_cache.read_text(encoding='utf-8')) if kfc_cache.exists() else {}
+    kfc_result,kfc_report=refresh_kfc(data,kfc_previous,None if args.cache_dir else fetch_detail,stamp,force=not args.if_due and not args.cache_dir,on_progress=lambda current:save_cache(kfc_cache,current))
+    save_cache(kfc_cache,kfc_result)
+    report['kfcDescriptions']=kfc_report
+    if kfc_report['byStatus'].get('error'):report['status']='partial_failure'
+    report['byStatus']=dict(Counter(o['dataStatus'] for o in data['offers']))
+    report['variants']=sum(len(o['variants']) for o in data['offers'])
+    report['optionGroups']=sum(len(v.get('optionGroups',[])) for o in data['offers'] for v in o['variants'])
     ph_cache=target.parent/'pizzahut_lookup.json'
     ph_previous=json.loads(ph_cache.read_text(encoding='utf-8')) if ph_cache.exists() else {}
     ph_result,ph_report=refresh_pizzahut(data,ph_previous,None if args.cache_dir else fetch_coupon,stamp,force=not args.if_due and not args.cache_dir,on_progress=lambda current:save_cache(ph_cache,current))

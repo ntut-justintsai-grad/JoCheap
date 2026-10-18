@@ -1,0 +1,263 @@
+{
+  "16725": {
+    "code": "16725",
+    "endpoint": "https://olo-api.kfcclub.com.tw/menu/v1/GetQueryFoodDetail",
+    "status": "success",
+    "checkedAt": "2026-10-18T05:31:11.846367+00:00",
+    "query": {
+      "shopcode": "TWI104",
+      "fcode": "TA10403",
+      "menuid": "",
+      "mealperiod": "3",
+      "ordertype": "2",
+      "orderdate": "2026/10/18"
+    },
+    "detail": {
+      "Fcode": "TA10403",
+      "couponCode": "16725",
+      "Name": "16725-中秋雙雞A",
+      "Intro": "2塊咔啦脆雞+1份香草紙包雞+8塊上校雞塊+ 【點心盒E:2顆原味蛋撻】=NT$300元(原價NT$469元)",
+      "Original_Price": 300,
+      "SoldOut": true,
+      "StartDate": "2026/09/02 00:00:00",
+      "EndDate": "2026/12/29 23:59:59",
+      "Nutrition": "1. 詳細餐點內容與相關注意事項請依實際優惠券上(圖檔)所示 2. 本券不適用外送，優惠不得同時併用，圖片僅供參考，產品以實物為準 3. 如遇不可抗力或原物料短缺等因素，以致門市無法提供相關商品，肯德基有權以等值商品替代，詳情請以店內公告為主，肯德基保有修改活動辦法及優惠內容的權利。",
+      "Details": [
+        {
+          "Title": "炸雞",
+          "MType": "AA",
+          "PTID": "7",
+          "MaxCount": 2,
+          "MinCount": 2,
+          "MList": [
+            {
+              "Code": "AA01",
+              "Name": "咔啦脆雞(辣)",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "AA042",
+              "Name": "爆脆雞",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "AA19",
+              "Name": "青花椒香麻脆雞(辣)",
+              "MListPrice": 7,
+              "AddPrice": 7
+            }
+          ]
+        },
+        {
+          "Title": "烤雞",
+          "MType": "QM",
+          "PTID": "6",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "QM02",
+              "Name": "2塊咔啦脆雞(辣)",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "QM05",
+              "Name": "麻油紙包雞",
+              "MListPrice": 13,
+              "AddPrice": 13
+            }
+          ]
+        },
+        {
+          "Title": "配餐",
+          "MType": "MC",
+          "PTID": "2",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "MC01",
+              "Name": "上校雞塊8塊",
+              "MListPrice": 0,
+              "AddPrice": 0
+            }
+          ]
+        },
+        {
+          "Title": "蛋撻",
+          "MType": "X4",
+          "PTID": "5",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "X401",
+              "Name": "2入原味蛋撻超極酥",
+              "MListPrice": 0,
+              "AddPrice": 0
+            }
+          ]
+        },
+        {
+          "Title": "其他",
+          "MType": "G3",
+          "PTID": "24",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "G302",
+              "Name": "不需刀叉及手套",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "G303",
+              "Name": "需要刀叉及手套",
+              "MListPrice": 0,
+              "AddPrice": 0
+            }
+          ]
+        },
+        {
+          "Title": "其他",
+          "MType": "DD",
+          "PTID": "24",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "DD01",
+              "Name": "糖醋醬",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "DD07",
+              "Name": "不需附糖醋醬",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "DD04",
+              "Name": "升級南洋酸甜醬(大)",
+              "MListPrice": 11,
+              "AddPrice": 11
+            },
+            {
+              "Code": "DD05",
+              "Name": "升級BBQ煙燻醬(大)",
+              "MListPrice": 11,
+              "AddPrice": 11
+            },
+            {
+              "Code": "DD051",
+              "Name": "韓式辣醬",
+              "MListPrice": 11,
+              "AddPrice": 11
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "16726": {
+    "code": "16726",
+    "endpoint": "https://olo-api.kfcclub.com.tw/menu/v1/GetQueryFoodDetail",
+    "status": "success",
+    "checkedAt": "2026-10-18T05:31:32.314539+00:00",
+    "query": {
+      "shopcode": "TWI104",
+      "fcode": "TA10404",
+      "menuid": "",
+      "mealperiod": "3",
+      "ordertype": "2",
+      "orderdate": "2026/10/18"
+    },
+    "detail": {
+      "Fcode": "TA10404",
+      "couponCode": "16726",
+      "Name": "16726-中秋雙雞B",
+      "Intro": "4塊咔啦脆雞+1份香草紙包雞=NT$300元(原價NT$415元)",
+      "Original_Price": 300,
+      "SoldOut": true,
+      "StartDate": "2026/09/02 00:00:00",
+      "EndDate": "2026/12/29 23:59:59",
+      "Nutrition": "1. 詳細餐點內容與相關注意事項請依實際優惠券上(圖檔)所示 2. 本券不適用外送，優惠不得同時併用，圖片僅供參考，產品以實物為準 3. 如遇不可抗力或原物料短缺等因素，以致門市無法提供相關商品，肯德基有權以等值商品替代，詳情請以店內公告為主，肯德基保有修改活動辦法及優惠內容的權利。",
+      "Details": [
+        {
+          "Title": "炸雞",
+          "MType": "AA",
+          "PTID": "7",
+          "MaxCount": 4,
+          "MinCount": 4,
+          "MList": [
+            {
+              "Code": "AA01",
+              "Name": "咔啦脆雞(辣)",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "AA042",
+              "Name": "爆脆雞",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "AA19",
+              "Name": "青花椒香麻脆雞(辣)",
+              "MListPrice": 7,
+              "AddPrice": 7
+            }
+          ]
+        },
+        {
+          "Title": "烤雞",
+          "MType": "QM",
+          "PTID": "6",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "QM02",
+              "Name": "2塊咔啦脆雞(辣)",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "QM05",
+              "Name": "麻油紙包雞",
+              "MListPrice": 13,
+              "AddPrice": 13
+            }
+          ]
+        },
+        {
+          "Title": "其他",
+          "MType": "G3",
+          "PTID": "24",
+          "MaxCount": 1,
+          "MinCount": 1,
+          "MList": [
+            {
+              "Code": "G302",
+              "Name": "不需刀叉及手套",
+              "MListPrice": 0,
+              "AddPrice": 0
+            },
+            {
+              "Code": "G303",
+              "Name": "需要刀叉及手套",
+              "MListPrice": 0,
+              "AddPrice": 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

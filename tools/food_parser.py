@@ -49,7 +49,7 @@ def atomic(name,quantity=1,allow_generic=True):
       (r'(?:上校)?雞塊$','nuggets',1),
       (r'薯餅$','hashBrown',1),
       (r'雙色轉轉QQ球$','qqPack',1),
-      (r'鱈魚圈圈$','fishRings',1),
+      (r'(?:鱈魚圈圈|魚圈圈)$','fishRings',1),
       (r'黃金超蝦塊$','shrimpPack',1),
       (r'草莓起司冰淇淋大福$','daifuku',1),
       (r'爆脆無骨雞腿霸$','bonelessChicken',1),
@@ -84,6 +84,8 @@ def atomic(name,quantity=1,allow_generic=True):
       (r'青花椒醬脆雞飯$','pepperChickenRice',1),
       (r'蒜香白醬脆雞飯$','creamChickenRice',1),
       (r'紅豆奶皇蛋撻$','redBeanTart',1),
+      (r'冰心蛋撻風味冰淇淋$','tartIceCream',1),
+      (r'韓式(?:脆雞起司|起司脆雞)飯$','koreanChickenRice',1),
       (r'愛心蝦球$','shrimpBalls',1),
       (r'(?:黃金)?雞柳條$','chickenStrips',1),
       (r'酥炸嫩雞球$','chickenBalls',1),
@@ -125,10 +127,12 @@ EXTENDED={
  'pizza6':dict(name='6 吋個人披薩',unit='個',emoji='🍕'),
 }
 CATALOG.update(EXTENDED)
+CATALOG['shrimpPieces']=dict(name='黃金超蝦塊',unit='塊',emoji='🍤')
 for key,name,unit in [
  ('honeyTeaCup','蜂蜜風味紅茶（容量未標）','杯'),('hotTeaCup','熱紅茶（容量未標）','杯'),
  ('pepperRice','青花椒醬飯','份'),('creamRice','蒜香白醬飯','份'),
  ('pepperChickenRice','青花椒醬脆雞飯','份'),('creamChickenRice','蒜香白醬脆雞飯','份'),
+ ('tartIceCream','冰心蛋撻風味冰淇淋','顆'),('koreanChickenRice','韓式脆雞起司飯','份'),
  ('redBeanTart','紅豆奶皇蛋撻','顆'),('shrimpBalls','愛心蝦球','顆'),('chickenStrips','雞柳條','條'),
  ('chickenBalls','酥炸嫩雞球','份'),('friedMushrooms','酥炸杏鮑菇','份'),('soda330','330ml 瓶裝汽水','瓶'),
  ('yuzu300','300ml 茉香柚茶','瓶'),('flatzzPersonal','Flatzz 手工個人薄披薩（尺寸未標）','個'),

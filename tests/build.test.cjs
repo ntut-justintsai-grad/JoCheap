@@ -9,7 +9,8 @@ test('standalone HTML builds without remote runtime dependencies and safely embe
  assert(!/<script\b[^>]*\bsrc=/i.test(html));
  assert(!/<link[^>]*\brel=["']stylesheet/i.test(html));
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];
- assert.equal(scripts.length,4);
+ assert.equal(scripts.length,5);
+ const config=scripts.find(([,attrs])=>attrs.includes('id="llm-config"'));assert(config);assert.deepEqual(Object.keys(JSON.parse(config[2])),['endpoint']);
  for(const [,attrs,body] of scripts){if(attrs.includes('application/json'))assert.doesNotThrow(()=>JSON.parse(body));else assert.doesNotThrow(()=>new vm.Script(body));}
  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
  const app=fs.readFileSync(__dirname+'/../src/app.js','utf8');

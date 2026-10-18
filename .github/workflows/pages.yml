@@ -27,7 +27,7 @@ jobs:
         run: |
           npm test
           python -m unittest discover -s tests -p 'test_*.py' -v
-      - name: Refresh feeds and match Pizza Hut codes with official lookup
+      - name: Refresh official KFC descriptions and match Pizza Hut codes
         env:
           EVENT_NAME: ${{ github.event_name }}
         run: |
@@ -43,12 +43,14 @@ jobs:
       - name: Check production recommendation trust
         run: node tools/check_trust.cjs
       - name: Build standalone HTML
+        env:
+          JOCHEAP_LLM_ENDPOINT: ${{ vars.JOCHEAP_LLM_ENDPOINT }}
         run: npm run build
       - name: Keep snapshots for the next scheduled run
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/offers.json data/offers.previous.json data/source_records.json data/crawl_report.json data/review_queue.json data/quality_report.json data/pizzahut_lookup.json
+          git add index.html data/offers.json data/offers.previous.json data/source_records.json data/crawl_report.json data/review_queue.json data/quality_report.json data/pizzahut_lookup.json data/kfc_descriptions.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh coupon snapshots and source status"
             git push

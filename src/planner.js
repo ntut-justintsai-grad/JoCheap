@@ -4,6 +4,7 @@
   const FAMILY={mixed:'披薩＋炸雞',pizza:'披薩共享',chicken:'炸雞共享',burger:'漢堡個人餐',wrapped:'紙包雞',pasta:'義大利麵'};
   const MAINS={pizza:{name:'披薩',emoji:'🍕'},chicken:{name:'炸雞',emoji:'🍗'},burger:{name:'漢堡',emoji:'🍔'},wrapped:{name:'紙包雞',emoji:'🥘'},pasta:{name:'義大利麵',emoji:'🍝'}};
   function normalizeMains(p){
+    if(p.mealMode==='snack')return [];
     const raw=p.mains??(p.family==='mixed'||!p.family?['pizza','chicken']:[p.family]);
     if(!Array.isArray(raw)||raw.some(k=>!MAINS[k]))throw Error('請選擇有效的主餐種類。');
     const mains=Object.keys(MAINS).filter(k=>raw.includes(k));
@@ -22,7 +23,7 @@
   Object.assign(SNACK_META,{qqPack:{brand:'KFC',group:'QQ 球',portion:1},shrimpPack:{brand:'KFC',group:'海鮮小食',portion:1},friesMedium:{brand:'KFC',group:'薯類',portion:1},chickenCartilageLarge:{brand:'PH',group:'雞肉小食',portion:1}});
   function buildSimple(p){
     const n=Number(p.people);if(!Number.isInteger(n)||n<1||n>30)throw Error('用餐人數請填 1～30 人。');
-    const mains=normalizeMains(p),family=mains.length===1?mains[0]:'mixed',rich=RICHNESS[p.richness||'normal'];if(!rich)throw Error('請選擇點心程度。');
+    const snack=p.mealMode==='snack',mains=normalizeMains(p),family=snack?'snack':mains.length===1?mains[0]:'mixed',rich=RICHNESS[p.richness||'normal'];if(!rich)throw Error('請選擇點心程度。');
     const demand={},pizza=mains.includes('pizza'),size=p.pizzaSize==='large'?'pizza13':'pizza9';
     const cuts=Number(size==='pizza9'?(p.smallCuts||6):(p.largeCuts||8));if(!Number.isInteger(cuts)||cuts<4||cuts>16)throw Error('每個披薩的試算切片數請填 4～16 片。');
     const appetite=p.appetite||'normal',light=appetite==='light',big=appetite==='big';
@@ -38,11 +39,11 @@
     const personal=mains.some(k=>['burger','wrapped','pasta'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
     for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=Math.ceil(n*(F.SNACKS[id]?.perPerson??.5));}
-    const snackGoal={minTypes:Math.max(rich.types,personal?1:0),servings:Math.max(Math.ceil(n*rich.ratio),personal?n:0)};
+    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):Math.max(rich.types,personal?1:0),servings:Math.max(Math.ceil(n*rich.ratio),personal?n:0)};
     if(snackGoal.servings)demand.snackPortions=snackGoal.servings;
     if(Object.values(demand).some(n=>!Number.isInteger(n)||n<0||n>60))throw Error('建議份量超過目前每項 60 的上限，請減少人數或調整食量。');
     const kinds=pizza?Number(p.flavorKinds??0):0;if(!Number.isInteger(kinds)||kinds<0||kinds>3)throw Error('披薩口味請選不指定或至少 1～3 種。');
-    return {demand,snackGoal,mains,mainAllocation,allocationOverflow:mains.length>n,portion:{size,cuts,slicesPerPerson,people:mainAllocation.find(m=>m.id==='pizza')?.people||0,referenceOnly:true},pizzaPreference:pizza?{tag:p.flavorTag||'any',minKinds:kinds}:null,pastaPreference:mains.includes('pasta')?p.flavorTag||'any':null,family,people:n,richness:p.richness||'normal',maxOrders:personal?12:Math.max(6,Math.min(12,n))};
+    return {demand,snackGoal,mains,mainAllocation,allocationOverflow:mains.length>n,portion:{size,cuts,slicesPerPerson,people:mainAllocation.find(m=>m.id==='pizza')?.people||0,referenceOnly:true},pizzaPreference:pizza?{tag:p.flavorTag||'any',minKinds:kinds}:null,pastaPreference:mains.includes('pasta')?p.flavorTag||'any':null,family,mealMode:snack?'snack':'meal',people:n,richness:p.richness||'normal',maxOrders:personal?12:Math.max(6,Math.min(12,n))};
   }
   function number(s){
     if(/^\d+(?:\.\d+)?$/.test(s))return Number(s);
@@ -73,6 +74,8 @@
       if(new RegExp(names,'i').test(t.replace(negative,'')))families.push(id);
     }
     if(families.length){patch.mains=families;patch.family=families.length===1?families[0]:'mixed';recognized.push('主餐混搭：'+families.map(id=>MAINS[id].name).join('＋'));}
+    if(/下午茶|只(?:想|要)?吃(?:點心|小點)|不(?:要|用|吃)主餐/.test(t)){patch.mealMode='snack';patch.mains=[];patch.fixedSnacks=[];recognized.push('下午茶／點心');}
+    else if(families.length)patch.mealMode='meal';
     const negSea=/不(?:要|吃|想吃)海鮮/.test(t);if(/海鮮/.test(t)&&!negSea){patch.flavorTag='seafood';recognized.push('偏好海鮮口味');}else if(/肉類|肉多|肉食/.test(t)){patch.flavorTag='meat';recognized.push('偏好肉類口味');}
     const kinds=t.match(new RegExp('('+num+')\\s*種(?:不同)?口味'));if(kinds){patch.flavorKinds=number(kinds[1]);recognized.push('至少 '+patch.flavorKinds+' 種披薩口味');}
     if(/大披薩|大比薩|大批薩|13\s*(?:吋|寸)/.test(t))patch.pizzaSize='large';else if(/小披薩|小比薩|9\s*(?:吋|寸)/.test(t))patch.pizzaSize='small';
@@ -90,6 +93,10 @@
       const m=t.match(new RegExp('('+num+')\\s*'+unit+'\\s*'+name))||t.match(new RegExp(name+'\\s*(?:要|[:：])?\\s*('+num+')\\s*'+unit));if(m){explicit[id]=number(m[1]);recognized.push(F.ITEMS[id].name+'：'+m[1]+F.ITEMS[id].unit);}
     }
     if(Object.keys(explicit).length)patch.explicitDemand=explicit;
+    if(patch.mealMode==='snack'){
+      for(const [id,pattern] of [['tart',/蛋撻|蛋塔/],['friesSmall',/薯條/],['nuggets',/雞塊/],['qq',/QQ球|QQ 球/i],['hashBrown',/薯餅/],['daifuku',/大福/]])if(pattern.test(t)&&!new RegExp('不要'+pattern.source,'i').test(t))patch.fixedSnacks.push(id);
+      if(patch.fixedSnacks.length)patch.richness='none';
+    }
     if(/只要|剛好|不能多|不要多/.test(t))warnings.push('已辨識的餐點數量會當成最低需求；尚未套用「只能這些／不能多」的限制。');
     if(/不要辣|不吃辣|不要鳳梨|不吃牛|不吃豬|過敏|全素|奶素|蛋奶素|清真|素食/.test(t)||/無糖/.test(t)&&patch.drinkPreference!=='unsweetened'||negSea)warnings.push('有食材、辣度或飲食限制尚無法自動驗證，這些內容不會被當成已符合。請逐項核對官方資訊。');
     if(patch.people!==undefined&&(!Number.isInteger(patch.people)||patch.people<1||patch.people>30))warnings.push('目前支援 1～30 人，請修改人數。');

@@ -1,6 +1,6 @@
 # KCouper 優惠券來源
 
-2026-10-18：肯德基正式資料僅使用此資料鏈，已停用其他整理站的肯德基記載。本站讀取 KCouper 公開快照，並非直接逐券呼叫官方 API。
+2026-10-18 更新：KCouper 僅用來發現肯德基優惠碼及商品代碼，已停用其他整理站的肯德基記載。本站每週另外直接逐券讀取官方 API 的餐點說明，以 Intro 為基本組合；詳見 [官方說明優先規則](kfc-description.md)。以下為 KCouper 本身的資料鏈。
 
 依上游公開程式確認。KCouper 是第三方維護的整理工具，上游是肯德基官方點餐 API。
 
@@ -11,7 +11,7 @@
 3. `menu/v1/GetQueryFoodDetail` 讀取預設餐點、可選替換及價格。
 4. 套餐價為 `Original_Price` 加上各餐點第一個 `MList` 項的 `MListPrice × MinCount`。其餘選項整理為替換與加價，不是每種選項都同價。
 
-API 位於 `https://olo-api.kfcclub.com.tw/`。本站使用上游發布的 [coupon.js](https://winedays.github.io/KCouper/coupon.js)，並非直接查詢所有門市，也沒有下訂單。
+API 位於 `https://olo-api.kfcclub.com.tw/`。本站使用上游發布的 [coupon.js](https://winedays.github.io/KCouper/coupon.js) 發現優惠碼，再查官方餐點說明；參考門市為 TWI104，並非查詢所有門市，也沒有下訂單。
 
 [上游工作流程](https://github.com/Winedays/KCouper/blob/master/.github/workflows/main.yml)：每日台北 00:30 快速更新，保留尚未過期的舊券；每週六 00:30 完整掃描，排程可能延遲。因此上游資料檔更新不代表每張券當天都重新查過。
 

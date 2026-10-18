@@ -2,3 +2,8 @@ node_modules/
 __pycache__/
 _scratch/
 .DS_Store
+
+.env
+.env.*
+!.env.example
+!server/.env.example

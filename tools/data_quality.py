@@ -33,4 +33,7 @@ def audit_report(data,stamp):
         issues=list(dict.fromkeys(o.get('qualityIssues',[])+meal_issues(o['variants'])+([o['reviewReason']] if o.get('reviewReason') else [])))
         v=o.get('verification',{})
         entries.append(dict(brand=o['brand'],code=o['code'],dataStatus=o['dataStatus'],verificationStatus=v.get('status','unverified'),issues=issues,sourceCount=len(o.get('observations',[])),checkedAt=v.get('checkedAt'),reviewBy=v.get('reviewBy'),couponLookupStatus=o.get('couponLookup',{}).get('status'),couponProductId=o.get('couponLookup',{}).get('productId'),couponCheckedAt=o.get('couponLookup',{}).get('checkedAt')))
+        if o['brand']=='KFC':
+            meal=o.get('sourceMetadata',{}).get('officialMeal',{})
+            entries[-1].update(compositionBasis=o.get('sourceMetadata',{}).get('compositionBasis'),officialDescriptionAt=meal.get('checkedAt'),officialDescriptionStatus=meal.get('status'),orderingDiffers=meal.get('orderingDiffers'),referenceShop=meal.get('query',{}).get('shopcode'),referenceShopSoldOut=meal.get('soldOut'))
     return dict(generatedAt=stamp,total=len(entries),byDataStatus=dict(Counter(e['dataStatus'] for e in entries)),byVerificationStatus=dict(Counter(e['verificationStatus'] for e in entries)),withQualityIssues=sum(bool(e['issues']) for e in entries),recommendationPolicy='all_source_versions_with_evidence_labels',offers=entries)
