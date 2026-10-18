@@ -115,3 +115,9 @@ test('no snacks never inserts hidden sides for paper chicken, burgers or pasta',
   assert.equal(b.snackGoal.minTypes,0);assert.equal(b.snackGoal.servings,0);assert(!b.demand.snackPortions);assert(!b.demand.drinkServing);
  }
 });
+
+test('an explicit no-snacks sentence clears earlier selected snacks before rebuilding a paper-chicken meal',()=>{
+ const parsed=P.interpret('六人吃紙包雞，每人150，不要點心，不要飲料，外帶');
+ const b=P.buildSimple({mealMode:'snack',mains:[],fixedSnacks:['tart','nuggets'],people:4,richness:'normal',drinks:true,...parsed.patch});
+ assert.deepEqual(parsed.patch.fixedSnacks,[]);assert.deepEqual(b.demand,{paperChicken:6});
+});

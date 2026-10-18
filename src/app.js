@@ -101,12 +101,13 @@
   function applyText(){
     const parsed=state.parsed,patch=parsed?.patch;if(!patch)return;
     const mode=patch.mealMode||state.mealMode,mains=mode==='snack'?[]:patch.mains||state.mealMains;
-    const config={...simpleConfig(),...patch,mealMode:mode,mains,people:patch.people??Number($('people').value)};
+    const fixedSnacks=patch.fixedSnacks??(mode!==state.mealMode?[]:state.fixedSnacks);
+    const config={...simpleConfig(),...patch,mealMode:mode,mains,fixedSnacks,people:patch.people??Number($('people').value)};
     P.buildSimple(config); // Validate the whole proposed state before touching controls.
     const mapping={people:'people',budget:'budget',budgetType:'budget-type',pizzaSize:'pizza-size',flavorKinds:'flavor-kinds',flavorTag:'flavor-tag',channel:'channel',orderMethod:'order-method',paymentMethod:'payment-method',drinkPreference:'drink-preference',brandScope:'brand-scope',appetite:'appetite',at:'at'};
     for(const [key,id] of Object.entries(mapping))if(patch[key]!==undefined)$(id).value=String(patch[key]);
     state.mealMode=mode;state.mains=P.normalizeMains({mealMode:mode,mains});if(mode==='meal')state.mealMains=[...state.mains];
-    if(patch.fixedSnacks)state.fixedSnacks=patch.fixedSnacks;if(patch.richness)state.richness=patch.richness;
+    state.fixedSnacks=[...fixedSnacks];if(patch.richness)state.richness=patch.richness;
     if(patch.drinks!==undefined)$('drinks').checked=patch.drinks;else if(patch.drinkPreference)$('drinks').checked=true;
     orderingUI();state.manual=false;regenerate(true);if(patch.explicitDemand){state.demand={...state.demand,...patch.explicitDemand};state.manual=true;renderDemand();renderSummary();}
     renderChoices();renderSnackGroups();feeUI();markDirty();

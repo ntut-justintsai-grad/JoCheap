@@ -63,7 +63,7 @@
     else if(total){patch.budget=patch.totalBudget;patch.budgetType='total';}delete patch.totalBudget;
     if(person&&patch.people===1&&/一人\s*\d/.test(t)&&!/一個人|1\s*人|只有一人/.test(t)){delete patch.people;for(let i=recognized.length-1;i>=0;i--)if(recognized[i]==='人數：一')recognized.splice(i,1);warnings.push('「一人」可能指每人預算，請另外核對用餐人數。');}
     if(new RegExp(num+'\\s*[~～到至-]\\s*'+num+'\\s*(?:人|位)').test(t)){delete patch.people;warnings.push('人數是範圍，請選定實際用餐人數。');}
-    if(/不加點心|不要點心|不用點心|不需要點心/.test(t)){patch.richness='none';recognized.push('不另外要求點心');}
+    if(/不加點心|不要點心|不用點心|不需要點心/.test(t)){patch.richness='none';patch.fixedSnacks=[];recognized.push('不另外要求點心');}
     else if(/很豐富|超豐富|豐盛|很多點心/.test(t)){patch.richness='rich';recognized.push('點心：很豐富');}
     else if(/剛剛好|適量點心|豐富一點|豐富點/.test(t)){patch.richness='normal';recognized.push('點心：剛剛好');}
     else if(/有一點|一點點心|少量點心|點心.{0,5}(?:不要太多|少一點)/.test(t)){patch.richness='light';recognized.push('點心：有一點');}
