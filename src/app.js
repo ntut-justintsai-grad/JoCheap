@@ -104,7 +104,7 @@
     const data=snapshots[state.mode],now=Date.now(),checked=data.offers.filter(o=>F.verificationCheck(o,now).allowed).length;
     const versions=F.planningOffers(data,{dataScope:'all'},now),priced=new Set(versions.filter(o=>F.recommendationCheck(data,o,now).allowed).map(o=>o.id)).size;
     $('trust-summary').hidden=state.mode==='demo';
-    $('trust-summary').textContent=`收錄 ${data.offers.length} 個優惠碼，${priced} 個有可計價版本（依日期與資格再篩選）。預設納入所有來源估算；${checked} 張另有仍適用的官方基本配置核對。來源不同的版本分開計算，不混合餐點與價格。`;
+    $('trust-summary').textContent=`收錄 ${data.offers.length} 個優惠碼，${priced} 個有可計價版本（依日期與資格再篩選）。肯德基僅採官方 API 上游快照；必勝客按各來源版本估算。${checked?checked+' 張另有仍適用的官方基本配置核對。':''}來源不同的版本分開計算，不混合餐點與價格。`;
     return {checked,priced};
   }
   function sourceUI(){
@@ -112,8 +112,9 @@
     $('offer-count').textContent=data.offers.length;$('dataset-label').textContent=state.mode==='demo'?'合成示範・不能兌換':'每週更新・全來源估算';$('snapshot-date').textContent=(state.mode==='demo'?'範例資料':'資料讀取 ')+dateTime(data.generatedAt);$('demo-notice').hidden=state.mode!=='demo';
     const div=$('source-content');div.replaceChildren(h('p',{class:'dialog-note'},state.mode==='demo'?'合成資料供測試與體驗，不能兌換。':'所有優惠碼均納入搜尋；有完整餐點及確定價格的來源版本均可估算。官方核對是額外標示，不是預設的推薦門檻。來源有差異的券會顯示各版本，缺價或未完整辨識的部分保留原文。'));
     div.append(h('p',{class:'dialog-note'},`收錄 ${data.offers.length} 個品牌／優惠碼；${counts.priced} 個有可計價版本，${counts.checked} 張另有適用中的官方基本配置核對。可實際配餐數量還會依時間、品牌、通路及資格篩選。`));
-    div.append(h('p',{class:'dialog-note'},'KCouper 由第三方維護，原始資料取自肯德基官方點餐 API，並計算預設餐點總價及整理替換差額。它不是肯德基經營的網站，也不代表每張券今天都重新查過。'),safeLink('https://github.com/Winedays/KCouper/blob/master/script/gatherer/coupon.py','KCouper 抓取與換算程式'));
+    div.append(h('p',{class:'dialog-note'},'肯德基僅使用「官方點餐 API → KCouper 公開快照」這條資料鏈，已移除其他整理站的肯德基餐點與價目。本站目前讀取 KCouper 快照，並非直接逐券查詢官方 API。KCouper 由第三方維護，會整理預設餐點總價及替換差額；本站讀取時間不代表每張券當天重新查過。'),safeLink('https://github.com/Winedays/KCouper/blob/master/script/gatherer/coupon.py','KCouper 抓取與換算程式'));
     div.append(h('p',{class:'dialog-note'},'上游每日快速更新會保留未過期舊券，每週另有完整抓取。本站每週日 08:17（台北）更新解析；來源更新、本站讀取與逐券核對時間分開呈現。'));
+    div.append(h('p',{class:'dialog-note'},'必勝客已實測官方券碼查詢介面，可回傳有效狀態與商品 ID；完整餐點、價格與選項需另讀官網訂餐頁。尚未用此介面全面替換現有必勝客來源。'),safeLink('https://github.com/ntut-justintsai-grad/JoCheap/blob/main/docs/pizzahut-api.md','必勝客 API 實測結果'));
     for(const source of data.sources||[])div.append(h('div',{class:'source-block'},h('strong',{},brandName(source.brand)+'・'+source.sourcePublisher),h('p',{},'最後成功讀取：'+dateTime(source.lastSuccessAt)+'（台北）'),h('p',{},`擷取 ${source.parsedCount??'—'} 列・${source.status}`),h('p',{},source.errorSummary||'來源原文與版本差異保留供查核。'),safeLink(source.sourceUrl,'查看公開來源')));
     div.append(safeLink('https://github.com/ntut-justintsai-grad/JoCheap/blob/main/data/quality_report.json','完整資料稽核紀錄'),h('p',{class:'dialog-note'},'估算未確認的限購、門市供應與分筆購買需於使用前核對；已知不符條件仍會排除。週更新失敗保留前次資料與原讀取時間，不改成空資料。'));
   }

@@ -8,13 +8,17 @@ from food_parser import atomic,add,CATALOG,norm
 from ordering_rules import parse_ordering
 from data_quality import meal_issues
 
-FEEDS=[
+PARSER_FEEDS=[
  dict(id='talk-kfc',brand='KFC',publisher='好康情報誌',url='https://info.talk.tw/kfc-coupon/',format='talk'),
  dict(id='talk-ph',brand='PH',publisher='好康情報誌',url='https://info.talk.tw/pizzahut-coupon/',format='talk'),
  dict(id='calling-kfc',brand='KFC',publisher='Calling Taiwan',url='https://www.callingtaiwan.com.tw/kfc-coupon-code/',format='calling'),
  dict(id='calling-ph',brand='PH',publisher='Calling Taiwan',url='https://www.callingtaiwan.com.tw/pizzahut-coupon-code/',format='calling'),
  dict(id='kcouper',brand='KFC',publisher='KCouper 公開資料',url='https://winedays.github.io/KCouper/coupon.js',format='kcouper'),
 ]
+
+# Production policy: KFC uses only the KFC-API-derived KCouper snapshot.
+# Historical parser definitions remain available to regression fixtures.
+FEEDS=[f for f in PARSER_FEEDS if f['brand']=='PH' or f['id']=='kcouper']
 
 def windows(text):
     s=unicodedata.normalize('NFKC',text)

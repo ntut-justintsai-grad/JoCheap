@@ -80,12 +80,12 @@ class OfficialVerificationTests(unittest.TestCase):
 
     def test_unknown_foods_and_invalid_choices_are_kept_for_review(self):
         rec=dict(code='X',text='咔啦雞腿堡 2顆原味蛋撻',priceMinor=10000,priceType='fixed',windows=[])
-        offer=c.make_offer(rec,c.FEEDS[2],STAMP)
+        offer=c.make_offer(rec,c.PARSER_FEEDS[2],STAMP)
         self.assertEqual(offer['dataStatus'],'pending')
         self.assertTrue(meal_issues(offer['variants']))
         self.assertEqual(offer['observations'][0]['text'],rec['text'])
         raw=dict(name='X',price=100,items=[dict(name='2塊咔啦脆雞',count=1,addition_price=0,flavors=[dict(name='紙包雞',addition_price=None)])])
-        offer=c.make_offer(dict(rec,text='X',structured=raw),c.FEEDS[4],STAMP)
+        offer=c.make_offer(dict(rec,text='X',structured=raw),c.PARSER_FEEDS[4],STAMP)
         self.assertEqual(offer['dataStatus'],'pending');self.assertIn('不能略過選項',offer['reviewReason'])
         with self.assertRaises(ValueError):c.parse_meal('咔啦脆雞 × 2（未完成','KFC')
 

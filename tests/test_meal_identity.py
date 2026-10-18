@@ -13,7 +13,7 @@ class MealIdentityTests(unittest.TestCase):
     def test_real_26900_uses_structured_contents_without_guessing_from_legacy_title(self):
         snapshot=json.loads((Path(__file__).parent/'fixtures/paper_chicken_20261017.json').read_text())
         row=snapshot['rawRecords'][0]
-        feed=next(f for f in c.FEEDS if f['id']==row['sourceId'])
+        feed=next(f for f in c.PARSER_FEEDS if f['id']==row['sourceId'])
         offer=c.make_offer(row['record'],feed,'2026-10-17T00:00:00+00:00')
         self.assertEqual(offer['dataStatus'],'estimate')
         self.assertEqual(offer['sourceMetadata']['compositionBasis'],'structured_items')
@@ -28,8 +28,8 @@ class MealIdentityTests(unittest.TestCase):
 
     def test_different_meals_in_different_sources_remain_a_conflict(self):
         row=dict(code='12345',text='咔啦脆雞 × 2',priceMinor=9900,priceType='fixed',windows=[])
-        a=c.make_offer(row,c.FEEDS[2],'now')
-        b=c.make_offer(dict(row,text='香草紙包雞 × 1'),c.FEEDS[0],'now')
+        a=c.make_offer(row,c.PARSER_FEEDS[2],'now')
+        b=c.make_offer(dict(row,text='香草紙包雞 × 1'),c.PARSER_FEEDS[0],'now')
         merged=c.merge([a,b],{},'now')[0]
         self.assertEqual(merged['dataStatus'],'conflict')
         self.assertEqual(len(merged['observations']),2)

@@ -20,9 +20,28 @@ def fetch(url):
         if len(body)>8_000_000:raise ValueError('來源超過 8 MB')
     return body.decode('utf-8-sig')
 
-def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
+def active_previous(previous,feeds,stamp):
+    """Retired feeds cannot return through the last-success fallback."""
+    urls={f['url'] for f in feeds};ids={f['id'] for f in feeds};out=copy.deepcopy(previous);kept=[]
+    for root in previous.get('offers',[]):
+        observations=root.get('observations',[])
+        if root.get('provenance',{}).get('sourceUrl') in urls and all(o.get('sourceUrl') in urls for o in observations):
+            kept.append(copy.deepcopy(root));continue
+        rows=[]
+        for version in root.get('sourceVersions',[]):
+            if version.get('provenance',{}).get('sourceUrl') not in urls:continue
+            row=copy.deepcopy(version)
+            row['observations']=[copy.deepcopy(o) for o in observations if o.get('contentHash')==row['provenance'].get('contentHash')]
+            if row['observations']:rows.append(row)
+        kept.extend(merge(rows,{},stamp))
+    out['offers']=kept;out['sources']=[s for s in out.get('sources',[]) if s.get('sourceUrl') in urls or s.get('sourceId') in ids]
+    return out
+
+def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None,feeds=None):
+    feeds=FEEDS if feeds is None else feeds
+    previous=active_previous(previous,feeds,stamp)
     all_records=[];source_status=[];observations=[]
-    for feed in FEEDS:
+    for feed in feeds:
         status=dict(brand=feed['brand'],sourceId=feed['id'],sourceUrl=feed['url'],sourcePublisher=feed['publisher'],sourceType='public_dataset' if feed['format']=='kcouper' else 'aggregator',lastAttemptAt=stamp,coverage='parsed_public_feed')
         old=[r for r in previous_records if r['sourceId']==feed['id']]
         try:
@@ -40,7 +59,8 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
     if not observations:return previous,all_records,dict(status='all_failed',sources=source_status)
     data=copy.deepcopy(previous)
     data.update(schemaVersion=2,datasetVersion=stamp,generatedAt=stamp,updateStatus='crawled',coverage='public_feeds_with_review_queue',sources=source_status)
-    data['parserVersion']=4
+    data['parserVersion']=5
+    data['sourcePolicy']=dict(KFC=dict(sourceIds=['kcouper'],upstream='KFC official ordering API',transport='kcouper_published_snapshot'),PH=dict(sourceIds=[f['id'] for f in feeds if f['brand']=='PH'],apiIntegration='research_only'))
     data['offers']=merge(observations,previous,stamp)
     reviews=ROOT/'data/ordering_reviews.json'
     if reviews.exists():apply_reviewed_ordering(data,json.loads(reviews.read_text(encoding='utf-8')),stamp)
@@ -64,7 +84,7 @@ def crawl(previous,previous_records,fetcher,stamp,official_fetcher=None):
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--cache-dir');parser.add_argument('--if-due',action='store_true');parser.add_argument('--snapshot',default=str(ROOT/'data/offers.json'));args=parser.parse_args()
     target=Path(args.snapshot);old=json.loads(target.read_text(encoding='utf-8'))
-    if args.if_due and old.get('parserVersion')==4:
+    if args.if_due and old.get('parserVersion')==5:
         try:
             age=(datetime.now(timezone.utc)-datetime.fromisoformat(old['generatedAt'].replace('Z','+00:00'))).total_seconds()
             if 0<=age<7*86400:

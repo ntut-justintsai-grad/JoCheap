@@ -1,6 +1,8 @@
 # KCouper 優惠券來源
 
-2026-10-18 依上游公開程式確認。KCouper 是第三方維護的整理工具，上游是肯德基官方點餐 API。
+2026-10-18：肯德基正式資料僅使用此資料鏈，已停用其他整理站的肯德基記載。本站讀取 KCouper 公開快照，並非直接逐券呼叫官方 API。
+
+依上游公開程式確認。KCouper 是第三方維護的整理工具，上游是肯德基官方點餐 API。
 
 [抓取與轉換程式](https://github.com/Winedays/KCouper/blob/master/script/gatherer/coupon.py)：
 

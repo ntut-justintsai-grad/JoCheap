@@ -2,12 +2,12 @@
 const assert=require('node:assert/strict'),F=require('../src/engine.js'),data=require('../data/offers.json');
 assert.equal(data.recommendationPolicy?.allowAllSources,true);
 assert.equal(data.recommendationPolicy?.requireOfficial,false);
-assert.equal(data.parserVersion,4);
+assert.equal(data.parserVersion,5);
 assert.equal(data.qualityReport?.total,data.offers.length);
 const now=Date.parse(data.generatedAt),checked=data.offers.filter(o=>F.verificationCheck(o,now).allowed);
 assert.equal(checked.length,data.officialRefresh.checked||0);
 for(const o of checked){assert.equal(o.dataStatus,'official');assert(o.variants.every(v=>!v.optionGroups?.length));assert.equal(o.limits.maxUsesPerUserPerDay,1);}
-for(const o of data.offers){assert(o.sourceVersions?.length,'Missing versions: '+o.id);assert.equal(o.sourceVersions.length,o.observations.length);}
+for(const o of data.offers){if(o.brand==='KFC'){assert(o.observations.every(x=>x.sourceId==='kcouper'));assert(o.sourceVersions.every(x=>x.provenance.sourceUrl==='https://winedays.github.io/KCouper/coupon.js'));}assert(o.sourceVersions?.length,'Missing versions: '+o.id);assert.equal(o.sourceVersions.length,o.observations.length);}
 const req={demand:Object.fromEntries(['chicken','burgerMain','paperChicken','pasta','pizza9','pizza13','tart','drinkServing'].map(k=>[k,1])),people:6,budgetMinor:null,brands:['KFC','PH'],cross:true,channel:'takeaway',orderMethod:'official_web',paymentMethod:'any',dataScope:'all',allowUnknownOrdering:true,at:data.generatedAt,maxOrders:12,estimate:true,avoid:[],allowExtras:true};
 const {candidates}=F.chooseCandidates(data,req,now);
 assert(candidates.length>5);

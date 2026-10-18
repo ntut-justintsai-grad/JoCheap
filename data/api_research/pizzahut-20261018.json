@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-10-18T04:51:50+00:00",
+  "purpose": "anonymous public coupon lookup; no cart addition or order submission",
+  "endpoint": "https://www.pizzahut.com.tw/order/?m=ajax",
+  "method": "POST",
+  "form": {
+    "mode": "get_dgtAll",
+    "type_id": "",
+    "dType": "plu",
+    "txtPLU": "<coupon code>"
+  },
+  "samples": [
+    {
+      "code": "16448",
+      "response": {
+        "success": true,
+        "data": {
+          "type": "f",
+          "dType": "plu",
+          "type_id": 1025,
+          "p_id": 19169,
+          "local": 1
+        }
+      }
+    },
+    {
+      "code": "93034",
+      "response": {
+        "errCode": 101,
+        "errMsg": "代碼輸入錯誤，請重新輸入！！"
+      }
+    },
+    {
+      "code": "00000",
+      "response": {
+        "errCode": 101,
+        "errMsg": "代碼輸入錯誤，請重新輸入！！"
+      }
+    }
+  ],
+  "detail": {
+    "code": "16448",
+    "sourceUrl": "https://www.pizzahut.com.tw/order/?mode=step_2&type_id=1025&cno=16448",
+    "priceMinor": 25000,
+    "pizzaSizeInches": 9,
+    "pizzaCount": 2,
+    "flavorGroups": [
+      {
+        "pick": 1,
+        "options": 7
+      },
+      {
+        "pick": 1,
+        "options": 6
+      }
+    ],
+    "structuredContext": {
+      "storeCode": "346",
+      "fulfilment": "takeout",
+      "date": "2026-10-19",
+      "variables": [
+        "psidss",
+        "pprcss",
+        "ctidss",
+        "exTopping"
+      ],
+      "selectCount": 26
+    }
+  },
+  "limits": [
+    "The code lookup JSON does not contain recipes or prices.",
+    "No official all-codes JSON endpoint was identified.",
+    "Menu structure was observed for one store/date/coupon, not all stores or coupon codes.",
+    "Frontend endpoint is not a documented stable developer API.",
+    "Research only; production Pizza Hut feeds unchanged."
+  ]
+}

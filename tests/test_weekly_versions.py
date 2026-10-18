@@ -18,8 +18,8 @@ class WeeklyVersionTests(unittest.TestCase):
         self.assertEqual(atomic('雙色轉轉QQ球',2)[0],{'qqPack':2})
 
     def test_merge_preserves_each_recipe_price_and_source_as_one_version(self):
-        a=c.make_offer(dict(code='12345',text='咔啦脆雞 × 2',priceMinor=9900,priceType='fixed',windows=[]),c.FEEDS[2],'2026-10-18T00:00:00Z')
-        b=c.make_offer(dict(code='12345',text='香草紙包雞 × 1',priceMinor=13900,priceType='fixed',windows=[]),c.FEEDS[0],'2026-10-18T00:00:00Z')
+        a=c.make_offer(dict(code='12345',text='咔啦脆雞 × 2',priceMinor=9900,priceType='fixed',windows=[]),c.PARSER_FEEDS[2],'2026-10-18T00:00:00Z')
+        b=c.make_offer(dict(code='12345',text='香草紙包雞 × 1',priceMinor=13900,priceType='fixed',windows=[]),c.PARSER_FEEDS[0],'2026-10-18T00:00:00Z')
         merged=c.merge([a,b],{},'now')[0]
         versions=merged['sourceVersions'];self.assertEqual(len(versions),2)
         recipes={(v['variants'][0]['priceMinor'],tuple(v['variants'][0]['items'].items())) for v in versions}
@@ -28,7 +28,7 @@ class WeeklyVersionTests(unittest.TestCase):
 
     def test_push_rebuild_reuses_current_week_snapshot_without_fetching(self):
         with tempfile.TemporaryDirectory() as directory:
-            path=Path(directory)/'offers.json';snapshot={'parserVersion':4,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
+            path=Path(directory)/'offers.json';snapshot={'parserVersion':5,'generatedAt':datetime.now(timezone.utc).isoformat()};path.write_text(json.dumps(snapshot))
             p=subprocess.run([sys.executable,str(ROOT/'tools/crawl_catalog.py'),'--if-due','--snapshot',str(path)],capture_output=True,text=True,timeout=5)
             self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(json.loads(path.read_text()),snapshot)
             self.assertFalse((path.parent/'source_records.json').exists())

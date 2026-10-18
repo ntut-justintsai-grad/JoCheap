@@ -1,5 +1,5 @@
 {
-  "researchedAt": "2026-10-17",
+  "researchedAt": "2026-10-18",
   "checkoutVerified": false,
   "cases": [
     {
@@ -16,15 +16,13 @@
     {
       "brand": "KFC",
       "type": "recipe_conflict",
-      "title": "紙包雞與炸雞內容有來源差異",
-      "finding": "16298 在整理頁仍記載香草紙包雞與炸雞；KCouper 公開資料的對應槽則為兩塊咔啦脆雞，可加 13 元換麻油紙包雞。這是來源衝突，該碼不參與自動推薦。",
-      "status": "conflict_not_checkout_verified",
+      "title": "紙包雞以 API 預設與替換為準",
+      "finding": "肯德基僅採用 KCouper 轉出的官方 API 餐點與價目。活動名稱若提紙包雞，但預設為兩塊炸雞，須實際選紙包雞替換並加入來源差額；不再混用其他整理站內容。",
+      "status": "api_derived_snapshot",
       "sourceUrls": [
-        "https://winedays.github.io/KCouper/coupon.js",
-        "https://www.callingtaiwan.com.tw/kfc-coupon-code/",
-        "https://info.talk.tw/kfc-coupon/"
+        "https://winedays.github.io/KCouper/coupon.js"
       ],
-      "limit": "需向指定門市或官方點餐結果確認，不能把舊的紙包雞內容直接沿用到新配方。"
+      "limit": "本站讀取上游快照，並非本次直接查詢每張券；仍受上游設定門市與更新方式影響。"
     },
     {
       "brand": "KFC",
@@ -83,6 +81,18 @@
         "https://www.kfcclub.com.tw/meal/TA9853?couponProduct=16298"
       ],
       "limit": "這是公開餐點資料的查核，不是指定門市的成功結帳驗證；額外加購清單為空時也不推定所有門市都沒有加購。"
+    },
+    {
+      "brand": "PH",
+      "type": "api_research",
+      "title": "官方券碼查詢介面已實測",
+      "finding": "POST /order/?m=ajax，mode=get_dgtAll 可驗證券碼並取得商品 ID。16448 回傳有效，官方套餐頁另列兩個9吋披薩與250元。查碼 JSON 本身未提供餐點、價格與所有替換差額。",
+      "status": "official_readonly_api_tested",
+      "sourceUrls": [
+        "https://www.pizzahut.com.tw/promotions/?mode=cpSch&type=plu",
+        "https://www.pizzahut.com.tw/order/?mode=step_2&type_id=1025&cno=16448"
+      ],
+      "limit": "這是查碼介面，未找到可一次取得全部券碼與完整配置的官方公開 JSON API；必勝客目前仍保留既有資料來源。"
     }
   ]
 }
