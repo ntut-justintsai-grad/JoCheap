@@ -13,6 +13,7 @@ from official_verification import refresh_official,fetch_official
 from pizzahut_lookup import refresh as refresh_pizzahut,fetch_coupon,save_cache
 from pizzahut_menu import update_file as update_menu,apply as apply_menu
 from kfc_description import refresh as refresh_kfc,fetch_detail
+from kfc_menu import update_file as update_kfc_menu,apply as apply_kfc_menu
 
 ROOT=Path(__file__).resolve().parent.parent
 def fetch(url):
@@ -96,6 +97,10 @@ def main():
                 if menu_cache.exists():
                     apply_menu(old,json.loads(menu_cache.read_text(encoding='utf-8')))
                     target.write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+                kfc_menu_cache=target.parent/'kfc_menu.json'
+                if kfc_menu_cache.exists():
+                    apply_kfc_menu(old,json.loads(kfc_menu_cache.read_text(encoding='utf-8')))
+                    target.write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
                 return
         except (KeyError,ValueError):pass
     cache=target.parent/'source_records.json'
@@ -131,7 +136,9 @@ def main():
     data['qualityReport']=audit_report(data,stamp)
     target.with_suffix('.previous.json').write_text(json.dumps(old,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     target.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    if not args.cache_dir:update_menu(target,stamp=stamp)
+    if not args.cache_dir:
+        update_menu(target,stamp=stamp)
+        update_kfc_menu(target,stamp=stamp)
     cache.write_text(json.dumps(records,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     (target.parent/'crawl_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     (target.parent/'quality_report.json').write_text(json.dumps(data['qualityReport'],ensure_ascii=False,indent=2),encoding='utf-8')

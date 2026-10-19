@@ -24,7 +24,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Load reviewed official side-menu snapshot
-        run: python tools/pizzahut_menu.py --apply-cache
+        run: |
+          python tools/pizzahut_menu.py --apply-cache
+          python tools/kfc_menu.py --apply-cache
       - name: Validate independent calculation and parser fixtures
         run: |
           npm test
@@ -52,7 +54,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/offers.json data/offers.previous.json data/source_records.json data/crawl_report.json data/review_queue.json data/quality_report.json data/pizzahut_lookup.json data/kfc_descriptions.json data/pizzahut_menu.json
+          git add index.html data/offers.json data/offers.previous.json data/source_records.json data/crawl_report.json data/review_queue.json data/quality_report.json data/pizzahut_lookup.json data/kfc_descriptions.json data/pizzahut_menu.json data/kfc_menu.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh coupon snapshots and source status"
             git push

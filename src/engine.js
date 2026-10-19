@@ -47,7 +47,7 @@
     snackPortions:{name:'分享點心',unit:'小份',emoji:'🍟'}
   };
   const physicalIds=Object.keys(ITEMS).filter(k=>!['individual','burgerMain','drinkServing','snackPortions'].includes(k));
-  function extendItems(dataset){for(const [id,meta] of Object.entries(dataset.foodCatalog||{}))if(!ITEMS[id]&&/^(?:food_[a-f0-9]{12}|[a-zA-Z][a-zA-Z0-9]*)$/.test(id)){ITEMS[id]=meta;physicalIds.push(id);}}
+  function extendItems(dataset){for(const [id,meta] of Object.entries(dataset.foodCatalog||{}))if(!ITEMS[id]&&/^(?:food_[a-f0-9]{12}|[a-zA-Z][a-zA-Z0-9]*)$/.test(id)){ITEMS[id]=meta;physicalIds.push(id);}root.Planner?.extendSnacks(dataset);}
   const drinkMatch=(d,preference='any')=>d.size!=='bottle'&&(preference==='any'?d.kind!=='soup':preference==='soda'?['cola','soda'].includes(d.kind):preference==='coldMilkTea'?d.kind==='milkTea'&&d.name.includes('冰'):preference==='hotMilkTea'?d.kind==='milkTea'&&d.name.includes('熱'):d.kind===preference);
   function drinkCount(beverages,preference){return sum((beverages||[]).filter(d=>drinkMatch(d,preference)).map(d=>d.quantity));}
   function applyOptions(variant,selections={},at=null){
@@ -70,7 +70,7 @@
     let choices=[{}],complete=true;
     const keys=Object.keys(r.demand).filter(k=>r.demand[k]>0&&!['snackPortions','drinkServing'].includes(k)).map(k=>k==='burgerMain'?'burger':k);
     const meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
-    const snackSignature=o=>Object.entries(o.items).filter(([k])=>meta[k]).map(([k,n])=>[meta[k].group,n/meta[k].portion]).sort();
+    const snackSignature=o=>Object.entries(o.items).filter(([k])=>meta[k]&&!meta[k].selectionOnly).map(([k,n])=>[meta[k].group,n/meta[k].portion]).sort();
     for(const g of variant.optionGroups){
       const base=g.options[0],indices=[0],seen=new Map();
       for(let i=0;i<g.options.length;i++){
@@ -230,7 +230,8 @@
   function recommendationCheck(dataset,o,now=Date.now(),r={}){
     if(o.kind==='direct_menu'){
       const m=o.menuSnapshot,checked=Date.parse(m?.checkedAt),until=Date.parse(m?.recheckBy),at=Date.parse(r.at);
-      const valid=o.brand==='PH'&&m?.productId>0&&m.contentSignature===contentSignature(o)&&m.contentHash&&m.sourceUrl?.startsWith('https://www.pizzahut.com.tw/order/?')&&Number.isFinite(checked)&&Number.isFinite(until)&&until>checked&&until-checked<=8*86400000&&now>=checked&&now<until&&(!Number.isFinite(at)||at>=checked&&at<until)&&o.priceType==='fixed'&&o.variants?.length&&o.variants.every(v=>Number.isSafeInteger(v.priceMinor)&&v.priceMinor>0&&Object.keys(v.items||{}).length&&!Object.keys(v.items).some(k=>k.startsWith('food_')));
+      const officialSource=o.brand==='PH'?m?.productId>0&&m.sourceUrl?.startsWith('https://www.pizzahut.com.tw/order/?'):o.brand==='KFC'&&/^[A-Za-z0-9]{1,24}$/.test(m?.productId||'')&&/^https:\/\/www\.kfcclub\.com\.tw\/menu\?menuId=(?:5|184)$/.test(m.sourceUrl||'')&&['takeaway','delivery'].includes(m.channel)&&o.variants?.every(v=>v.channels?.length===1&&v.channels[0]===m.channel);
+      const valid=officialSource&&m.contentSignature===contentSignature(o)&&m.contentHash&&Number.isFinite(checked)&&Number.isFinite(until)&&until>checked&&until-checked<=8*86400000&&now>=checked&&now<until&&(!Number.isFinite(at)||at>=checked&&at<until)&&o.priceType==='fixed'&&o.variants?.length&&o.variants.every(v=>Number.isSafeInteger(v.priceMinor)&&v.priceMinor>0&&Object.keys(v.items||{}).length&&!Object.keys(v.items).some(k=>k.startsWith('food_')));
       return {allowed:!!valid&&r.dataScope!=='official',reason:valid?'官方單點菜單・供應以門市為準':'官方單點菜單待更新'};
     }
     if(dataset.mode==='demo')return {allowed:!['pending','conflict'].includes(o.dataStatus),reason:'合成示範，不能兌換'};
@@ -326,8 +327,8 @@
         items.burgerMain=Math.min(items.burger||0,v.individualMainItems?.burger??(!v.individualMainItems?v.individualMains||0:0));
         items.drinkServing=v.beverages?drinkCount(v.beverages,r.drinkPreference):r.drinkPreference&&r.drinkPreference!=='any'?0:(items.drinkSmall||0)+(items.drinkMedium||0)+(items.milkTeaCup||0);
         const meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
-        items.snackPortions=sum(Object.entries(v.items).map(([k,n])=>meta[k]?n/meta[k].portion:0));
-        const snackGroups=[...new Set(Object.entries(v.items).filter(([k,n])=>n>0&&meta[k]).map(([k])=>meta[k].group))];
+        items.snackPortions=sum(Object.entries(v.items).map(([k,n])=>meta[k]&&!meta[k].selectionOnly?n/meta[k].portion:0));
+        const snackGroups=[...new Set(Object.entries(v.items).filter(([k,n])=>n>0&&meta[k]&&!meta[k].selectionOnly).map(([k])=>meta[k].group))];
         if(r.pastaPreference&&r.pastaPreference!=='any'&&items.pasta&&!(v.pastaTags||[]).includes(r.pastaPreference))continue;
         if(r.pizzaPreference&&(items.pizza9||items.pizza13)){
           if(!v.pizzaSlots&&((r.pizzaPreference.minKinds||0)>0||r.pizzaPreference.tag!=='any'))continue;

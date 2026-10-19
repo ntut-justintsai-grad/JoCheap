@@ -114,7 +114,7 @@ def apply(data,cache):
    menu=dict(productId=pid,checkedAt=p['checkedAt'],recheckBy=review,sourceUrl=p['sourceUrl'],contentHash=p['contentHash'],limited=limited,endUnknown=True,limitedEvidence=evidence if pid in {18128,18702,18703} else None)
    offers.append(dict(id='ph-menu-'+str(pid),brand='PH',kind='direct_menu',code='',title=p['name'],rawText=p['name'],dataStatus='estimate',priceType='fixed',displayPriceMinor=p['priceMinor'],officialUrl=p['officialUrl'],variants=[dict(id='menu',priceMinor=p['priceMinor'],items=items,channels=['takeaway'],beverages=[],mainDescription=p['name'])],ordering=dict(platforms=['official_web'],fulfilments=['takeaway'],status='known'),validity=dict(validWindows=[{'from':(checked+timedelta(hours=8)).date().isoformat()}],timezone='Asia/Taipei'),eligibility={},limits={},conditions=conditions,provenance=dict(sourceUrl=p['sourceUrl'],sourcePublisher='必勝客官方菜單',fetchedAt=p['checkedAt']),menuSnapshot=menu,sourceVersionKey='official-menu'))
  for offer in offers:offer['menuSnapshot']['contentSignature']=content_signature(offer)
- data['menuOffers']=offers;data['foodCatalog'].update(food_catalog())
+ data['menuOffers']=[o for o in data.get('menuOffers',[]) if o['brand']!='PH']+offers;data['foodCatalog'].update(food_catalog())
  data['pizzahutMenu']=dict(attemptedAt=cache.get('attemptedAt'),products=len(offers),foods=len(foods),pending=pending,errors=cache.get('errors',[]))
  return data['pizzahutMenu']
 

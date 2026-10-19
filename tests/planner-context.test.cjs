@@ -75,3 +75,18 @@ test('period badges require both the selected meal time and the selected food wi
  assert.equal(P.periodStatus({...chicken,unknown:true},regular,780),'unknown');
  assert.equal(P.periodStatus({...chicken,requested:[]},breakfast,490),'no_selection');
 });
+test('channel-only omissions remain visible with an explicit takeaway switch, without mixing brands',()=>{
+ const data={...demo,offers:[offer('paper','KFC',{paperChicken:1,tart:1}),offer('pizza','PH',{pizza9:1})]};
+ const current=P.planningContext(data,{...request,channel:'delivery',brands:['KFC']});
+ const takeaway=P.planningContext(data,{...request,channel:'takeaway',brands:['KFC']});
+ const choices=P.selectionChoices(current,takeaway);
+ assert.deepEqual(choices.mains,[{id:'wrapped',switchChannel:'takeaway'}]);
+ assert.deepEqual(choices.snacks,[{id:'tart',switchChannel:'takeaway'}]);
+ assert(!current.items.includes('paperChicken'));
+ const phCurrent=P.planningContext(data,{...request,channel:'delivery',brands:['PH']});
+ const phReference=P.planningContext(data,{...request,channel:'takeaway',brands:['PH']});
+ assert(!P.selectionChoices(phCurrent,phReference).mains.some(c=>c.id==='wrapped'));
+ assert.equal(P.selectionChoices(takeaway,takeaway).mains[0].switchChannel,null);
+ const expired=P.planningContext(data,{...request,at:'2026-10-21T13:00:00+08:00'});
+ assert.equal(P.selectionChoices(expired).mains.length,0);
+});

@@ -28,6 +28,7 @@
     return includes(schedule.windows)?'matching':'unavailable';
   }
   function planningContext(dataset,request,now=Date.now()){
+    F.extendItems(dataset);extendSnacks(dataset);
     const r={estimate:true,dataScope:'all',allowUnknownOrdering:true,orderMethod:'auto',paymentMethod:'any',...request};
     const date=F.taipeiDate(Date.parse(r.at)),records=[],items=new Set();
     for(const o of F.planningOffers(dataset,r,now)){
@@ -56,7 +57,12 @@
       return {brand,windows,unknown,requested,periods,allWindows,allUnknown,allPeriods};
     });
     const mainTimes=Object.fromEntries(Object.entries(MAIN_ITEMS).map(([main,ids])=>{const matches=records.filter(o=>ids.some(id=>o.items.has(id)));return [main,{windows:mergeWindows(matches.flatMap(o=>o.windows)),unknown:matches.some(o=>o.unknown)}];}));
-    return {date,mainTimes,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
+    const itemTimes=Object.fromEntries([...items].map(id=>{const matches=records.filter(o=>o.items.has(id));return [id,{windows:mergeWindows(matches.flatMap(o=>o.windows)),unknown:matches.some(o=>o.unknown)}];}));
+    return {date,mainTimes,itemTimes,items:[...items],mains:Object.keys(MAIN_ITEMS).filter(k=>MAIN_ITEMS[k].some(id=>items.has(id))),snacks:Object.keys(SNACK_META).filter(k=>items.has(k)),schedules};
+  }
+  // Alternatives are visible choices, not eligible offers for the current channel.
+  function selectionChoices(current,takeaway=null){
+    return Object.fromEntries(['mains','snacks'].map(kind=>[kind,[...new Set([...(current[kind]||[]),...(takeaway?.[kind]||[])])].map(id=>({id,switchChannel:current[kind].includes(id)?null:'takeaway'}))]));
   }
   function planTimeWindows(plan,at){
     const date=F.taipeiDate(Date.parse(at));let windows=[[0,1440]],unknown=false;
@@ -88,6 +94,9 @@
     ['phSeaLarge','綜合拼盤',1,1,true],['phHotLarge','綜合拼盤',1,1,true],['phRoastPlatter','綜合拼盤',1,1,true],['phSeaSmall','綜合拼盤',1,1,true],['phHotSmall','綜合拼盤',1,1,true],['phTaiwanTrio','綜合拼盤',1,1,true],
     ['bbqLegThighPack','烤雞',1,1,true],['bbqWingDrumPack','烤雞',1,1,true],['basque4','蛋糕',1,1,true],['basque8','蛋糕',1,1,true],['coldCheeseGift','起司塔',1,1,true],['warmCheeseGift','起司塔',1,1,true]
   ])SNACK_META[id]={brand:'PH',group,portion,perPerson,perGroup:!!perGroup};
+  function extendSnacks(dataset){
+    for(const [id,meta] of Object.entries(dataset.snackCatalog||{}))if(F.ITEMS[id]&&['KFC','PH'].includes(meta.brand)&&typeof meta.group==='string'&&Number.isFinite(meta.portion)&&meta.portion>0)SNACK_META[id]={...meta};
+  }
   function buildSimple(p){
     const n=Number(p.people);if(!Number.isInteger(n)||n<1||n>30)throw Error('用餐人數請填 1～30 人。');
     const snack=p.mealMode==='snack',mains=normalizeMains(p),family=snack?'snack':mains.length===1?mains[0]:'mixed',rich=RICHNESS[p.richness||'normal'];if(!rich)throw Error('請選擇點心程度。');
@@ -106,7 +115,7 @@
     const personal=mains.some(k=>!['pizza','chicken'].includes(k));
     if(p.drinks??personal)demand.drinkServing=n;
     for(const id of p.fixedSnacks||[]){if(!SNACK_META[id])continue;demand[id]=SNACK_META[id].perGroup?1:Math.ceil(n*(SNACK_META[id].perPerson??F.SNACKS[id]?.perPerson??.5));}
-    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
+    const snackGoal={minTypes:snack?(p.fixedSnacks?.length?Math.min(3,new Set(p.fixedSnacks.filter(id=>SNACK_META[id]&&!SNACK_META[id].selectionOnly).map(id=>SNACK_META[id].group)).size):rich.types?Math.min(rich.types,n):0):rich.types,servings:Math.ceil(n*rich.ratio)};
     if(snackGoal.servings)demand.snackPortions=snackGoal.servings;
     if(Object.values(demand).some(n=>!Number.isInteger(n)||n<0||n>60))throw Error('建議份量超過目前每項 60 的上限，請減少人數或調整食量。');
     const kinds=pizza?Number(p.flavorKinds??0):0;if(!Number.isInteger(kinds)||kinds<0||kinds>3)throw Error('披薩口味請選不指定或至少 1～3 種。');
@@ -173,5 +182,5 @@
     if(!recognized.length)warnings.push('尚未辨識到可套用條件，請補充人數、主餐、預算或點心程度。');
     return {patch,recognized,warnings,text:t,method:'local_rules',partial:true};
   }
-  const api={FAMILY,MAINS,MAIN_ITEMS,RICHNESS,SNACK_META,planningContext,planTimeWindows,formatWindows,periodStatus,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
+  const api={FAMILY,MAINS,MAIN_ITEMS,RICHNESS,SNACK_META,extendSnacks,planningContext,selectionChoices,planTimeWindows,formatWindows,periodStatus,normalizeMains,validateMainDemand,buildSimple,interpret,number};root.Planner=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
