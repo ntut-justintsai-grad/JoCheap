@@ -14,7 +14,7 @@
   function syncAt(){const date=$('order-date').value,time=$('order-time').value;$('at').value=date&&time?date+'T'+time:'';}
   function contextMenu(demand={},overrides={}){
     const request={brands:$('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value],at:$('at').value+':00+08:00',channel:$('channel').value,orderMethod:$('order-method').value,paymentMethod:$('payment-method').value,member:$('member').checked,dataScope:$('data-scope').value,demand,...overrides};
-    const key=JSON.stringify([state.mode,{...request,at:request.at.slice(0,10)}]);
+    const key=JSON.stringify([state.mode,request]);
     const cache=state.contextCache||(state.contextCache=new Map());
     if(cache.has(key))return cache.get(key);
     const value=P.planningContext(snapshots[state.mode],request);if(cache.size>=12)cache.clear();cache.set(key,value);return value;
