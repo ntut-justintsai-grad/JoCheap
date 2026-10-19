@@ -167,6 +167,15 @@
     const diagnostic=/^(?:基本組合與套餐價採官方 API|官方查詢參考門市：|點餐明細與餐點說明未能完整配對|來源整理資料，|供餐時段與取餐方式依 KCouper|KCouper 將可用餐期與取餐方式|本次官方查詢失敗，沿用|含未完成對照的餐點；|來源標示起價，升級差額|套餐敘述尚待分解：|活動名稱提及紙包雞；)/;
     return [...new Set((o.conditions||[]).filter(note=>typeof note==='string'&&note.trim()&&!diagnostic.test(note.trim())&&!note.includes('於查詢當下回報售罄；本配置僅供估算')) )];
   }
+  function planContents(plan){
+    // Sum purchased physical foods, including extras. Derived demand counters
+    // (burgerMain, drinkServing, snackPortions) must never count as more food.
+    const totals={};
+    for(const order of plan.orders||[])for(const [id,n] of Object.entries(order.items||{})){
+      if(physicalIds.includes(id)&&Number.isSafeInteger(n)&&n>0)totals[id]=(totals[id]||0)+n;
+    }
+    return Object.fromEntries(physicalIds.filter(id=>totals[id]>0).map(id=>[id,totals[id]]));
+  }
   function mealIdentityIssue(o){
     if(o.sourceMetadata?.compositionBasis==='structured_items')return null;
     const title=[o.title,o.rawText].filter(Boolean).join(' '),variants=o.variants||[];
@@ -404,7 +413,7 @@
         const slot=brandSlots[c.offer.brand]||0;brandSlots[c.offer.brand]=slot+1;
         const fee=r.channel==='delivery'?(r.fees?.[c.offer.brand]?.[slot]??null):0;
         const service=r.channel==='delivery'?(r.serviceFees?.[c.offer.brand]?.[slot]??0):0;
-        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,kind:c.offer.kind||'coupon',menuSnapshot:c.offer.menuSnapshot||null,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderMethod:c.ordering.method||r.orderMethod||'official_web',paymentMethod:c.ordering.paymentMethod||r.paymentMethod||'any',orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,couponLookup:c.offer.couponLookup||null,officialMeal:c.offer.sourceMetadata?.officialMeal||null,validity:c.offer.validity,confidence:sourceConfidence(c.offer,now),sourceVersionKey:c.offer.sourceVersionKey||null,sourceConflict:!!c.offer.sourceConflict,conflictReason:c.offer.conflictReason||null,sourceFetchedAt:c.offer.provenance?.fetchedAt,sourcePublisher:c.offer.provenance?.sourcePublisher,sourceText:c.offer.rawText,sourceUpdatedAt:c.offer.sourceMetadata?.sourceUpdatedAt,conditions:c.offer.conditions||[],choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
+        return {index,feeSlot:slot,brand:c.offer.brand,offerId:c.offer.id,variantId:c.variant.id,code:c.offer.code,kind:c.offer.kind||'coupon',menuSnapshot:c.offer.menuSnapshot||null,title:c.offer.title,items:c.variant.items,base:c.base,mealBase:c.variant.priceMinor,surchargeMinor:c.variant.surchargeMinor||0,beverages:c.variant.beverages||[],optionChoices:c.variant.optionChoices||[],orderMethod:c.ordering.method||r.orderMethod||'official_web',paymentMethod:c.ordering.paymentMethod||r.paymentMethod||'any',orderingStatus:c.ordering.status,orderingNote:c.ordering.reason,fee,service,total:fee===null?null:c.base+fee+service,sourceUrl:c.offer.provenance?.sourceUrl,officialUrl:c.offer.officialUrl,verification:c.offer.verification||null,couponLookup:c.offer.couponLookup||null,officialMeal:c.offer.sourceMetadata?.officialMeal||null,validity:c.offer.validity,confidence:sourceConfidence(c.offer,now),sourceVersionKey:c.offer.sourceVersionKey||null,sourceConflict:!!c.offer.sourceConflict,conflictReason:c.offer.conflictReason||null,sourceFetchedAt:c.offer.provenance?.fetchedAt,sourcePublisher:c.offer.provenance?.sourcePublisher,sourceText:c.offer.rawText,sourceUpdatedAt:c.offer.sourceMetadata?.sourceUpdatedAt,conditions:c.offer.conditions||[],eligibility:c.offer.eligibility||{},limits:c.offer.limits||{},choice:c.variant.choice||null,pizzaChoices:flavorPlan.assignments.filter(a=>a.order===index),mainDescription:c.variant.mainDescription||null};
       });
       const unknown=orders.some(o=>o.total===null),knownSubtotal=sum(orders.map(o=>o.base));
       const total=unknown?null:sum(orders.map(o=>o.total));
@@ -747,6 +756,6 @@
     const unpriced=!result.plans.length&&!suggestions.length&&!result.minimumIgnoringBudget&&!result.fullQuote;
     return {...result,suggestions,unpricedAlternative:unpriced?{items:{...r.demand},label:'完整需求清單（未計價）',note:'這份清單保留原餐點需求，可向官方確認單點價格與供應。請與其他替代配置擇一參考，不直接相加。'}:null,elapsedMs:Date.now()-started};
   }
-  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,couponTerms,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
+  const api={ITEMS,SNACKS,physicalIds,ORDER_METHODS,orderingCheck,extendItems,applyOptions,expandOptions,drinkMatch,drinkCount,buildDemand,validateRequest,isActive,couponTerms,planContents,mealIdentityIssue,contentSignature,verificationCheck,recommendationCheck,couponLookupCheck,sourceConfidence,planningOffers,catalogOffer,catalogChoice,chooseCandidates,assignFlavors,solve,recommend,taipeiDate};
   root.Feast=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

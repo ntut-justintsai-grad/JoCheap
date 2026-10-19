@@ -15,12 +15,14 @@
    let base=choice?.base||o.variants[0],selected=choice?.selected||base,selections=choice?.selections||{};
    const card=h('article',{class:'coupon-card'},h('span',{class:'muted'},brandName(o.brand)+'・'+(o.kind==='direct_menu'?'官方單點':o.code)),h('h3',{},o.title.replace(new RegExp('^'+o.code+'[-－ ]*'),'')));
    if(!eligible)card.append(h('span',{class:'coupon-status'},pair?.status==='invalid'?'目前無法使用':'內容待確認'));
+   const detailContents=h('p',{class:'coupon-selected-contents'});
    const price=h('div',{class:'coupon-price'}),contents=h('p',{class:'coupon-contents'}),drinks=h('p',{class:'helper'}),options=h('div');card.append(price,contents,drinks,options);
    const update=()=>{
     selected=base?F.applyOptions(base,selections,new Date().toISOString()):null;
     const total=selected&&Number.isFinite(selected.priceMinor)?selected.priceMinor+(selected.surchargeMinor||0):null;
     price.textContent=total===null?'價格待確認':money(total)+(o.priceType==='from'?' 起':'');
     contents.textContent=selected?format(selected.items):o.rawText||'餐點內容待確認';
+    detailContents.textContent=selected?'目前選擇：'+format(selected.items):o.rawText||'餐點內容待確認';
     drinks.textContent=selected?.beverages?.map(d=>d.name+' × '+d.quantity).join('、')||'';drinks.hidden=!drinks.textContent;
    };
    const renderOptions=()=>{
@@ -36,7 +38,8 @@
    if(o.variants.length>1){const select=h('select',{'aria-label':o.code+'套餐配置'});o.variants.forEach(v=>select.append(h('option',{value:v.id},v.choice||v.id)));select.value=base.id;select.addEventListener('change',()=>{base=o.variants.find(v=>v.id===select.value);selections={};renderOptions();update();});card.append(h('label',{class:'variant-label'},'餐點選擇',select));}
    if(o.eligibility?.memberRequired)card.append(h('p',{class:'helper'},'需會員資格'));
    const detail=h('details',{class:'coupon-options'},h('summary',{},'餐點與使用細節'));
-   if(o.rawText)detail.append(h('p',{},o.rawText));if(o.reviewReason)detail.append(h('p',{class:'helper'},o.reviewReason));
+   detail.append(detailContents);
+   if(o.sourceMetadata?.officialMeal?.intro)detail.append(h('p',{},o.sourceMetadata.officialMeal.intro));else if(o.rawText)detail.append(h('p',{},o.rawText));if(o.reviewReason)detail.append(h('p',{class:'helper'},o.reviewReason));
    for(const c of F.couponTerms(o))detail.append(h('p',{class:'helper'},c));
    const end=o.validity?.validWindows?.[0]?.toExclusive;if(end&&o.kind!=='direct_menu')detail.append(h('p',{class:'helper'},'期限至 '+new Date(Date.parse(end+'T00:00:00+08:00')-86400000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})));
    detail.append(safeLink(o.provenance.sourceUrl,'資料記錄'));card.append(detail);
