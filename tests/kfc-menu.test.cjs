@@ -8,8 +8,11 @@ const biscuit=Object.keys(data.foodCatalog).find(k=>data.foodCatalog[k].name==='
 test('official KFC missing snacks are selectable and actually priced with coupons',()=>{
  const menu=P.planningContext(data,request,now);assert(menu.snacks.includes(biscuit));
  for(const name of ['青花椒薯條','青花椒雞塊','南洋酸甜雙拼點心盒','BBQ煙燻雙拼點心盒','樂享三拼小盒','分享拼盤']){
-  const id=Object.keys(data.foodCatalog).find(k=>data.foodCatalog[k].name===name);assert(id,name);assert(menu.snacks.includes(id),name);
+  const id=Object.keys(data.foodCatalog).find(k=>data.foodCatalog[k].name===name);assert(id,name);
+  assert(!menu.snacks.includes(id),'selection uses kinds, while product remains in catalogue: '+name);
  }
+ assert(menu.snacks.includes('snackFries'));assert(menu.snacks.includes('snackNuggets'));
+ const box=menuOffers.find(o=>o.menuSnapshot.productId==='FA191');assert.deepEqual(box.variants[0].items,{nuggets:8,qqPack:1,friesMedium:1});
  const result=F.recommend(data,{...request,demand:{[biscuit]:1,tart:1},snackGoal:{minTypes:0,servings:0}},{now,timeLimitMs:300,maxStates:10000});
  assert(result.plans.length,result.quoteUnavailable?.reason);assert.equal(F.planContents(result.plans[0])[biscuit],1);
  assert(result.plans[0].orders.some(o=>o.kind==='direct_menu'&&o.menuSnapshot.productId==='FA168'&&!o.code));

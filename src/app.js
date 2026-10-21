@@ -66,10 +66,10 @@
     if(state.mealMode==='meal'&&!mains.length&&menu.mains.length)mains.push(menu.mains.find(id=>mainTimeInfo(id).current===true)||menu.mains[0]);
     if(JSON.stringify(mains)!==JSON.stringify(state.mains))state.manual=false;
     state.mains=mains;state.mealMains=state.mealMains.filter(id=>menu.mains.includes(id));if(state.mealMode==='meal')state.mealMains=[...mains];
-    state.fixedSnacks=state.fixedSnacks.filter(id=>menu.snacks.includes(id));
+    state.fixedSnacks=P.normalizeSnacks(state.fixedSnacks).filter(id=>menu.snacks.includes(id));
     for(const id of Object.keys(state.demand))if(!allowed.has(id))delete state.demand[id];
     $('cross-brand-row').hidden=$('brand-scope').value!=='all';
-    const old=$('add-item').value;$('add-item').replaceChildren(...Object.entries(I).filter(([id])=>menu.items.includes(id)&&!id.startsWith('food_')&&!['individual','burgerMain','drinkServing','snackPortions'].includes(id)).map(([id,item])=>h('option',{value:id},item.name)));
+    const old=$('add-item').value;$('add-item').replaceChildren(...Object.entries(I).filter(([id])=>menu.items.includes(id)&&!P.SNACK_ALIASES[id]&&!id.startsWith('food_')&&!['individual','burgerMain','drinkServing','snackPortions'].includes(id)).map(([id,item])=>h('option',{value:id},item.name)));
     if(menu.items.includes(old))$('add-item').value=old;$('add-demand').disabled=!$('add-item').options.length;
     $('context-change').hidden=!notify||!removed.length;$('context-change').textContent=removed.length?'已移除不符合目前設定的餐點：'+[...new Set(removed)].join('、'):'';
     regenerate();renderChoices();renderSnackGroups();renderContextTimes();return removed;
@@ -82,6 +82,7 @@
   function renderSummary(){
     const built=state.built;if(!built)return;
     $('simple-summary').replaceChildren(h('strong',{},'預計份量'),h('p',{class:'main-summary'},formatItems(state.demand)+(state.demand.drinkServing?'（'+drinkNames[$('drink-preference').value]+'）':'')));
+    $('simple-summary').append(h('details',{class:'minor-details'},h('summary',{},'點心份量怎麼算？'),h('p',{},P.SNACK_PORTION_NOTE),h('p',{},'選食物種類即可，已標明內容的點心盒也能一起湊份量；未知組成不當成已滿足。飲料與湯請在飲料欄位選擇。')));
     const pizza=built.mains.includes('pizza'),pasta=built.mains.includes('pasta');$('pizza-settings').hidden=!pizza;$('flavor-settings').hidden=!(pizza||pasta);$('main-portions').hidden=state.mealMode==='snack';
     $('portion-guide').textContent='份量按人數與食量估算，可在餐點數量中調整。披薩切法是試算用，不會改變整個披薩份量。';renderContextTimes();
   }
@@ -102,7 +103,7 @@
     $('richness-label').textContent=state.mealMode==='snack'?'點心份量':'點心搭配';
     const picks=(state.choices?.snacks||[]).map(c=>c.id);
     $('tea-snack-choices').replaceChildren(h('button',{type:'button','data-tea-snack':'any','aria-pressed':String(!state.fixedSnacks.length)},'幫我搭配'));
-    for(const brand of ($('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value]))for(const category of ['鹹點','甜點','拼盤與烤雞','飯類','飲料與湯','醬料']){
+    for(const brand of ($('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value]))for(const category of ['鹹點','甜點','拼盤與烤雞','飯類']){
       const ids=picks.filter(id=>{const m=P.SNACK_META[id],group=['飯類','飲料與湯','醬料'].includes(m.group)?m.group:/綜合拼盤|烤雞/.test(m.group)?'拼盤與烤雞':/蛋撻|QQ 球|起司塔|蛋糕|冰淇淋/.test(m.group)?'甜點':'鹹點';return m.brand===brand&&group===category;});
       if(!ids.length)continue;
       $('tea-snack-choices').append(h('section',{class:'tea-snack-section'},h('h4',{},($('brand-scope').value==='all'?brandName(brand)+'・':'')+category),h('div',{class:'tea-snack-list'},ids.map(id=>{const change=state.choices.snacks.find(c=>c.id===id).switchChannel;return h('button',{type:'button','data-tea-snack':id,'data-switch-channel':change||'','aria-pressed':String(state.fixedSnacks.includes(id))},I[id].emoji+' '+snackLabel(id),change?h('small',{class:'snack-channel'},'改用外帶選擇'):snackTimeLabel(id)?h('small',{class:'snack-channel'},snackTimeLabel(id)):null);}))));
@@ -113,7 +114,7 @@
     $('snack-groups').replaceChildren();
     for(const brand of ($('brand-scope').value==='all'?['KFC','PH']:[$('brand-scope').value])){
       const list=h('div',{class:'brand-snack-list'}),section=h('section',{class:'snack-brand-section'},h('h3',{},brandName(brand)),list);
-      for(const [id,meta] of Object.entries(P.SNACK_META).filter(([id,m])=>m.brand===brand&&state.menu?.snacks.includes(id))){
+      for(const [id,meta] of Object.entries(P.SNACK_META).filter(([id,m])=>m.brand===brand&&P.isSnackChoice(id)&&state.menu?.snacks.includes(id))){
         list.append(h('label',{},h('input',{type:'checkbox','data-fixed-snack':id,checked:state.fixedSnacks.includes(id)}),snackLabel(id)));
       }
       if(list.childElementCount)$('snack-groups').append(section);
@@ -186,9 +187,9 @@
     const mapping={people:'people',budget:'budget',budgetType:'budget-type',pizzaSize:'pizza-size',flavorKinds:'flavor-kinds',flavorTag:'flavor-tag',channel:'channel',orderMethod:'order-method',paymentMethod:'payment-method',drinkPreference:'drink-preference',brandScope:'brand-scope',appetite:'appetite',at:'at'};
     for(const [key,id] of Object.entries(mapping))if(patch[key]!==undefined)$(id).value=String(patch[key]);
     state.mealMode=mode;state.mains=P.normalizeMains({mealMode:mode,mains});if(mode==='meal')state.mealMains=[...state.mains];
-    state.fixedSnacks=[...fixedSnacks];if(patch.richness)state.richness=patch.richness;
+    state.fixedSnacks=P.normalizeSnacks(fixedSnacks);if(patch.richness)state.richness=patch.richness;
     if(patch.drinks!==undefined)$('drinks').checked=patch.drinks;else if(patch.drinkPreference)$('drinks').checked=true;
-    syncDateFields();orderingUI();state.manual=false;regenerate(true);if(patch.explicitDemand){state.demand={...state.demand,...patch.explicitDemand};state.manual=true;}
+    syncDateFields();orderingUI();state.manual=false;regenerate(true);if(patch.explicitDemand){state.demand=P.applyExplicitDemand(state.demand,patch.explicitDemand);state.manual=true;}
     const removed=refreshMenu(true);
     if(patch.explicitDemand){for(const [id,n] of Object.entries(patch.explicitDemand))if(state.menu.items.includes(id)){state.demand[id]=n;state.manual=true;}renderDemand();renderSummary();}
     feeUI();markDirty();
@@ -204,7 +205,7 @@
   }
   const savedIds=['people','budget','budget-type','appetite','brand-scope','pizza-size','flavor-kinds','flavor-tag','small-cuts','large-cuts','drinks','drink-preference','order-method','payment-method','member','cross-brand','meal-replacement','channel','max-orders'];
   function save(){try{const values={};for(const id of savedIds)values[id]=$(id).type==='checkbox'?$(id).checked:$(id).value;localStorage.setItem('feast-simple-v6',JSON.stringify({values,mealMode:state.mealMode,mealMains:state.mealMains,mains:state.mains,richness:state.richness,fixedSnacks:state.fixedSnacks,manual:state.manual,demand:state.demand}));}catch{}}
-  function restore(){try{const current=localStorage.getItem('feast-simple-v6'),s=JSON.parse(current||localStorage.getItem('feast-simple-v5')||localStorage.getItem('feast-simple-v4')||localStorage.getItem('feast-simple-v3'));if(!s)return;for(const id of savedIds)if((current||id!=='order-method')&&s.values?.[id]!==undefined){if($(id).type==='checkbox')$(id).checked=Boolean(s.values[id]);else $(id).value=String(s.values[id]);}state.mealMode=s.mealMode==='snack'?'snack':'meal';state.mains=P.normalizeMains({...s,mealMode:state.mealMode});state.mealMains=s.mealMains?.length?s.mealMains:state.mealMode==='meal'?[...state.mains]:['pizza','chicken'];if(P.RICHNESS[s.richness])state.richness=s.richness;state.fixedSnacks=(s.fixedSnacks||[]).filter(k=>P.SNACK_META[k]);if(s.manual&&Object.entries(s.demand||{}).every(([k,n])=>I[k]&&Number.isInteger(n)&&n>=0&&n<=60)){state.manual=true;state.demand={...s.demand};if(!current&&s.family==='burger'&&state.demand.individual){state.demand.burgerMain=state.demand.individual;delete state.demand.individual;}if(!current&&s.values?.drinks&&!state.demand.drinkServing){state.demand.drinkServing=state.demand.drinkSmall||Number($('people').value);delete state.demand.drinkSmall;}}}catch{}}
+  function restore(){try{const current=localStorage.getItem('feast-simple-v6'),s=JSON.parse(current||localStorage.getItem('feast-simple-v5')||localStorage.getItem('feast-simple-v4')||localStorage.getItem('feast-simple-v3'));if(!s)return;for(const id of savedIds)if((current||id!=='order-method')&&s.values?.[id]!==undefined){if($(id).type==='checkbox')$(id).checked=Boolean(s.values[id]);else $(id).value=String(s.values[id]);}state.mealMode=s.mealMode==='snack'?'snack':'meal';state.mains=P.normalizeMains({...s,mealMode:state.mealMode});state.mealMains=s.mealMains?.length?s.mealMains:state.mealMode==='meal'?[...state.mains]:['pizza','chicken'];if(P.RICHNESS[s.richness])state.richness=s.richness;state.fixedSnacks=P.normalizeSnacks(s.fixedSnacks);if(s.manual&&Object.entries(s.demand||{}).every(([k,n])=>I[k]&&Number.isInteger(n)&&n>=0&&n<=60)){state.manual=true;state.demand=P.migrateSnackDemand(s.demand,s.fixedSnacks);if(!current&&s.family==='burger'&&state.demand.individual){state.demand.burgerMain=state.demand.individual;delete state.demand.individual;}if(!current&&s.values?.drinks&&!state.demand.drinkServing){state.demand.drinkServing=state.demand.drinkSmall||Number($('people').value);delete state.demand.drinkSmall;}}}catch{}}
 
   const buildVersion=document.querySelector('meta[name="jocheap-build"]')?.content||'';
   let latestVersion=buildVersion,versionChecking=false,lastVersionCheck=0;
@@ -300,7 +301,7 @@
     const r=p.effectiveRequest||state.lastRequest;
     if(state.mode!=='demo'&&p.orders.some(o=>!orderUsable(o,r)))return '餐點資料已變更，請重新試算。';
     const lines=['【揪省購買清單】',`${r.people} 人・${({takeaway:'外帶',delivery:'官方外送',dinein:'內用'}[r.channel])}`,p.totalCost===null?'餐點小計 '+money(p.knownSubtotal)+'（外送等費用另計）':'合計 '+money(p.totalCost),''];
-    lines.push('你會獲得：',formatItems(F.planContents(p)),'');
+    lines.push('你會獲得：',formatItems(F.planContents(p)),'點心份量：'+P.snackSummary(F.planContents(p))+'（配餐估算）','');
     if(p.substitution)lines.push('替代方案：',...(p.adjustments||[]),'');
     if(p.requiredMaxOrders)lines.push('完整滿足原需求需分 '+p.requiredMaxOrders+' 筆購買（原上限 '+state.lastRequest.maxOrders+' 筆）','');
     if(p.partial)lines.push('還缺：'+shortageText(p),'');
@@ -334,7 +335,8 @@
   }
   function planOverview(p){
     const contents=F.planContents(p);if(!Object.keys(contents).length)return null;
-    return h('section',{class:'plan-overview','aria-label':'你會獲得什麼'},h('h4',{},'你會獲得什麼'),h('ul',{},Object.entries(contents).map(([id,n])=>h('li',{},h('span',{class:'overview-emoji','aria-hidden':'true'},I[id].emoji),h('span',{},I[id].name),h('strong',{},n+' '+I[id].unit)))));
+    const portionSummary=P.snackSummary(contents);
+    return h('section',{class:'plan-overview','aria-label':'你會獲得什麼'},h('h4',{},'你會獲得什麼'),h('ul',{},Object.entries(contents).map(([id,n])=>h('li',{},h('span',{class:'overview-emoji','aria-hidden':'true'},I[id].emoji),h('span',{},I[id].name),h('strong',{},n+' '+I[id].unit)))),portionSummary?h('p',{class:'helper'},'點心份量：'+portionSummary+'（配餐估算，實際品項如上）'):null);
   }
   function planCard(p,index){
     const r=p.effectiveRequest||state.lastRequest,isDemo=state.mode==='demo';
@@ -473,14 +475,14 @@
   document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
   $('main-choices').addEventListener('click',e=>{const b=e.target.closest('[data-main]');if(!b)return;const id=b.dataset.main;if(b.dataset.switchChannel){$('channel').value=b.dataset.switchChannel;orderingUI();refreshMenu();toast('已改為外帶，並加入'+P.MAINS[id].name+'。');}if(!b.dataset.switchChannel&&state.mains.includes(id)&&state.mains.length===1){toast('至少保留一種主餐；可先選另一種，再取消這一種。');return;}state.mains=b.dataset.switchChannel?[...new Set([...state.mains,id])]:state.mains.includes(id)?state.mains.filter(k=>k!==id):[...state.mains,id];state.mealMains=[...state.mains];state.manual=false;$('drinks').checked=state.mains.some(k=>!['pizza','chicken'].includes(k));regenerate(true);renderChoices();feeUI();markDirty();});
   document.querySelectorAll('[data-meal-mode]').forEach(b=>b.addEventListener('click',()=>setMealMode(b.dataset.mealMode)));
-  $('tea-snack-choices').addEventListener('click',e=>{const b=e.target.closest('[data-tea-snack]');if(!b)return;const id=b.dataset.teaSnack;if(b.dataset.switchChannel){$('channel').value=b.dataset.switchChannel;orderingUI();refreshMenu();feeUI();toast('已改為外帶，並加入'+I[id].name+'。');}state.fixedSnacks=id==='any'?[]:state.fixedSnacks.includes(id)?state.fixedSnacks.filter(x=>x!==id):[...state.fixedSnacks,id];state.richness=state.fixedSnacks.length?'none':'normal';state.manual=false;regenerate(true);renderChoices();renderSnackGroups();markDirty();});
+  $('tea-snack-choices').addEventListener('click',e=>{const b=e.target.closest('[data-tea-snack]');if(!b)return;const id=b.dataset.teaSnack;if(b.dataset.switchChannel){$('channel').value=b.dataset.switchChannel;orderingUI();refreshMenu();feeUI();toast('已改為外帶，並加入'+I[id].name+'。');}state.fixedSnacks=id==='any'?[]:state.fixedSnacks.includes(id)?state.fixedSnacks.filter(x=>x!==id):[...state.fixedSnacks,id];if(!state.fixedSnacks.length)state.richness='normal';state.manual=false;regenerate(true);renderChoices();renderSnackGroups();markDirty();});
   $('main-portion-list').addEventListener('input',e=>{const id=e.target.dataset.mainQuantity;if(!id)return;state.demand[id]=e.target.value===''?NaN:Number(e.target.value);state.manual=true;renderSummary();markDirty();});
   $('main-portion-list').addEventListener('change',()=>renderDemand());
   $('reset-main-portions').addEventListener('click',()=>{state.manual=false;regenerate(true);markDirty();});
   $('richness-choices').addEventListener('click',e=>{const b=e.target.closest('[data-richness]');if(!b)return;state.richness=b.dataset.richness;regenerate();renderChoices();markDirty();});
   $('no-snacks').addEventListener('click',()=>{state.richness='none';regenerate();renderChoices();markDirty();});
   document.querySelectorAll('[data-person-delta]').forEach(b=>b.addEventListener('click',()=>{const next=Number($('people').value)+Number(b.dataset.personDelta);if(next<1||next>30)return;$('people').value=next;regenerate();feeUI();markDirty();}));
-  $('snack-groups').addEventListener('change',e=>{const id=e.target.dataset.fixedSnack;if(!id)return;state.fixedSnacks=e.target.checked?[...new Set([...state.fixedSnacks,id])]:state.fixedSnacks.filter(k=>k!==id);if(state.manual){if(e.target.checked)state.demand[id]=Math.ceil(Number($('people').value)*(F.SNACKS[id]?.perPerson??.5));else delete state.demand[id];}regenerate();markDirty();});
+  $('snack-groups').addEventListener('change',e=>{const id=e.target.dataset.fixedSnack;if(!id)return;state.fixedSnacks=e.target.checked?[...new Set([...state.fixedSnacks,id])]:state.fixedSnacks.filter(k=>k!==id);if(state.manual){if(e.target.checked)state.demand[id]=P.buildSimple(simpleConfig()).demand[id]||1;else delete state.demand[id];}regenerate();markDirty();});
   $('demand-list').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.remove)delete state.demand[b.dataset.remove];else if(b.dataset.item){const k=b.dataset.item;state.demand[k]=Math.max(0,Math.min(60,(state.demand[k]||0)+Number(b.dataset.delta)));}state.manual=true;renderDemand();markDirty();});
   $('demand-list').addEventListener('input',e=>{if(e.target.dataset.quantity){state.demand[e.target.dataset.quantity]=e.target.value===''?NaN:Number(e.target.value);state.manual=true;renderMainPortions();markDirty();}});
   $('add-demand').addEventListener('click',()=>{const id=$('add-item').value;state.demand[id]=Math.min(60,(state.demand[id]||0)+1);state.manual=true;renderDemand();markDirty();});

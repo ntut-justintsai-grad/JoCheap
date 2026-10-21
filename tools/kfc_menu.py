@@ -9,6 +9,7 @@ from datetime import datetime,timedelta,timezone
 from hashlib import sha256
 from pathlib import Path
 from data_quality import content_signature
+from food_parser import atomic
 
 API='https://olo-api.kfcclub.com.tw/menu/v1/'
 SHOP='TWI104'
@@ -31,6 +32,19 @@ IDENTITIES={
 }
 def norm(s):return re.sub(r'\s+','',s).replace('（','(').replace('）',')')
 def digest(value):return sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+def fixed_components(detail):
+ """Only mandatory single-food groups prove a box's physical contents."""
+ items={}
+ for group in detail.get('Details',[]):
+  if group.get('MType')=='DD':continue  # Optional dipping sauces are separate.
+  low,high=group.get('MinCount'),group.get('MaxCount')
+  if low==0:continue
+  options=group.get('MList',[])
+  if isinstance(low,bool) or not isinstance(low,int) or low!=high or not 1<=low<=60 or len(options)!=1 or options[0].get('HasOptions'):return {}
+  try:foods,_=atomic(options[0]['Name'],low,allow_generic=False)
+  except (ValueError,KeyError):return {}
+  for id,n in foods.items():items[id]=items.get(id,0)+n
+ return items if len(items)>1 and all(n<=60 for n in items.values()) else {}
 def fetch(endpoint,query):
  req=urllib.request.Request(API+endpoint,data=json.dumps(query).encode(),headers={'Content-Type':'application/json','User-Agent':'JoCheap/1.0 public official menu reader','Origin':'https://www.kfcclub.com.tw'})
  with urllib.request.urlopen(req,timeout=20) as response:
@@ -84,9 +98,25 @@ def refresh(previous,fetcher,stamp):
     for row in rows:records[digest(row)]=row
     for code in page['records']:
      if code not in records and code in previous.get('records',{}):records[code]=copy.deepcopy(previous['records'][code])
- return dict(version=1,attemptedAt=stamp,shopcode=SHOP,pages=pages,records=records,errors=errors)
+ # Fetch recipes once per boxed product. Failure leaves the box unexpanded;
+ # neither its name nor its picture proves the number of chicken nuggets.
+ products={r['Fcode']:r for r in records.values() if any(x in r['Name'] for x in ['點心盒','三拼小盒'])}
+ for code,row in products.items():
+  try:
+   result=fetcher('GetQueryFoodDetail',dict(fcode=code,menuid='5',mealperiod='2',ordertype='2',orderdate=datetime.fromisoformat(stamp.replace('Z','+00:00')).astimezone(TZ).strftime('%Y/%m/%d')+' 13:00',shopcode=SHOP,channel='1'))
+   if result.get('Success') is not True:continue
+   detail=next(x for x in result['Data']['FoodDetail'] if norm(x['Name'])==norm(row['Name']))
+   components=fixed_components(detail)
+   if components:
+    for r in records.values():
+     if r['Fcode']==code:r.update(Components=components,ComponentsCheckedAt=stamp)
+  except (ValueError,KeyError,TypeError,StopIteration,OSError):pass
+ remapped={digest(row):row for row in records.values()};lookup={old:digest(row) for old,row in records.items()}
+ for page in pages.values():page['records']=[lookup[key] for key in page['records']]
+ return dict(version=1,attemptedAt=stamp,shopcode=SHOP,pages=pages,records=remapped,errors=errors)
 
 def food(row):
+ if row.get('Components') and all(isinstance(n,int) and not isinstance(n,bool) and 0<n<=60 and id in {k for v in IDENTITIES.values() for k in v} for id,n in row['Components'].items()):return dict(row['Components']),{}
  name=norm(row['Name']);items=IDENTITIES.get(name)
  if items:return items,{}
  # A named box/assortment remains one pack, not fabricated individual pieces.
@@ -125,6 +155,7 @@ def apply(data,cache):
     size='bottle' if '瓶' in row['Name'] else 'small' if '(小)' in norm(row['Name']) else 'medium' if '(中)' in norm(row['Name']) else 'cup'
     beverages=[dict(name=row['Name'],quantity=n,kind=kind,size=size,item=id) for id,n in items.items()]
    m=dict(productId=row['Fcode'],checkedAt=page['checkedAt'],recheckBy=review.isoformat(timespec='seconds'),sourceUrl=source,contentHash=signature,channel=channel,mealPeriod=period,shopcode=SHOP,limited=any(x in intro+row['Name'] for x in ['期間限定','限時','售完為止']))
+   if row.get('Components'):m['componentsCheckedAt']=row.get('ComponentsCheckedAt')
    # Official campaign end is honoured, without labelling every rotating menu
    # administrative EndDate as a marketing "limited edition".
    o=dict(id='kfc-menu-'+channel+'-'+period+'-'+row['Fcode'],brand='KFC',kind='direct_menu',code='',title=row['Name'],rawText=row['Name'],dataStatus='estimate',priceType='fixed',displayPriceMinor=round(price*100),officialUrl='https://www.kfcclub.com.tw/meal/'+row['Fcode']+'?menuId='+menu,variants=[dict(id='menu',priceMinor=round(price*100),items=items,channels=[channel],beverages=beverages,mainDescription=intro or row['Name'])],ordering=dict(platforms=['official_web'],fulfilments=[channel],status='known'),validity=dict(validWindows=[dict(from_=from_date,toExclusive=to_date,startMinute=start,endMinute=end)],timezone='Asia/Taipei'),eligibility={},limits={},conditions=['單點價格與供應以實際門市為準。'],provenance=dict(sourceUrl=source,sourcePublisher='肯德基官方單點 API',fetchedAt=page['checkedAt']),menuSnapshot=m,sourceMetadata=dict(mealPeriods=[int(period)]),sourceVersionKey='official-menu')

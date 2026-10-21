@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),Intent=require('../src/intent.js'),P=require('../src/planner.js'),F=require('../src/engine.js');
 test('afternoon tea can have snacks and drinks without a main, including a drinks-only request',()=>{
  const b=P.buildSimple({people:4,mealMode:'snack',mains:[],fixedSnacks:['tart','nuggets'],richness:'none',drinks:true});
- assert.deepEqual(b.mains,[]);assert.deepEqual(b.demand,{drinkServing:4,tart:4,nuggets:8});assert.equal(b.snackGoal.minTypes,2);assert.equal(b.mainAllocation.length,0);
+ assert.deepEqual(b.mains,[]);assert.deepEqual(b.demand,{drinkServing:4,tart:1,snackNuggets:1,snackPortions:2});assert.equal(b.snackGoal.minTypes,2);assert.equal(b.mainAllocation.length,0);
  const d=P.buildSimple({people:2,mealMode:'snack',richness:'none',drinks:true});assert.deepEqual(d.demand,{drinkServing:2});assert.equal(d.snackGoal.minTypes,0);
  assert.throws(()=>P.buildSimple({people:2,mealMode:'meal',mains:[]}));
 });

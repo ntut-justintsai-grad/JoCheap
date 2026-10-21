@@ -44,9 +44,15 @@
     individual:{name:'獨立主餐',unit:'份',emoji:'🍽️'},
     burgerMain:{name:'一般漢堡主餐',unit:'個',emoji:'🍔'},
     drinkServing:{name:'指定飲料／湯',unit:'杯',emoji:'🥤'},
-    snackPortions:{name:'分享點心',unit:'小份',emoji:'🍟'}
+    snackPortions:{name:'分享點心',unit:'小份',emoji:'🍟'},
+    snackFries:{name:'薯條（大小皆可）',unit:'小份當量',emoji:'🍟'},
+    snackNuggets:{name:'雞塊（單點／盒裝皆可）',unit:'小份',emoji:'🍗'},
+    snackKfcQQ:{name:'雙色 QQ 球',unit:'分享小份',emoji:'🟠'},
+    snackPhQQ:{name:'QQ 球（口味不限）',unit:'分享小份',emoji:'🍡'},
+    snackCoins:{name:'薯金幣（大小皆可）',unit:'小份當量',emoji:'🥔'},
+    snackCartilage:{name:'雞軟骨（大小皆可）',unit:'小份當量',emoji:'🍗'}
   };
-  const physicalIds=Object.keys(ITEMS).filter(k=>!['individual','burgerMain','drinkServing','snackPortions'].includes(k));
+  const physicalIds=Object.keys(ITEMS).filter(k=>!['individual','burgerMain','drinkServing','snackPortions','snackFries','snackNuggets','snackKfcQQ','snackPhQQ','snackCoins','snackCartilage'].includes(k));
   function extendItems(dataset){for(const [id,meta] of Object.entries(dataset.foodCatalog||{}))if(!ITEMS[id]&&/^(?:food_[a-f0-9]{12}|[a-zA-Z][a-zA-Z0-9]*)$/.test(id)){ITEMS[id]=meta;physicalIds.push(id);}root.Planner?.extendSnacks(dataset);}
   const drinkMatch=(d,preference='any')=>d.size!=='bottle'&&(preference==='any'?d.kind!=='soup':preference==='soda'?['cola','soda'].includes(d.kind):preference==='coldMilkTea'?d.kind==='milkTea'&&d.name.includes('冰'):preference==='hotMilkTea'?d.kind==='milkTea'&&d.name.includes('熱'):d.kind===preference);
   function drinkCount(beverages,preference){return sum((beverages||[]).filter(d=>drinkMatch(d,preference)).map(d=>d.quantity));}
@@ -68,6 +74,8 @@
   function expandOptions(variant,r){
     if(!variant.optionGroups?.length)return {variants:[applyOptions(variant,{},r.at)],complete:true};
     let choices=[{}],complete=true;
+    const planner=root.Planner||(typeof require==='function'?require('./planner.js'):{});
+    const quantity=(id,items)=>planner.snackQuantity?.(id,items)??items[id]??0;
     const keys=Object.keys(r.demand).filter(k=>r.demand[k]>0&&!['snackPortions','drinkServing'].includes(k)).map(k=>k==='burgerMain'?'burger':k);
     const meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
     const snackSignature=o=>Object.entries(o.items).filter(([k])=>meta[k]&&!meta[k].selectionOnly).map(([k,n])=>[meta[k].group,n/meta[k].portion]).sort();
@@ -76,10 +84,10 @@
       for(let i=0;i<g.options.length;i++){
         if(atOrAfterEight(r.at)&&/20:00前供應/.test(g.options[i].name))continue;
         const o=g.options[i],drinkGain=r.demand.drinkServing&&drinkCount(o.beverages,r.drinkPreference)>drinkCount(base.beverages,r.drinkPreference);
-        const foodGain=keys.some(k=>(o.items[k]||0)>(base.items[k]||0));
+        const foodGain=keys.some(k=>quantity(k,o.items)>quantity(k,base.items));
         const snackChange=r.snackGoal&&JSON.stringify(snackSignature(o))!==JSON.stringify(snackSignature(base)),avoidGain=(r.avoid||[]).some(k=>base.items[k]&&!o.items[k]);
         if(!i||drinkGain||foodGain||snackChange||avoidGain){
-          const signature=JSON.stringify([keys.map(k=>o.items[k]||0),r.demand.drinkServing?drinkCount(o.beverages,r.drinkPreference):0,r.snackGoal?snackSignature(o):null,(r.avoid||[]).map(k=>o.items[k]||0)]);
+          const signature=JSON.stringify([keys.map(k=>quantity(k,o.items)),r.demand.drinkServing?drinkCount(o.beverages,r.drinkPreference):0,r.snackGoal?snackSignature(o):null,(r.avoid||[]).map(k=>o.items[k]||0)]);
           const prev=seen.get(signature);if(prev===undefined||o.surchargeMinor<g.options[prev].surchargeMinor)seen.set(signature,i);
         }
       }
@@ -321,7 +329,8 @@
         if(!Number.isSafeInteger(v.priceMinor)||v.priceMinor<0||!Number.isSafeInteger(v.surchargeMinor??0)||(v.surchargeMinor??0)<0){excluded.push({id:o.id,reasons:['固定價格待確認']});continue;}
         const ch=v.channels||[];
         if(!ch.includes(r.channel)&&!(r.estimate&&ch.includes('unknown'))){excluded.push({id:o.id,reasons:['不適用此通路']});continue;}
-        const items={...v.items};
+        const planner=root.Planner||(typeof require==='function'?require('./planner.js'):{});
+        const items={...v.items,...(planner.snackCounters?.(v.items)||{})};
         // Independent mains are explicitly classified; shared pizza never becomes an individual meal.
         items.individual=v.individualMains||0;
         items.burgerMain=Math.min(items.burger||0,v.individualMainItems?.burger??(!v.individualMainItems?v.individualMains||0:0));
@@ -338,7 +347,7 @@
         if(Object.keys(r.demand).every(k=>!r.demand[k]||!items[k]))continue;
         if((r.avoid||[]).some(k=>items[k]>0))continue;
         if(r.exact&&Object.entries(r.demand).some(([k,n])=>n>0&&(items[k]||0)>n))continue;
-        if(r.allowExtras===false&&physicalIds.some(k=>items[k]>0&&!r.demand[k]&&!(k==='burger'&&r.demand.burgerMain&&items.burgerMain)&&!(r.demand.individual&&(v.individualMainItems?.[k]||(k==='burger'&&v.individualMains)))))continue;
+        if(r.allowExtras===false&&physicalIds.some(k=>items[k]>0&&!r.demand[k]&&!Object.entries(planner.SNACK_KINDS||{}).some(([kind,meta])=>r.demand[kind]&&meta.sources[k])&&!(k==='burger'&&r.demand.burgerMain&&items.burgerMain)&&!(r.demand.individual&&(v.individualMainItems?.[k]||(k==='burger'&&v.individualMains)))))continue;
         if(o.minimumSubtotalMinor&&v.priceMinor<o.minimumSubtotalMinor)continue;
         candidates.push({id:o.id+'/'+(o.sourceVersionKey?o.sourceVersionKey+'/':'')+v.id,offer:o,variant:v,items,snackGroups,ordering,base:v.priceMinor+(v.surchargeMinor||0),maxUses:o.limits?.maxUsesPerUserPerDay??(r.estimate?r.maxOrders:1),group:o.limits?.sharedLimitGroup||null,groupLimit:o.limits?.sharedGroupMax??null});
        }
@@ -426,6 +435,14 @@
       for(const [k,n] of Object.entries(allocated))consumed[k]=Math.max(consumed[k]||0,n);
       if(r.demand.burgerMain)consumed.burger=Math.max(consumed.burger||0,r.demand.burgerMain);
       const allocatedDrinks={};let drinkNeed=r.demand.drinkServing||0;for(const c of selected)for(const d of c.variant.beverages||[]){if(!drinkMatch(d,r.drinkPreference)||!drinkNeed)continue;const take=Math.min(drinkNeed,d.quantity);allocatedDrinks[d.item]=(allocatedDrinks[d.item]||0)+take;drinkNeed-=take;}for(const [k,n] of Object.entries(allocatedDrinks))consumed[k]=Math.max(consumed[k]||0,n);
+      const planner=root.Planner||(typeof require==='function'?require('./planner.js'):{});
+      for(const [kind,meta] of Object.entries(planner.SNACK_KINDS||{})){
+        let need=r.demand[kind]||0;
+        for(const [id,factor] of Object.entries(meta.sources)){
+          const take=Math.min(counts[id]||0,Math.ceil(Math.max(0,need)/factor-1e-9));
+          consumed[id]=Math.max(consumed[id]||0,take);need=Math.max(0,need-take*factor);
+        }
+      }
       if(r.demand.snackPortions){
         const meta=(root.Planner||(typeof require==='function'?require('./planner.js'):{})).SNACK_META||{};
         const ids=physicalIds.filter(k=>meta[k]&&(counts[k]||0)>0),groups=[...new Set(ids.map(k=>meta[k].group))];

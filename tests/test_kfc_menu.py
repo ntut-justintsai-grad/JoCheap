@@ -1,7 +1,7 @@
 import copy,sys,unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'tools'))
-from kfc_menu import refresh,apply
+from kfc_menu import refresh,apply,fixed_components,food
 STAMP='2026-10-19T03:26:25+00:00'
 PERIODS={'08:10':('1','06:50','10:30'),'11:00':('2','10:30','14:00'),'15:00':('3','14:00','17:01'),'18:00':('4','17:01','20:01'),'22:00':('5','20:01','23:59')}
 def row(code='FA168',name='金黃比司吉',price=59):
@@ -13,6 +13,14 @@ def reader(rows):
   return dict(Success=True,Data=dict(Foods=[dict(MenuID=int(q['menuid']),Details=rows(q) if callable(rows) else rows)]))
  return fetch
 class KfcMenuTests(unittest.TestCase):
+ def test_only_unambiguous_mandatory_box_groups_are_decomposed(self):
+  def group(name,n):return dict(MType='ER',MinCount=n,MaxCount=n,MList=[dict(Name=name,HasOptions=False)])
+  detail=dict(Details=[group('上校雞塊',8),group('香酥脆薯(中)',1),group('雙色轉轉QQ球',1),dict(MType='DD')])
+  self.assertEqual(fixed_components(detail),{'nuggets':8,'friesMedium':1,'qqPack':1})
+  self.assertEqual(food(dict(Name='樂享三拼小盒',Components=fixed_components(detail)))[0],fixed_components(detail))
+  ambiguous=copy.deepcopy(detail);ambiguous['Details'][0]['MList'].append(dict(Name='其他食物'))
+  self.assertEqual(fixed_components(ambiguous),{})
+  self.assertEqual(fixed_components(dict(Details=[dict(MType='DD')])),{})
  def test_literal_pack_no_invented_parts_and_channel_prices(self):
   cache=refresh({},reader(lambda q:[row(price=59 if q['ordertype']=='2' else 65),row('FA191','樂享三拼小盒',139),row('FA013','上校雞塊4塊',49)]),STAMP)
   d={'foodCatalog':{},'menuOffers':[{'brand':'PH','id':'retain'}]};apply(d,cache)

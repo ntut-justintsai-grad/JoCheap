@@ -21,6 +21,11 @@ def atomic(name,quantity=1,allow_generic=True):
     raw=name.strip();s=norm(raw)
     s=re.sub(r'\((?:辣|不辣|加量不加價)\)','',s)
     s=re.sub(r'^20:00前供應','',s)
+    # A named box with a complete literal recipe is its contents, counted once.
+    box=re.fullmatch(r'(?:點心盒|.*點心盒|樂享三拼小盒)\((.+)\)',s)
+    if box:return atomic(box[1],quantity,allow_generic)
+    multiplied=re.fullmatch(r'(.+?)[x×](\d+)',s,re.I)
+    if multiplied:return atomic(multiplied[1],quantity*int(multiplied[2]),allow_generic)
     # Composite option packs are retained as their constituent foods.
     parts=re.split(r'[+＋]',s)
     if len(parts)>1:

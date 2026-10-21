@@ -25,10 +25,10 @@ test('Pizza Hut selections include all mapped sides, and respect channel and sna
  const data={...production,offers:[]};
  const menu=P.planningContext(data,request,now);
  for(const id of ['chickenBalls','friedMushrooms','cheesePork','fishCakeTrio','peachCheeseTart','basque4','durianIceCream'])assert(menu.snacks.includes(id),id);
- assert.equal(menu.snacks.length,28);assert(!menu.items.includes('chicken'));
+ assert(menu.snacks.every(P.isSnackChoice));assert(menu.snacks.includes('snackCoins'));assert(menu.snacks.includes('snackPhQQ'));assert(!menu.snacks.includes('potatoCoinsSmall'));assert(!menu.snacks.includes('phSeaLarge'));assert(!menu.items.includes('chicken'));
  assert.equal(P.planningContext(data,{...request,channel:'delivery'},now).items.length,0);
  const built=P.buildSimple({people:6,mealMode:'snack',richness:'none',fixedSnacks:['basque8','coldCheeseTart']});
- assert.equal(built.demand.basque8,1);assert.equal(built.demand.coldCheeseTart,6);
+ assert.equal(built.demand.basque8,1);assert.equal(built.demand.coldCheeseTart,1);assert.equal(built.snackGoal.servings,3);
 });
 
 test('a fresh browser worker registers new menu identities before validating requests',()=>{

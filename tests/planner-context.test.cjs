@@ -8,7 +8,7 @@ function offer(id,brand,items,validity={validWindows:[{from:'2026-10-19',toExclu
 test('brand and fulfilment choices determine the selectable menu, including at night',()=>{
  const data={...demo,offers:[offer('chicken','KFC',{chicken:4,paperChicken:1,tart:2}),offer('pizza','PH',{pizza9:1,pasta:1,potatoCoinsSmall:1})]};
  const ph=P.planningContext(data,{...request,brands:['PH'],at:'2026-10-19T23:59:00+08:00'});
- assert.deepEqual(ph.mains,['pizza','pasta']);assert(!ph.items.includes('chicken'));assert(!ph.snacks.includes('tart'));assert(ph.snacks.includes('potatoCoinsSmall'));
+ assert.deepEqual(ph.mains,['pizza','pasta']);assert(!ph.items.includes('chicken'));assert(!ph.snacks.includes('tart'));assert(ph.snacks.includes('snackCoins'));
  const kfc=P.planningContext(data,{...request,brands:['KFC']});assert.deepEqual(kfc.mains,['chicken','wrapped']);assert(!kfc.items.includes('pizza9'));
  assert.equal(P.planningContext(data,{...request,channel:'delivery'}).items.length,0);
 });
